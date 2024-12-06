@@ -1,5 +1,42 @@
 {% extends 'layout/base.html' %}
 
 {% block content %}
+<div class="mb-3">
+    <div class="row gap-3 flex-nowrap">
+        <div class="col-md-7 col-12 border border-dark first-row bg-white">
+            <div class="row flex-nowrap align-items-center">
+                <div class="col-md-4 inner-col align-items-center d-flex align-items-center justify-content-center">
+                    <div class="ps-3">
+                        <h3>Tìm kiếm chuyến bay</h3>
+                        <p>Tìm được chuyến bay phù hợp và bắt đầu bay thôi</p>
+                        <button class="btn btn-primary">Các qui định</button>
+                    </div>
 
+                </div>
+                <div class="col-md-7 border border-dark m-3 inner-col align-self-center bg-white">
+                    <form action="">
+                        <div class="mb-5 mt-3">
+                            <label for="start_point" class="mb-1 ps-1">Nơi đi</label>
+                            <input type="text" class="form-control" id="start_point" placeholder="Nhập nơi đi ..." name="start_point">
+                        </div>
+                        <div class="mb-5 mt-3">
+                            <label for="end_point" class="mb-1 ps-1">Nơi đến</label>
+                            <input type="text" class="form-control" id="end_point" placeholder="Nhập nơi đến ..." name="end_point">
+                        </div>
+                        <div class="mb-5 mt-3">
+                            <label for="start_date" class="mb-1 ps-1">Ngày bay</label>
+                            <input type="date" class="form-control" id="start_date" placeholder="Chọn ngày bay ..." name="end_point">
+                        </div>
+                        <div class="mb-5 mt-3 d-flex justify-content-center" >
+                            <button type="submit" class="btn btn-outline-primary">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5 col-12 border border-dark first-row bg-white">
+
+        </div>
+    </div>
+</div>
 {% endblock %}
