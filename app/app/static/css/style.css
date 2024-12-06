@@ -1,0 +1,21 @@
+.btn-pattern-custom {
+    border-radius: 0;
+}
+
+.btn-navbar-fixed-size {
+     width: 120px;
+     height:40px;
+
+}
+
+.btn-outline-dark:hover {
+     background-color: black;
+     color: white;
+     transition: all 0.3s ease;
+}
+
+.btn-dark:hover {
+    background-color: white;
+    color: black;
+    transition: all 0.3s ease;
+}
