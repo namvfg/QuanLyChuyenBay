@@ -1,3 +1,18 @@
+ :root {
+    --primary-color: #66ccff;
+    --secondary_color: #ffffff;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--secondary_color);
+}
+
+.btn-outline-primary{
+    background-color: var(--secondary_color);
+    border-color: var(--primary-color);
+}
+
 .btn-pattern-custom {
     border-radius: 0;
 }
@@ -8,14 +23,14 @@
 
 }
 
-.btn-outline-dark:hover {
-     background-color: black;
-     color: white;
+.btn-outline-primary:hover {
+     background-color: primary-color;
+     color: secondary-color;
      transition: all 0.3s ease;
 }
 
 .btn-dark:hover {
-    background-color: white;
-    color: black;
+    background-color: secondary-color;
+    color: primary-color;
     transition: all 0.3s ease;
 }
