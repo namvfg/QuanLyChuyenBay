@@ -3,6 +3,10 @@
     --secondary_color: #ffffff;
 }
 
+body {
+    background-color: var(--primary-color);
+}
+
 .btn-primary {
     background-color: var(--primary-color);
     border-color: var(--secondary_color);
@@ -33,4 +37,22 @@
     background-color: secondary-color;
     color: primary-color;
     transition: all 0.3s ease;
+}
+
+footer ul {
+    list-style-type: "\1F449";
+    padding-left: 10px;
+    margin: 0;
+}
+
+footer ul li{
+    margin-top: 10px;
+}
+
+body .first-row{
+    height: 500px
+}
+
+body .first-row .inner-col{
+    height: 450px
 }
