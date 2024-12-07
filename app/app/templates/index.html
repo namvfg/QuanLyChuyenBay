@@ -1,5 +1,90 @@
 {% extends 'layout/base.html' %}
 
 {% block content %}
+<div class="mb-3">
+    <div class="row gap-3 flex-nowrap">
+        <div class="col-md-7 col-12 border border-dark first-row bg-white">
+            <div class="row flex-nowrap align-items-center">
+                <div class="col-md-4 inner-col align-items-center d-flex align-items-center justify-content-center">
+                    <div class="ps-3">
+                        <h3>Tìm kiếm chuyến bay</h3>
+                        <p>Tìm được chuyến bay phù hợp và bắt đầu bay thôi</p>
+                        <button class="btn btn-primary">Các qui định</button>
+                    </div>
 
+                </div>
+                <div class="col-md-7 border border-dark m-3 inner-col align-self-center bg-white">
+                    <form action="">
+                        <div class="mb-5 mt-3">
+                            <label for="start_point" class="mb-1 ps-1">Nơi đi</label>
+                            <input type="text" class="form-control" id="start_point" placeholder="Nhập nơi đi ..."
+                                   name="start_point">
+                        </div>
+                        <div class="mb-5 mt-3">
+                            <label for="end_point" class="mb-1 ps-1">Nơi đến</label>
+                            <input type="text" class="form-control" id="end_point" placeholder="Nhập nơi đến ..."
+                                   name="end_point">
+                        </div>
+                        <div class="mb-5 mt-3">
+                            <label for="start_date" class="mb-1 ps-1">Ngày bay</label>
+                            <input type="date" class="form-control" id="start_date" placeholder="Chọn ngày bay ..."
+                                   name="end_point">
+                        </div>
+                        <div class="mb-5 mt-3 d-flex justify-content-center">
+                            <button type="submit" class="btn btn-outline-primary">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5 col-12 border border-dark first-row bg-white slide-show">
+            <div class="mt-1">
+                <h4 class="text-center">Review</h4>
+                <p class="text-center">Đánh giá của những người nổi tiếng về chất lượng</p>
+            </div>
+            <div>
+                <div class="swiper mySwiper">
+                    <div class="swiper-wrapper ">
+                        {% for review in reviews %}
+                        <div class="swiper-slide d-flex justify-content-center flex-column">
+                            <div class="mt-1 " style="width:60%">
+                                <img class="mb-3"
+                                     src="{{ review.image }}"
+                                     alt="Card image">
+                            </div>
+                            <div>
+                                <p class="text-center"><i class="fa-solid fa-calendar-days"></i>
+                                    <span>{{ review.review_date.strftime("%Y-%m-%d") }}</span></p>
+                            </div>
+                            <div class="row" style="width:100%">
+                                <div class="col-md-5 col-5 me-auto">
+                                    <p class="me-auto">{{ review.reviewer_name }}</p>
+                                </div>
+                                <div class="col-md-5 col-5 ms-auto">
+                                    <p class="">
+                                        {% for i in range(review.vote) %}
+                                        <span><i class="fa-solid fa-star"></i></span>
+                                        {% endfor %}
+                                        {% for i in range(5 - review.vote) %}
+                                        <span><i class="fa-regular fa-star"></i></span>
+                                        {% endfor %}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="mt-1">
+                                <p class="text-center mt-2">{{ review.content }}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                </div>
+            </div>
+        </div>
+        <!-- Swiper JS -->
+        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+        <script src="{{ url_for('static', filename='js/slideshow.js') }}"></script>
+    </div>
+</div>
 {% endblock %}

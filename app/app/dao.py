@@ -1,5 +1,6 @@
 import hashlib
 from app.models import User
+from app.models import Review
 def auth_user(user_name,password):
     password = str(hashlib.md5(password.strip().encode('utf-8')).digest())
 
@@ -9,3 +10,10 @@ def auth_user(user_name,password):
 
 def get_user_by_id(user_id):
     return User.query.get(user_id)
+
+
+
+
+#đọc lấy review từ bảng review
+def load_reviews():
+    return Review.query

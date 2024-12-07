@@ -6,6 +6,7 @@ from app import app, db
 from flask_login import UserMixin
 from enum import Enum as UserEnum
 from datetime import datetime
+import json
 
 
 # base model
@@ -218,7 +219,7 @@ class Review(BaseModel):
     reviewer_name = Column(String(150), nullable=False)
     vote = Column(Integer, nullable=False)
     content = Column(Text, nullable=False)
-    image = Column(String(100), nullable=False)
+    image = Column(String(150), nullable=False)
     review_date = Column(DateTime, nullable=False)
 
 
@@ -240,10 +241,20 @@ class Rule(BaseModel):
 
 if __name__ == "__main__":
     with app.app_context():
+
         # db.create_all()
         import hashlib
 
         password = str(hashlib.md5('123456'.encode('utf-8')).digest())
         u = AdminWebsite(first_name='Dat', last_name='Nguyen', user_name='admin', password=password)
         db.session.add(u)
-        db.session.commit()
+        with open("%s/data/review.json" %app.root_path, encoding="utf-8") as f:
+            data = json.load(f)
+            for x in data:
+                date = x["review_date"]
+                date = datetime.fromisoformat(date)
+                x["review_date"] = date
+                x = Review(**x)
+                db.session.add(x)
+         db.session.commit()
+
