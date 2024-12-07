@@ -243,18 +243,31 @@ if __name__ == "__main__":
     with app.app_context():
 
         # db.create_all()
+        # with open("%s/data/review.json" %app.root_path, encoding="utf-8") as f1:
+        #     data = json.load(f1)
+        #     for x in data:
+        #         date = x["review_date"]
+        #         date = datetime.fromisoformat(date)
+        #         x["review_date"] = date
+        #         x = Review(**x)
+        #         db.session.add(x)
+        #     db.session.commit()
+        with open("%s/data/notification.json" %app.root_path, encoding="utf-8") as f2:
+            data = json.load(f2)
+             for x in data:
+                date = datetime.now()
+                x = Notification(**x)
+                x.posting_date = date
+                db.session.add(x)
+             db.session.commit()
+            
         import hashlib
-
         password = str(hashlib.md5('123456'.encode('utf-8')).digest())
         u = AdminWebsite(first_name='Dat', last_name='Nguyen', user_name='admin', password=password)
         db.session.add(u)
-        with open("%s/data/review.json" %app.root_path, encoding="utf-8") as f:
-            data = json.load(f)
-            for x in data:
-                date = x["review_date"]
-                date = datetime.fromisoformat(date)
-                x["review_date"] = date
-                x = Review(**x)
-                db.session.add(x)
-         db.session.commit()
+        db.session.commit()
+           
+
+       
+
 

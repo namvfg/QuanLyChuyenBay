@@ -55,4 +55,17 @@ body .first-row{
 
 body .first-row .inner-col{
     height: 450px
+    width: 100%
+}
+
+body .second-row{
+    height: 500px;
+    width: 103%;
+    margin-left: -12px
+}
+
+body .third-row{
+    height: 750px;
+    width: 103%;
+    margin-left: -12px
 }
