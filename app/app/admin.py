@@ -86,7 +86,7 @@ class RuleView(ModelView):
     column_list = ["id", "name", "value", "rules_admin"]
 
 
-admin = Admin(app=app, name="Test quản trị", template_mode="bootstrap4")
+admin = Admin(app=app, name="Trang quản trị", template_mode="bootstrap4")
 
 admin.add_view(ManufacturerView(Manufacturer, db.session))
 admin.add_view(AirplaneView(Airplane, db.session))

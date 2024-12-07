@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from urllib.parse import quote
+from flask_login import LoginManager
 
 
 app = Flask(__name__)
@@ -11,4 +12,8 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 #số notification trên 1 trang ở file index.html
 app.config["PAGE_SIZE_NOTIFICATION"] = 4
 
+
 db = SQLAlchemy(app=app)
+
+login = LoginManager(app=app)
+
