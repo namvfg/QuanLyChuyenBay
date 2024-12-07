@@ -1,0 +1,36 @@
+[{
+  "id": 1,
+  "reviewer_name": "Bill Gate",
+  "vote": 4,
+  "content": "Tôi năm nay đã 69 tuổi nhưng mà mới lần đầu được đi 1 chuyến bay tuyệt vời như thế này, cảm ơn Đông Thành Airline đã cung cấp cho tôi những dịch vụ tuyệt vời nhất.",
+  "image": "https://res.cloudinary.com/dcee16rsp/image/upload/v1733546111/bill-gates_1280x720-800-resize_c6nfyy.jpg",
+  "review_date": "2024-02-15T00:00:00Z"
+}, {
+  "id": 2,
+  "reviewer_name": "Cristiano Ronaldo",
+  "vote": 5,
+  "content": "Mỗi chuyến du đấu cùng Đông Thành Airline đều là những trải nghiệm tuyệt vời. Mong rằng trong tương lai chúng ta lại có thể hợp tác.",
+  "image": "https://res.cloudinary.com/dcee16rsp/image/upload/v1733551108/ronaldo-the-ky-21-1-5129.jpg_lrft4j.webp",
+  "review_date": "2024-05-13T00:00:00Z"
+}, {
+  "id": 3,
+  "reviewer_name": "Neymar",
+  "vote": 5,
+  "content": "Người Brazil chúng tôi thích nhất là những trải nghiệm độc nhất như thế này. Good job Đông Thành Airline.",
+  "image": "https://res.cloudinary.com/dcee16rsp/image/upload/v1733551110/su-that-neymar_ehg0eg.jpg",
+  "review_date": "2024-04-19T00:00:00Z"
+}, {
+  "id": 4,
+  "reviewer_name": "Alan Walker",
+  "vote": 4,
+  "content": "Tuy có vài hiểu lầm đáng tiếc nhưng chất lượng đáng kinh ngạc của những chuyến bay là không thể bàn cãi.",
+  "image": "https://res.cloudinary.com/dcee16rsp/image/upload/v1733551108/Blue-Orange-Modern-Travel-Tour-Presentation-1_u2ane8.jpg",
+  "review_date": "2024-09-30T00:00:00Z"
+}, {
+  "id": 5,
+  "reviewer_name": "Robert Downey Jr.",
+  "vote": 4,
+  "content": "Tôi muốn được đến Việt Nam nhiều hơn, nhưng là phải đồng hành cùng với Đông Thành Airline để tận hưởng những trải nghiệm tuyệt vời nhất.",
+  "image": "https://res.cloudinary.com/dcee16rsp/image/upload/v1733551109/4679333_Cover_IronMan_bvmluq.jpg",
+  "review_date": "2024-10-14T00:00:00Z"
+}]
