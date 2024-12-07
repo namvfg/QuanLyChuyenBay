@@ -256,5 +256,5 @@ if __name__ == "__main__":
                 x["review_date"] = date
                 x = Review(**x)
                 db.session.add(x)
-         db.session.commit()
+            db.session.commit()
 
