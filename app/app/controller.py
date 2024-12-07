@@ -5,4 +5,5 @@ from app import app, db, dao
 
 #trang chu
 def index():
-    return render_template("index.html")
+    reviews = dao.load_reviews()
+    return render_template("index.html", reviews=reviews)
