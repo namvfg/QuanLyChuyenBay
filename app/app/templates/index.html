@@ -15,7 +15,7 @@
                 </div>
                 <div class="col-md-7 border border-dark m-3 inner-col align-self-center bg-white">
                     <form action="">
-                        <div class="mb-5 mt-3">
+                        <div class="mb-5 mt-4">
                             <label for="start_point" class="mb-1 ps-1">Nơi đi</label>
                             <input type="text" class="form-control" id="start_point" placeholder="Nhập nơi đi ..."
                                    name="start_point">
@@ -48,7 +48,7 @@
                         {% for review in reviews %}
                         <div class="swiper-slide d-flex justify-content-center flex-column">
                             <div class="mt-1 " style="width:60%; height: 70%">
-                                <img class="mb-3" style="width: 100%"
+                                <img class="mb-3" style="width: 350px; height: 200px"
                                      src="{{ review.image }}"
                                      alt="Card image">
                             </div>
@@ -83,8 +83,7 @@
             </div>
         </div>
         <!-- Swiper JS -->
-        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-        <script src="{{ url_for('static', filename='js/slideshow.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/review.js') }}"></script>
     </div>
 </div>
 <div class="border border-dark second-row mb-3 bg-white">
@@ -115,32 +114,42 @@
         </ul>
     </div>
 </div>
-<div class="row third-row border border-dark mb-3 bg-white flex-nowrap">
-    <div class="col-md-5 col-12 d-flex justify-content-center flex-column ms-4">
-        <h1>Thông tin quan trọng</h1>
-        <p>Cập nhật thông tin thường xuyên để không bỏ lỡ những điều quan trọng</p>
-        <ul class="pagination">
-            <li class="page-item"><a class="page-link" href="#"><i class="fa-solid fa-arrow-left"></i></a></li>
-            {% for i in range (1, pages_notification + 1) %}
-            <li class="page-item"><a class="page-link" href="/?page_notification={{ i }}">{{ i }}</a></li>
-            {% endfor %}
-            <li class="page-item"><a class="page-link" href="#"><i class="fa-solid fa-arrow-right"></i></a></li>
-        </ul>
+<div class="third-row border border-dark mb-3 bg-white flex-nowrap">
+    <div class="">
+        <h1 class="text-center mt-4">Thông tin quan trọng</h1>
+        <p class="text-center">Cập nhật thông tin thường xuyên để không bỏ lỡ những điều quan trọng</p>
+
     </div>
-    <div class="col-md-7 col-12 ms-5 mb-2 row ">
-        {% for notification in notifications %}
-        <div class="card ms-3 mt-3 mb-3 border border-dark col-md-5" style="height: 45%; width: 40%">
-            <div style="height: 60%">
-            <img class="mt-1" style="width:100%"
-                 src="{{ notification.image }}"
-                 alt="Card image">
+    <div class="">
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper">
+                {% for notification in notifications %}
+                <div class="swiper-slide">
+                    <div class="card mt-3 mb-3 border border-dark col-md-5" style="height: 370px; width: 90%">
+                        <div style="height: 200px">
+                            <img class=" card-image-top" style="width:100%"
+                                 src="{{ notification.image }}"
+                                 alt="Card image">
+                        </div>
+                        <div class="mt-1">
+                            <div style="height: 60px" class="mt-1">
+                                <h4 class="text-center card-title">{{ notification.title }}</h4>
+                            </div>
+                            <p class="text-center card-text">{{ notification.content }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
             </div>
-            <div class="mt-3">
-                <h4 class="text-center">{{ notification.title }}</h4>
-                <p class="text-center">{{ notification.content }}</p>
+            <div class="mt-5">
+                <div class="swiper-pagination"></div>
             </div>
         </div>
-        {% endfor %}
+
+        <!-- Swiper JS -->
+        <script src="{{ url_for('static', filename='js/notification.js') }}"></script>
+
     </div>
+</div>
 </div>
 {% endblock %}

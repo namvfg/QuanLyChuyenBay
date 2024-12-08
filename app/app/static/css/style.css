@@ -7,6 +7,14 @@ body {
     background-color: var(--primary-color);
 }
 
+ body {
+      font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      color: #000;
+      margin: 0;
+      padding: 0;
+    }
+
 .btn-primary {
     background-color: var(--primary-color);
     border-color: var(--secondary_color);
@@ -65,7 +73,7 @@ body .second-row{
 }
 
 body .third-row{
-    height: 750px;
+    height: 600px;
     width: 103%;
     margin-left: -12px
 }

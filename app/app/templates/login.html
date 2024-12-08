@@ -1,0 +1,41 @@
+{% extends 'layout/base.html' %}
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-center login-form ">
+    <div class="bg-white mb-3 d-flex justify-content-center border border-dark" style="width:50%">
+        <form method="post">
+            <div class="login-box">
+                <div class="login-header">
+                    <header>Đăng nhập</header>
+                </div>
+                <div class="input-box">
+                    <input type="text" class="input-field" placeholder="Tên đăng nhập" name="user_name" id="user_name" autocomplete="off"
+                           required>
+                </div>
+                <div class="input-box">
+                    <input type="password" class="input-field" placeholder="Mật khẩu" name="password" id="password" autocomplete="off"
+                           required>
+                </div>
+                <div class="forgot">
+                    <section>
+                        <input type="checkbox" id="check">
+                        <label for="check">Remember me</label>
+                    </section>
+                    <section>
+                        <a href="#">Quên mật khẩu</a>
+                    </section>
+                </div>
+                <div class="input-submit">
+                    <button type="submit" class="submit-btn" id="submit"></button>
+                    <label for="submit">Đăng nhập</label>
+                </div>
+                <div class="sign-up-link">
+                    <p>Chưa có tài khoản? <a href="/register">Đăng ký</a></p>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

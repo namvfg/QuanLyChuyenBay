@@ -252,19 +252,23 @@ if __name__ == "__main__":
         #         x = Review(**x)
         #         db.session.add(x)
         #     db.session.commit()
-        with open("%s/data/notification.json" %app.root_path, encoding="utf-8") as f2:
-            data = json.load(f2)
-             for x in data:
-                date = datetime.now()
-                x = Notification(**x)
-                x.posting_date = date
-                db.session.add(x)
-             db.session.commit()
+        # with open("%s/data/notification.json" %app.root_path, encoding="utf-8") as f2:
+        #      data = json.load(f2)
+        #      for x in data:
+        #         date = datetime.now()
+        #         x = Notification(**x)
+        #         x.posting_date = date
+        #         db.session.add(x)
+        #      db.session.commit()
             
         import hashlib
         password = str(hashlib.md5('123456'.encode('utf-8')).digest())
-        u = AdminWebsite(first_name='Dat', last_name='Nguyen', user_name='admin', password=password)
-        db.session.add(u)
+        # u = AdminWebsite(first_name='Dat', last_name='Nguyen', user_name='admin', password=password)
+        # db.session.add(u)
+        customer = Customer(first_name='Dun', last_name='Nguyen', user_name='customer', password=password,
+                     avatar="https://res.cloudinary.com/dcee16rsp/image/upload/v1732182639/My%20Brand/deadlock_rz3for.jpg",
+                     id_card_number="123456", phone_number="123456", email="123@gmail.com")
+        db.session.add(customer)
         db.session.commit()
            
 
