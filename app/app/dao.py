@@ -14,8 +14,6 @@ def load_notifications(page=1):
 
     return notifications.all()
 
-
-    return 0
 #đếm số notifications
 def count_notifications():
     return Notification.query.count()
