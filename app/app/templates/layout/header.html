@@ -14,13 +14,32 @@
         </ul>
 
         <ul class="navbar-nav ms-auto">
-             <li class="nav-item ">
-                <a class="nav-link" href="#"><button type="button" class="btn btn-outline-primary btn-pattern-custom btn-navbar-fixed-size">Đăng nhập</button></a>
+            {% if current_user.is_authenticated %}
+            <li class="nav-item">
+                <a class="nav-link text-danger" href="/"><button class="btn btn-outline-primary">
+                    <img src="{{ current_user.avatar }}" width="25" class="rounded-circle"
+                         alt="{{ current_user.first_name }}">
+                    Chào <span class="text-info">{{ current_user.first_name }}</span>
+                </button></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-success" href="/logout"><button class="btn btn-primary">Đăng xuất</button></a>
+            </li>
+            {% else %}
+            <li class="nav-item ">
+                <a class="nav-link" href="/login">
+                    <button type="button" class="btn btn-outline-primary btn-pattern-custom btn-navbar-fixed-size">Đăng
+                        nhập
+                    </button>
+                </a>
             </li>
             <li class="nav-item me-3">
-                <a class="nav-link text-white" href="#"><button type="button" class="btn btn-primary btn-pattern-custom btn-navbar-fixed-size">Đăng ký</button></a>
+                <a class="nav-link text-white" href="/register">
+                    <button type="button" class="btn btn-primary btn-pattern-custom btn-navbar-fixed-size">Đăng ký
+                    </button>
+                </a>
             </li>
-
+            {% endif %}
         </ul>
     </div>
 </nav>

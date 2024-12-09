@@ -158,9 +158,8 @@ class AdminWebsite(User):
 # customer
 class Customer(User):
     customer_id = Column(Integer, ForeignKey(User.id), primary_key=True)
-    id_card_number = Column(String(20), nullable=False, unique=True)
-    phone_number = Column(String(15), nullable=False)
-    email = Column(String(50), nullable=False)
+    phone_number = Column(String(10), unique=True, nullable=False)
+    email = Column(String(50), unique=True, nullable=False)
     avatar = Column(String(100))
 
     receipts = relationship("Receipt", backref="receipts_customer", lazy=True)
@@ -242,23 +241,34 @@ class Rule(BaseModel):
 if __name__ == "__main__":
     with app.app_context():
 
-        #db.create_all()
+        # db.create_all()
+        # with open("%s/data/review.json" %app.root_path, encoding="utf-8") as f1:
+        #     data = json.load(f1)
+        #     for x in data:
+        #         date = x["review_date"]
+        #         date = datetime.fromisoformat(date)
+        #         x["review_date"] = date
+        #         x = Review(**x)
+        #         db.session.add(x)
+        #     db.session.commit()
+        # with open("%s/data/notification.json" %app.root_path, encoding="utf-8") as f2:
+        #      data = json.load(f2)
+        #      for x in data:
+        #         date = datetime.now()
+        #         x = Notification(**x)
+        #         x.posting_date = date
+        #         db.session.add(x)
+        #      db.session.commit()
+            
         import hashlib
-
         password = str(hashlib.md5('123456'.encode('utf-8')).digest())
-        u = AdminWebsite(first_name='Dat', last_name='Nguyen', user_name='admin', password=password)
-        db.session.add(u)
-        with open("%s/data/review.json" %app.root_path, encoding="utf-8") as f:
-            data = json.load(f)
-            for x in data:
-                date = x["review_date"]
-                date = datetime.fromisoformat(date)
-                x["review_date"] = date
-                x = Review(**x)
-                db.session.add(x)
-            db.session.commit()
+        # u = AdminWebsite(first_name='Dat', last_name='Nguyen', user_name='admin', password=password)
+        # db.session.add(u)
+        customer = Customer(first_name='Dun', last_name='Nguyen', user_name='customer', password=password,
+                     avatar="https://res.cloudinary.com/dcee16rsp/image/upload/v1732182639/My%20Brand/deadlock_rz3for.jpg",
+                     id_card_number="123456", phone_number="123456", email="123@gmail.com")
+        db.session.add(customer)
 
-        password = str(hashlib.md5('12345'.encode('utf-8')).digest())
         u = Staff(first_name='Dat', last_name='Nguyen', user_name='staff', password=password)
         db.session.add(u)
         db.session.commit()
