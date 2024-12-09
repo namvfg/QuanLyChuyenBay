@@ -242,7 +242,7 @@ class Rule(BaseModel):
 if __name__ == "__main__":
     with app.app_context():
 
-        # db.create_all()
+        #db.create_all()
         import hashlib
 
         password = str(hashlib.md5('123456'.encode('utf-8')).digest())
@@ -258,3 +258,7 @@ if __name__ == "__main__":
                 db.session.add(x)
             db.session.commit()
 
+        password = str(hashlib.md5('12345'.encode('utf-8')).digest())
+        u = Staff(first_name='Dat', last_name='Nguyen', user_name='staff', password=password)
+        db.session.add(u)
+        db.session.commit()

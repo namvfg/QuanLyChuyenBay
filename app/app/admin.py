@@ -1,6 +1,6 @@
 from app import app, db, dao
 from app.models import Manufacturer, SeatClass, Seat, Airplane, Airport, Route, IntermediateAirport, Flight, SubFlight, TicketPrice, User, AdminWebsite, Customer, Staff, StaffRole, Receipt, Passenger, Ticket, Review, Notification, Rule
-from flask_admin import Admin, BaseView, expose
+from flask_admin import Admin, BaseView, expose, AdminIndexView
 from flask_admin.contrib.sqla import ModelView
 from flask_login import current_user
 
@@ -85,8 +85,19 @@ class NotificationView(ModelView):
 class RuleView(ModelView):
     column_list = ["id", "name", "value", "rules_admin"]
 
+#đếm số lượng vé
+class MyAdminView(AdminIndexView):
+    @expose("/")
+    def index(self):
+        tickets = dao.count_tickets()
+        passengers = dao.count_passengers()
+        total_revenue = dao.get_total_revenue()
+        return self.render("admin/index.html", tickets=tickets, passengers = passengers,total_revenue = total_revenue)
 
-admin = Admin(app=app, name="Trang quản trị", template_mode="bootstrap4")
+
+
+admin = Admin(app=app, name="Trang quản trị", template_mode="bootstrap4",index_view=MyAdminView())
+
 
 admin.add_view(ManufacturerView(Manufacturer, db.session))
 admin.add_view(AirplaneView(Airplane, db.session))
