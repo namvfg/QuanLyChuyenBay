@@ -158,9 +158,8 @@ class AdminWebsite(User):
 # customer
 class Customer(User):
     customer_id = Column(Integer, ForeignKey(User.id), primary_key=True)
-    id_card_number = Column(String(20), nullable=False, unique=True)
-    phone_number = Column(String(15), nullable=False)
-    email = Column(String(50), nullable=False)
+    phone_number = Column(String(10), unique=True, nullable=False)
+    email = Column(String(50), unique=True, nullable=False)
     avatar = Column(String(100))
 
     receipts = relationship("Receipt", backref="receipts_customer", lazy=True)
@@ -269,9 +268,7 @@ if __name__ == "__main__":
                      avatar="https://res.cloudinary.com/dcee16rsp/image/upload/v1732182639/My%20Brand/deadlock_rz3for.jpg",
                      id_card_number="123456", phone_number="123456", email="123@gmail.com")
         db.session.add(customer)
+
+        u = Staff(first_name='Dat', last_name='Nguyen', user_name='staff', password=password)
+        db.session.add(u)
         db.session.commit()
-           
-
-       
-
-

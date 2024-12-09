@@ -1,0 +1,174 @@
+{% extends 'staff/index.html' %}
+
+{% block content %}
+<head>
+
+    <style>
+        .scheduling-box{
+            max-width: 400px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<div class="container mt-5">
+    <div class="card p-3 shadow-sm scheduling-box">
+        <div class="d-flex align-items-center">
+            <div>
+                <h5 class="mb-1 "><i class="fa-regular fa-calendar"></i>    LẬP LỊCH CHUYẾN BAY<i class="fa-solid fa-plane ms-3"></i>
+                </h5>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container border border-dark bg-white mb-5">
+    <div class="form-container">
+        <form>
+            <!-- Dòng 1: Mã chuyến bay -->
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    <label for="flight-code" class="form-label mt-2">Mã chuyến bay</label>
+                    <input type="text" class="form-control border border-dark" id="flight-code" placeholder="Nhập mã chuyến bay">
+                </div>
+            </div>
+            <!-- Dòng 2: Sân bay đi và sân bay đến -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="departure" class="form-label">Sân bay đi</label>
+                <select class="form-select" id="departure" aria-label="Sân bay đi">
+                    <option selected value="Sân bay Nội Bài">Sân bay Nội Bài</option>
+                    <option value="Sân bay Tân Sơn Nhất">Sân bay Tân Sơn Nhất</option>
+                    <option value="Sân bay Đà Nẵng">Sân bay Đà Nẵng</option>
+                </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="arrival" class="form-label">Sân bay đến</label>
+                <select class="form-select" id="arrival" aria-label="Sân bay đến">
+                    <option selected value="Sân bay Tân Sơn Nhất">Sân bay Tân Sơn Nhất</option>
+                    <option value="Sân bay Nội Bài">Sân bay Nội Bài</option>
+                    <option value="Sân bay Đà Nẵng">Sân bay Đà Nẵng</option>
+                </select>
+                </div>
+            </div>
+
+            <!-- Dòng 3: Ngày – giờ và Thời gian bay -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="datetime" class="form-label ">Ngày – giờ</label>
+                    <input type="datetime-local" class="form-control border border-dark" id="datetime">
+                </div>
+            </div>
+
+            <!-- Dòng 4: Số lượng ghế hạng 1 và hạng 2 -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="first-class-seats" class="form-label">Số lượng ghế hạng 1</label>
+                    <input type="number" class="form-control border border-dark" id="first-class-seats" placeholder="Nhập số lượng ghế hạng 1">
+
+                </div>
+                <div class="col-md-6">
+                    <label for="second-class-seats" class="form-label">Số lượng ghế hạng 2</label>
+                    <input type="number" class="form-control border border-dark" id="second-class-seats" placeholder="Nhập số lượng ghế hạng 2">
+                </div>
+            </div>
+
+            <!-- Dòng 5: Sân bay trung gian và thời gian dừng -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="IntermediateAirport1" class="form-label">Sân bay trung gian 1</label>
+                    <select class="form-select border border-dark" id="IntermediateAirport1" aria-label="Sân bay đến">
+                    <option selected value="Sân bay Tân Sơn Nhất">Sân bay Tân Sơn Nhất</option>
+                    <option value="Sân bay Nội Bài">Sân bay Nội Bài</option>
+                    <option value="Sân bay Đà Nẵng">Sân bay Đà Nẵng</option>
+                </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="IntermediateAirport2" class="form-label">Sân bay trung gian 2</label>
+                    <select class="form-select border border-dark" id="IntermediateAirport2" aria-label="Sân bay đến">
+                    <option selected value="Sân bay Tân Sơn Nhất">Sân bay Tân Sơn Nhất</option>
+                    <option value="Sân bay Nội Bài">Sân bay Nội Bài</option>
+                    <option value="Sân bay Đà Nẵng">Sân bay Đà Nẵng</option>
+                </select>
+                </div>
+            </div>
+            <!-- Dòng 6: Ghi chú -->
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    <label for="notes" class="form-label">Ghi chú</label>
+                    <textarea class="form-control border border-dark" id="notes" rows="3" placeholder="Nhập ghi chú"></textarea>
+                </div>
+            </div>
+
+            <!-- Dòng 7: Nút Lưu và Xóa -->
+            <div class="row mb-5">
+                <div class="col-md-6">
+                    <button type="reset" class="btn btn-danger w-100">Xóa</button>
+                </div>
+                <div class="col-md-6">
+                    <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#additionalInfoModal">Lưu</button>
+                </div>
+
+            </div>
+        </form>
+
+<!-- Modal -->
+<div class="modal fade" id="additionalInfoModal" tabindex="-1" aria-labelledby="additionalInfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="additionalInfoModalLabel">Thông tin bổ sung</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Hiển thị thông tin tuyến bay -->
+                <div class="row border border-dark mb-2">
+                    <div class="col-md-6">
+                        <p><strong>Từ:</strong> sân bay đi </p>
+                        <p><strong>Đến:</strong> sân bay trung gian thứ 1</p>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="flightTime" class="form-label">Thời gian bay:</label>
+                        <input type="number" class="form-control" id="flightTime" name="flight_time" placeholder="Nhập thời gian bay">
+                    </div>
+                </div>
+                <div class="row border border-dark mb-2">
+                    <div class="col-md-6">
+                        <p><strong>Từ:</strong> sân bay trung gian thứ 1 </p>
+                        <p><strong>Đến:</strong> sân bay trung gian thứ 2</p>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="flightTime" class="form-label">Thời gian bay:</label>
+                        <input type="number" class="form-control" id="flightTime1" name="flight_time" placeholder="Nhập thời gian bay">
+
+                        <label for="stopTime1" class="form-label mt-3">Thời gian dừng:</label>
+                        <input type="number" class="form-control mb-2" id="stopTime1" name="stop_time" placeholder="Nhập thời gian dừng">
+                    </div>
+                </div>
+                <div class="row border border-dark">
+                    <div class="col-md-6">
+                        <p><strong>Từ:</strong> sân bay trung gian thứ 2 </p>
+                        <p><strong>Đến:</strong> sân bay đến</p>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="flightTime" class="form-label">Thời gian bay:</label>
+                        <input type="number" class="form-control" id="flightTime2" name="flight_time" placeholder="Nhập thời gian bay">
+
+                        <label for="stopTime2" class="form-label mt-3">Thời gian dừng:</label>
+                        <input type="number" class="form-control mb-2" id="stopTime2" name="stop_time" placeholder="Nhập thời gian dừng">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="submit" class="btn btn-primary">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+    </div>
+</div>
+</body>
+
+
+{% endblock %}
