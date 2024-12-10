@@ -1,5 +1,6 @@
 
 import hashlib
+from flask import request, jsonify
 from app.models import Ticket, Passenger, TicketPrice
 from app import app, db
 from app.models import User, Customer
@@ -11,14 +12,33 @@ def auth_user(user_name, password):
     return User.query.filter(User.user_name.__eq__(user_name.strip()),
                              User.password.__eq__(password)).first()
 
+#=================================Validate đăng ký======================================#
+#check đã tồn tại user_name hay chưa
+def get_user_by_user_name(user_name):
+    return User.query.filter_by(user_name=user_name).first()
+
+def get_customer_by_phone_number(phone_number):
+    return Customer.query.filter_by(phone_number=phone_number).first()
+
+def get_customer_by_email(email):
+    return Customer.query.filter_by(email=email).first()
+
+def register(user_name, password, first_name, last_name, phone_number, email, avatar):
+    password = str(hashlib.md5(password.strip().encode("utf-8")).digest())
+    customer = Customer(user_name=user_name, password=password, first_name=first_name, last_name=last_name,
+                        phone_number=phone_number, email=email, avatar=avatar)
+    db.session.add(customer)
+    db.session.commit()
+
+#end==============================Validate đăng ký======================================#
 
 #lấy thông tin người dùng
 def get_user_by_id(user_id):
     return User.query.get(user_id)
-
+  
+#xác nhận customer
 def auth_customer(user_name, password):
     password = str(hashlib.md5(password.strip().encode('utf-8')).digest())
-
     return Customer.query.filter(Customer.user_name.__eq__(user_name.strip()),
                              Customer.password.__eq__(password)).first()
 
