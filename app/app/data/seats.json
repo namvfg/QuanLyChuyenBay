@@ -1,0 +1,44 @@
+[
+        {
+            "name": "B1-01",
+            "active": true,
+            "seat_class_id": 1,
+            "airplane_id": 1,
+            "id": 1
+        },
+        {
+            "name": "B2-01",
+            "active": false,
+            "seat_class_id": 2,
+            "airplane_id": 1,
+            "id": 2
+        },
+        {
+            "name": "A1-01",
+            "active": false,
+            "seat_class_id": 1,
+            "airplane_id": 2,
+            "id": 3
+        },
+        {
+            "name": "A2-01",
+            "active": false,
+            "seat_class_id": 1,
+            "airplane_id": 2,
+            "id": 4
+        },
+        {
+            "name": "E1-01",
+            "active": true,
+            "seat_class_id": 1,
+            "airplane_id": 3,
+            "id": 5
+        },
+        {
+            "name": "E2-01",
+            "active": false,
+            "seat_class_id": 2,
+            "airplane_id": 3,
+            "id": 6
+        }
+    ]

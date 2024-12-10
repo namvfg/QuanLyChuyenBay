@@ -1,10 +1,11 @@
 
 import hashlib
-from app.models import Ticket, Passenger, TicketPrice
+from typing import TextIO
+
 from app import app, db
 from app.models import User, Customer
-from app.models import Review, Notification
-
+from app.models import Review, Notification,Ticket,TicketPrice,Passenger
+import json
 #xác nhận user
 def auth_user(user_name, password):
     password = str(hashlib.md5(password.strip().encode('utf-8')).digest())
@@ -56,3 +57,4 @@ def load_notifications():
 #đếm số notifications
 def count_notifications():
     return Notification.query.count()
+

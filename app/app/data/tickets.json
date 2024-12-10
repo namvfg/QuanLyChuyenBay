@@ -1,0 +1,26 @@
+[
+        {
+            "seat_id": 1,
+            "flight_id": 1,
+            "passenger_id": 1,
+            "ticket_price_id": 1,
+            "receipt_id": 1,
+            "id": 1
+        },
+        {
+            "seat_id": 2,
+            "flight_id": 1,
+            "passenger_id": 3,
+            "ticket_price_id": 2,
+            "receipt_id": 1,
+            "id": 2
+        },
+        {
+            "seat_id": 1,
+            "flight_id": 2,
+            "passenger_id": 5,
+            "ticket_price_id": 3,
+            "receipt_id": 1,
+            "id": 3
+        }
+    ]

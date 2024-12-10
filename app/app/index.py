@@ -1,7 +1,7 @@
 
 from flask import request, redirect, render_template
 from flask_login import login_user
-from app import app, controller, login, dao,admin
+from app import app, controller, login, dao,admin,db
 
 
 # load trang chủ
@@ -31,10 +31,10 @@ app.add_url_rule("/logout", "logout", controller.logout_my_user)
 def load_user(user_id):
     return dao.get_user_by_id(user_id)
 
-@login.user_loader
-def load_user(customer_id):
-    # Tìm Customer trong cơ sở dữ liệu
-    return dao.get_customer_by_id(customer_id)
+# @login.user_loader
+# def load_user(customer_id):
+#     # Tìm Customer trong cơ sở dữ liệu
+#     return dao.get_customer_by_id(customer_id)
 
 #load trang chu admin
 app.add_url_rule("/login-admin", "login_admin", controller.admin_login, methods=['post'])

@@ -35,11 +35,12 @@ def logout_my_user():
 
 #trang chu admin
 def admin_login():
-    username = request.form['username']
+    user_name = request.form['username']
     password = request.form['password']
 
-    user = dao.auth_user(username=username, password=password)
+    user = dao.auth_user(user_name=user_name, password=password)
     if user:
         login_user(user)
+        print(current_user)
     return redirect('/admin')
 
