@@ -69,6 +69,7 @@ class Seat(BaseModel):
 class Airport(BaseModel):
     name = Column(String(50), nullable=False, unique=True)
     address = Column(String(100), nullable=False, unique=True)
+    image = Column(String(150), nullable=False)
 
     start_routes = relationship("Route", foreign_keys="Route.departure_airport_id", backref="departure_airport",
                                 lazy=True)
