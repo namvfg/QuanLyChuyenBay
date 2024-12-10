@@ -13,17 +13,22 @@ app.add_url_rule("/login", "login", controller.login_my_user, methods=["POST", "
 #load trang đăng ký
 app.add_url_rule("/register", "register", controller.register, methods=["POST", "GET"])
 
+# #api đăng ký
+# app.add_url_rule("/api/validate_register", "validate_register", controller.validate_register, methods=[ "POST"])
+
 #load out
 app.add_url_rule("/logout", "logout", controller.logout_my_user)
 
 @login.user_loader
-def load_user(user_id):
-    return dao.get_user_by_id(user_id)
+def load_user(id):
+    #nếu là customer
+    if dao.get_customer_by_id(id):
+        return dao.get_customer_by_id(id)
+    else:
+    # nếu là user
+        return dao.get_user_by_id(id)
 
-@login.user_loader
-def load_user(customer_id):
-    # Tìm Customer trong cơ sở dữ liệu
-    return dao.get_customer_by_id(customer_id)
+
 
 #load trang chu admin
 app.add_url_rule("/login-admin", "login_admin", controller.admin_login, methods=['post'])

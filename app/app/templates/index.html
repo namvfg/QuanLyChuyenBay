@@ -1,5 +1,15 @@
 {% extends 'layout/base.html' %}
 
+{% block css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<link rel="stylesheet" href="{{ url_for('static', filename='css/notification.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/review.css') }}">
+{% endblock %}
+
+{% block js %}
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+{% endblock %}
+
 {% block content %}
 <div class="mb-3">
     <div class="row gap-3 flex-nowrap">
@@ -47,7 +57,7 @@
                     <div class="swiper-wrapper ">
                         {% for review in reviews %}
                         <div class="swiper-slide d-flex justify-content-center flex-column">
-                            <div class="mt-1 " style="width:60%; height: 70%">
+                            <div class="mt-1 me-5" style="width:60%; height: 70%">
                                 <img class="mb-3" style="width: 350px; height: 200px"
                                      src="{{ review.image }}"
                                      alt="Card image">
@@ -81,9 +91,10 @@
                     <div class="swiper-button-prev"></div>
                 </div>
             </div>
+            <!-- Swiper JS -->
+            <script src="{{ url_for('static', filename='js/review.js') }}"></script>
         </div>
-        <!-- Swiper JS -->
-        <script src="{{ url_for('static', filename='js/review.js') }}"></script>
+
     </div>
 </div>
 <div class="border border-dark second-row mb-3 bg-white">
@@ -145,11 +156,10 @@
                 <div class="swiper-pagination"></div>
             </div>
         </div>
-
-        <!-- Swiper JS -->
-        <script src="{{ url_for('static', filename='js/notification.js') }}"></script>
-
     </div>
+    <!-- Swiper JS -->
+    <script src="{{ url_for('static', filename='js/notification.js') }}"></script>
 </div>
 </div>
+
 {% endblock %}
