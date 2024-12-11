@@ -1,11 +1,11 @@
 
 import hashlib
+from typing import TextIO
 from flask import request, jsonify
-from app.models import Ticket, Passenger, TicketPrice, Flight, Route, Airport
 from app import app, db
 from app.models import User, Customer
-from app.models import Review, Notification
-
+from app.models import Review, Notification, Ticket, TicketPrice, Passenger, Flight, Route, Airport
+import json
 #xác nhận user
 def auth_user(user_name, password):
     password = str(hashlib.md5(password.strip().encode('utf-8')).digest())

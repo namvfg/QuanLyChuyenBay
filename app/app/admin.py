@@ -55,7 +55,7 @@ class AdminWebsiteView(UserView):
 
 #khách hàng
 class CustomerView(UserView):
-    column_list = ["id", "first_name", "last_name", "username", "password"] + ["id_card_number", "phone_number", "email", "avatar", "receipts"]
+    column_list = ["id", "first_name", "last_name", "username", "password"] + ["phone_number", "email", "avatar", "receipts"]
 
 #nhân viên
 class StaffView(UserView):

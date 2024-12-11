@@ -1,7 +1,7 @@
 
 from flask import request, redirect, render_template
 from flask_login import login_user
-from app import app, controller, login, dao,admin
+from app import app, controller, login, dao,admin,db
 
 
 # load trang chủ

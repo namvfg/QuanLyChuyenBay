@@ -1,0 +1,38 @@
+[
+  {
+            "name": "AirBus",
+            "id": 2,
+            "airplanes": [
+                {
+                    "id": 2,
+                    "name": "Airbus A320",
+                    "mfg_date": "2020-12-22 14:24:00",
+                    "manufacturer_id": 2
+                }
+            ]
+        },
+        {
+            "name": "Boeing",
+            "id": 1,
+            "airplanes": [
+                {
+                    "id": 1,
+                    "name": "Boeing 737",
+                    "mfg_date": "2019-12-03 14:23:00",
+                    "manufacturer_id": 1
+                }
+            ]
+        },
+        {
+            "name": "Embraer",
+            "id": 3,
+            "airplanes": [
+                {
+                    "id": 3,
+                    "name": "Embraer B01",
+                    "mfg_date": "2018-12-31 14:24:00",
+                    "manufacturer_id": 3
+                }
+            ]
+        }
+]
