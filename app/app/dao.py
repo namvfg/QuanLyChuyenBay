@@ -1,7 +1,7 @@
 
 import hashlib
 from flask import request, jsonify
-from app.models import Ticket, Passenger, TicketPrice
+from app.models import Ticket, Passenger, TicketPrice, Flight, Route, Airport
 from app import app, db
 from app.models import User, Customer
 from app.models import Review, Notification
@@ -72,7 +72,10 @@ def load_reviews():
 def load_notifications():
     return Notification.query
 
-
 #đếm số notifications
 def count_notifications():
     return Notification.query.count()
+
+#đọc lấy dữ liệu để trả ra sau khi tìm kiếm
+def load_flight_search_result(start_point=None, end_point=None, flight_date=None):
+    query = db.session.query

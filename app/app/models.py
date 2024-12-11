@@ -120,7 +120,7 @@ class Flight(BaseModel):
 # chuyen bay nho
 class SubFlight(BaseModel):
     order = Column(Integer, nullable=False)
-    flight_time = Column(Integer, nullable=False)
+    flight_time = Column(Integer, nullable=False) #xóa
     flying_duration = Column(Integer, nullable=False)
     waiting_duration = Column(Integer, nullable=False, default=0)
 
