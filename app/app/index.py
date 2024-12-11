@@ -1,7 +1,7 @@
 
 from flask import request, redirect, render_template
 from flask_login import login_user
-from app import app, controller, login, dao,admin
+from app import app, controller, login, dao,admin,db
 
 
 # load trang chủ
@@ -38,7 +38,6 @@ def load_user(id):
     else:
     # nếu là user
         return dao.get_user_by_id(id)
-
 
 
 #load trang chu admin

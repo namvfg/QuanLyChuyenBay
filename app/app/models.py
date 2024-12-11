@@ -16,6 +16,8 @@ class BaseModel(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
 
 
+
+
 # hang san xuat
 class Manufacturer(BaseModel):
     name = Column(String(100), nullable=False, unique=True)
@@ -24,6 +26,8 @@ class Manufacturer(BaseModel):
 
     def __str__(self):
         return self.name
+
+
 
 
 # may bay
@@ -40,6 +44,7 @@ class Airplane(BaseModel):
         return self.name
 
 
+
 # hang ghe
 class SeatClass(BaseModel):
     name = Column(String(30), nullable=False, unique=True)
@@ -49,6 +54,8 @@ class SeatClass(BaseModel):
 
     def __str__(self):
         return self.name
+
+
 
 
 # cho ngoi
@@ -79,6 +86,8 @@ class Airport(BaseModel):
         return self.name
 
 
+
+
 # Tuyen bay
 class Route(BaseModel):
     note = Column(Text)
@@ -90,6 +99,7 @@ class Route(BaseModel):
     flights = relationship("Flight", backref="flights_route", lazy=True)
 
 
+
 # san bay trung gian
 class IntermediateAirport(BaseModel):
     order = Column(Integer, nullable=False)
@@ -97,6 +107,8 @@ class IntermediateAirport(BaseModel):
 
     airport_id = Column(Integer, ForeignKey(Airport.id), nullable=False)
     route_id = Column(Integer, ForeignKey(Route.id), nullable=False)
+
+
 
 
 # chuyen bay
@@ -116,6 +128,8 @@ class Flight(BaseModel):
         return self.name
 
 
+
+
 # chuyen bay nho
 class SubFlight(BaseModel):
     order = Column(Integer, nullable=False)
@@ -126,6 +140,8 @@ class SubFlight(BaseModel):
     flight_id = Column(Integer, ForeignKey(Flight.id), nullable=False)
 
 
+
+
 # gia ve
 class TicketPrice(BaseModel):
     price = Column(Float, nullable=False)
@@ -134,6 +150,7 @@ class TicketPrice(BaseModel):
     flight_id = Column(Integer, ForeignKey(Flight.id), nullable=False)
 
     tickets = relationship("Ticket", backref="tickets_ticket_price", lazy=True)
+
 
 
 # user
@@ -180,6 +197,8 @@ class Staff(User):
     receipts = relationship("Receipt", backref="receipts_seller", lazy=True)
 
 
+
+
 # hoa don
 class Receipt(BaseModel):
     pay_date = Column(DateTime, default=datetime.now())
@@ -188,6 +207,8 @@ class Receipt(BaseModel):
     seller_id = Column(Integer, ForeignKey(Staff.staff_id), nullable=False)
 
     tickets = relationship("Ticket", backref="tickets_receipt", lazy=True)
+
+
 
 
 # nguoi di
@@ -203,6 +224,8 @@ class Passenger(BaseModel):
         return self.first_name
 
 
+
+
 # ve may bay
 class Ticket(BaseModel):
     seat_id = Column(Integer, ForeignKey(Seat.id), nullable=False)
@@ -210,6 +233,7 @@ class Ticket(BaseModel):
     passenger_id = Column(Integer, ForeignKey(Passenger.id), nullable=False, unique=True)
     ticket_price_id = Column(Integer, ForeignKey(TicketPrice.id), nullable=False)
     receipt_id = Column(Integer, ForeignKey(Receipt.id), nullable=False)
+
 
 
 # review
@@ -241,6 +265,7 @@ if __name__ == "__main__":
     with app.app_context():
 
         db.create_all()
+
         with open("%s/data/review.json" %app.root_path, encoding="utf-8") as f1:
             data = json.load(f1)
             for x in data:
@@ -257,15 +282,17 @@ if __name__ == "__main__":
                 x = Notification(**x)
                 x.posting_date = date
                 db.session.add(x)
-             db.session.commit()
+            db.session.commit()
             
         import hashlib
+
         password = str(hashlib.md5('123456'.encode('utf-8')).digest())
         u = AdminWebsite(first_name='Dat', last_name='Nguyen', user_name='admin', password=password)
         db.session.add(u)
         customer = Customer(first_name='Dun', last_name='Nguyen', user_name='customer', password=password,
-                     avatar="https://res.cloudinary.com/dcee16rsp/image/upload/v1732182639/My%20Brand/deadlock_rz3for.jpg",
-                    phone_number="123456", email="123@gmail.com")
+                            avatar="https://res.cloudinary.com/dcee16rsp/image/upload/v1732182639/My%20Brand/deadlock_rz3for.jpg",
+                            phone_number="123456", email="123@gmail.com")
+        
         db.session.add(customer)
 
         u = Staff(first_name='Dat', last_name='Nguyen', user_name='staff', password=password)
