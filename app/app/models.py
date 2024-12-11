@@ -156,7 +156,7 @@ class TicketPrice(BaseModel):
 # user
 class User(BaseModel, UserMixin):
     first_name = Column(String(20), nullable=False)
-    last_name = Column(String(100))
+    last_name = Column(String(100), nullable=False)
     user_name = Column(String(20), unique=True, nullable=False)
     password = Column(String(50), nullable=False)
 
@@ -177,8 +177,7 @@ class Customer(User):
     customer_id = Column(Integer, ForeignKey(User.id), primary_key=True)
     phone_number = Column(String(10), unique=True, nullable=False)
     email = Column(String(50), unique=True, nullable=False)
-    avatar = Column(String(100))
-
+    avatar = Column(String(100), nullable=False)
     receipts = relationship("Receipt", backref="receipts_customer", lazy=True)
 
 
@@ -266,7 +265,8 @@ if __name__ == "__main__":
     with app.app_context():
 
         db.create_all()
-        with open("%s/data/review.json" % app.root_path, encoding="utf-8") as f1:
+
+        with open("%s/data/review.json" %app.root_path, encoding="utf-8") as f1:
             data = json.load(f1)
             for x in data:
                 date = x["review_date"]
@@ -275,15 +275,15 @@ if __name__ == "__main__":
                 x = Review(**x)
                 db.session.add(x)
             db.session.commit()
-        with open("%s/data/notification.json" % app.root_path, encoding="utf-8") as f2:
-            data = json.load(f2)
-            for x in data:
+        with open("%s/data/notification.json" %app.root_path, encoding="utf-8") as f2:
+             data = json.load(f2)
+             for x in data:
                 date = datetime.now()
                 x = Notification(**x)
                 x.posting_date = date
                 db.session.add(x)
             db.session.commit()
-
+            
         import hashlib
 
         password = str(hashlib.md5('123456'.encode('utf-8')).digest())
@@ -292,6 +292,7 @@ if __name__ == "__main__":
         customer = Customer(first_name='Dun', last_name='Nguyen', user_name='customer', password=password,
                             avatar="https://res.cloudinary.com/dcee16rsp/image/upload/v1732182639/My%20Brand/deadlock_rz3for.jpg",
                             phone_number="123456", email="123@gmail.com")
+        
         db.session.add(customer)
 
         u = Staff(first_name='Dat', last_name='Nguyen', user_name='staff', password=password)

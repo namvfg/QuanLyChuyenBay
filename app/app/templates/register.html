@@ -1,4 +1,80 @@
 {% extends 'layout/base.html' %}
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
+{% endblock %}
+
+{% block js %}
+
+{% endblock %}
 
 {% block content %}
+<div class="d-flex justify-content-center login-form ">
+    <div class="bg-white mb-3 d-flex justify-content-center border border-dark" style="width:50%">
+        <form action="/register" method="post" enctype="multipart/form-data" id="register-form">
+            <div class="login-box">
+                <div class="login-header">
+                    <header>Đăng ký</header>
+                </div>
+                <div class="input-box">
+                    <input type="text" class="input-field" placeholder="Tên đăng nhập" name="user_name" id="user_name"
+                           autocomplete="off"
+                           required>
+                </div>
+                <div class="input-box">
+                    <input type="password" class="input-field" placeholder="Mật khẩu" name="password" id="password"
+                           autocomplete="off"
+                           required>
+                </div>
+                <div class="input-box">
+                    <input type="password" class="input-field" placeholder="Xác nhận mật khẩu" name="confirm_password"
+                           id="confirm_password"
+                           autocomplete="off"
+                           required>
+                </div>
+                <div class="input-box">
+                    <input type="text" class="input-field" placeholder="Họ" name="last_name" id="last_name"
+                           autocomplete="off"
+                           required>
+                </div>
+                <div class="input-box">
+                    <input type="text" class="input-field" placeholder="Tên" name="first_name" id="first_name"
+                           autocomplete="off"
+                           required>
+                </div>
+                <div class="input-box">
+                    <input type="text" class="input-field" placeholder="Số điện thoại" name="phone_number"
+                           id="phone_number"
+                           autocomplete="off"
+                           required>
+                </div>
+                <div class="input-box">
+                    <input type="text" class="input-field" placeholder="Email" name="email" id="email"
+                           autocomplete="off"
+                           required>
+                </div>
+                <div class="form-floating mt-3 mb-3">
+                    <input type="file" class="form-control" id="avatar" name="avatar" required>
+                    <label for="avatar">Ảnh đại diện</label>
+                </div>
+
+                <div class="forgot">
+                    <section>
+
+                    </section>
+                    <section>
+                        <a href="#" class="text-primary">Điều khoản dịch vụ</a>
+                    </section>
+                </div>
+                <div class="input-submit">
+                    <button type="submit" class="submit-btn" id="submit_btn"></button>
+                    <label for="submit_btn">Đăng ký</label>
+                </div>
+                <div class="sign-up-link">
+                    <p>Đã có tài khoản? <a href="/login">Đăng nhập</a></p>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='js/register.js') }}"></script>
 {% endblock %}
