@@ -1,7 +1,7 @@
 {% extends 'layout/base.html' %}
 
 {% block css %}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/notification.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/review.css') }}">
 {% endblock %}
@@ -11,20 +11,51 @@
 {% endblock %}
 
 {% block content %}
-<div class="mb-3">
-    <div class="row gap-3 flex-nowrap">
-        <div class="col-md-7 col-12 border border-dark first-row bg-white">
-            <div class="row flex-nowrap align-items-center">
+<div class="mb-3 d-flex flex-column align-items-center">
+    <div class="row gap-3 flex-nowrap" style="width:100%">
+        <div class="col-md-7 col-12 border border-dark first-row bg-white" >
+            <div class="row  flex-nowrap align-items-center" >
                 <div class="col-md-4 inner-col d-flex align-items-center justify-content-center">
                     <div class="ps-3">
                         <h3>Tìm kiếm chuyến bay</h3>
                         <p>Tìm được chuyến bay phù hợp và bắt đầu bay thôi</p>
-                        <button class="btn btn-primary">Các qui định</button>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
+                            Các qui định
+                        </button>
+                        <!-- The Modal -->
+                        <div class="modal fade" id="myModal">
+                            <div class="modal-dialog modal-sm">
+                                <div class="modal-content">
+
+                                    <!-- Modal Header -->
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Qui định khi đặt vé</h4>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+
+                                    <!-- Modal body -->
+                                    <div class="modal-body">
+                                        <ul>
+                                            <li>Chỉ đặt được những chuyến bay còn chỗ</li>
+                                            <li>Chỉ đặt cho các chuyến bay trước 12h lúc khởi hành</li>
+                                        </ul>
+                                    </div>
+
+                                    <!-- Modal footer -->
+                                    <div class="modal-footer">
+                                         <p class="me-4">Copyright &copy 2024 Đông Thành Airline. All rights reserved.</p>
+                                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
-                <div class="col-md-7 border border-dark m-3 inner-col align-self-center bg-white">
-                    <form action="">
+                <div class="col-md-7 border border-dark m-3 inner-col align-self-center bg-white" >
+                    <form action="/search_result" method="get" style="width:100%">
                         <div class="mb-5 mt-4">
                             <label for="start_point" class="mb-1 ps-1">Nơi đi</label>
                             <input type="text" class="form-control" id="start_point" placeholder="Nhập nơi đi ..."
@@ -36,12 +67,12 @@
                                    name="end_point">
                         </div>
                         <div class="mb-5 mt-3">
-                            <label for="start_date" class="mb-1 ps-1">Ngày bay</label>
-                            <input type="date" class="form-control" id="start_date" placeholder="Chọn ngày bay ..."
-                                   name="end_point">
+                            <label for="flight_date" class="mb-1 ps-1">Ngày bay</label>
+                            <input type="date" class="form-control" id="flight_date" placeholder="Chọn ngày bay ..."
+                                   name="flight_date">
                         </div>
                         <div class="mb-5 mt-3 d-flex justify-content-center">
-                            <button type="submit" class="btn btn-outline-primary">Submit</button>
+                            <a href=""><button type="submit" class="btn btn-outline-primary">Tìm kiếm</button></a>
                         </div>
                     </form>
                 </div>

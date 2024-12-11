@@ -4,7 +4,7 @@ from typing import TextIO
 from flask import request, jsonify
 from app import app, db
 from app.models import User, Customer
-from app.models import Review, Notification, Ticket, TicketPrice, Passenger
+from app.models import Review, Notification, Ticket, TicketPrice, Passenger, Flight, Route, Airport
 import json
 #xác nhận user
 def auth_user(user_name, password):
@@ -72,8 +72,10 @@ def load_reviews():
 def load_notifications():
     return Notification.query
 
-
 #đếm số notifications
 def count_notifications():
     return Notification.query.count()
 
+#đọc lấy dữ liệu để trả ra sau khi tìm kiếm
+def load_flight_search_result(start_point=None, end_point=None, flight_date=None):
+    query = db.session.query

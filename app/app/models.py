@@ -76,6 +76,7 @@ class Seat(BaseModel):
 class Airport(BaseModel):
     name = Column(String(50), nullable=False, unique=True)
     address = Column(String(100), nullable=False, unique=True)
+    image = Column(String(150), nullable=False)
 
     start_routes = relationship("Route", foreign_keys="Route.departure_airport_id", backref="departure_airport",
                                 lazy=True)
@@ -133,7 +134,7 @@ class Flight(BaseModel):
 # chuyen bay nho
 class SubFlight(BaseModel):
     order = Column(Integer, nullable=False)
-    flight_time = Column(Integer, nullable=False)
+    flight_time = Column(Integer, nullable=False) #xóa
     flying_duration = Column(Integer, nullable=False)
     waiting_duration = Column(Integer, nullable=False, default=0)
 

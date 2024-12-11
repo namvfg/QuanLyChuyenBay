@@ -5,7 +5,7 @@ from app import app, controller, login, dao,admin,db
 
 
 # load trang chủ
-app.add_url_rule("/", "index", controller.index)
+app.add_url_rule("/", "index", controller.index, methods=["GET", "POST"])
 
 
 # gọi tới file html của staff
@@ -39,6 +39,8 @@ def load_user(id):
     # nếu là user
         return dao.get_user_by_id(id)
 
+# #load trang kết quả tìm kiếm
+app.add_url_rule("/search_result", "search_result", controller.search_result, methods=["GET", "POST"])
 
 #load trang chu admin
 app.add_url_rule("/login-admin", "login_admin", controller.admin_login, methods=['post'])

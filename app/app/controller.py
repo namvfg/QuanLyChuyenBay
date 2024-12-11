@@ -1,5 +1,7 @@
 import math
 import re
+from re import search
+
 from flask_login import login_user,current_user, logout_user
 from flask import render_template, request, jsonify, session, url_for, flash
 from flask import request, redirect, render_template
@@ -9,6 +11,17 @@ import cloudinary.uploader
 
 #trang chủ
 def index():
+    # if request.method.__eq__("POST"):
+    #     start_point = request.form["start_point"]
+    #     end_point = request.form["end_point"]
+    #     flight_date = request.form["flight_date"]
+    #     query = {
+    #         "start_point": start_point,
+    #         "end_point": end_point,
+    #         "flight_date": flight_date
+    #     }
+    #     print(query)
+    #     return redirect(url_for("search_result", **query))
     reviews = dao.load_reviews()
     notifications = dao.load_notifications()
     return render_template("index.html", reviews=reviews, notifications=notifications)
@@ -90,13 +103,17 @@ def register():
     return render_template("register.html")
 
 
-
-
-
 #dang xuat
 def logout_my_user():
     logout_user()
     return redirect("/login")
+
+#kết quả tìm kiếm
+def search_result():
+    start_point = request.args.get("start_point")
+    end_point = request.args.get("end_point")
+    flight_date = request.args.get("flight_date")
+    return render_template("search_result.html", start_point=start_point, end_point=end_point, flight_date=flight_date)
 
 #trang chu admin
 def admin_login():
@@ -108,4 +125,6 @@ def admin_login():
         login_user(user)
         print(current_user)
     return redirect('/admin')
+
+
 

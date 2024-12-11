@@ -1,0 +1,87 @@
+{% extends 'layout/base.html' %}
+{% block content %}
+<div class="d-flex flex-column align-items-center">
+    <div class="row bg-info-subtle p-3 border border-dark" style="width:100%">
+        <div class="col-md-4 d-flex align-items-center justify-content-center border-end border-dark">
+            <p class="text-center mt-4 fs-3 text-danger"><span>Sài Gòn</span> <i class="fa-solid fa-minus"></i><i
+                    class="fa-solid fa-minus"></i><i class="fa-solid fa-arrow-right"></i> <span>Hà Nội</span></p>
+        </div>
+        <div class="col-md-4 d-flex flex-column align-items-center justify-content-center border-end border-dark">
+            <p class="text-center fs-4">Chuyến đi</p>
+            <p class="text-center fs-4 text-danger">19/04/2004</p>
+        </div>
+        <div class="ms-auto col-md-4 d-flex align-items-center justify-content-center">
+            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#myModal">
+                Thay đổi
+            </button>
+            <!-- The Modal -->
+            <div class="modal fade" id="myModal">
+                <div class="modal-dialog modal-md">
+                    <div class="modal-content">
+
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title">Tìm kiếm chuyến bay</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            <form action="/search_result" method="get" style="width:100%">
+                                <div class="mb-5 mt-4">
+                                    <label for="start_point" class="mb-1 ps-1">Nơi đi</label>
+                                    <input type="text" class="form-control" id="start_point"
+                                           placeholder="Nhập nơi đi ..."
+                                           name="start_point">
+                                </div>
+                                <div class="mb-5 mt-3">
+                                    <label for="end_point" class="mb-1 ps-1">Nơi đến</label>
+                                    <input type="text" class="form-control" id="end_point"
+                                           placeholder="Nhập nơi đến ..."
+                                           name="end_point">
+                                </div>
+                                <div class="mb-5 mt-3">
+                                    <label for="flight_date" class="mb-1 ps-1">Ngày bay</label>
+                                    <input type="date" class="form-control" id="flight_date"
+                                           placeholder="Chọn ngày bay ..."
+                                           name="flight_date">
+                                </div>
+                                <div class="mb-5 mt-3 d-flex justify-content-center">
+                                    <a href="">
+                                        <button type="submit" class="btn btn-outline-primary">Tìm kiếm</button>
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <p class="me-4">Copyright &copy 2024 Đông Thành Airline. All rights reserved.</p>
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-3 mt-3 border border-dark bg-white p-3 " style="width:100%">
+        <div class="title mb-5">
+            <h3 class="text-decoration-underline">Chọn chuyến bay của bạn đi nào</h3>
+        </div>
+        <div class="row border border-dark rounded">
+            <div class="col-md-4 d-flex align-items-center justify-content-center flex-column mt-3">
+                <p>Thời điểm bay: </p>
+                <p>Số sân bay trung gian: </p>
+            </div>
+            <div class="col-md-4 d-flex align-items-center justify-content-center mt-3">
+                <p>Thời gian bay: 2h</p>
+            </div>
+            <div class="col-md-4 d-flex align-items-center justify-content-center">
+                <button class="btn btn-primary">Đặt vé</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
