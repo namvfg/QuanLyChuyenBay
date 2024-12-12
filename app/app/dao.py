@@ -1,10 +1,10 @@
 
 import hashlib
 from typing import TextIO
-
+from sqlalchemy import func
 from app import app, db
 from app.models import User, Customer
-from app.models import Review, Notification,Ticket,TicketPrice,Passenger
+from app.models import Review, Notification,Ticket,TicketPrice,Passenger,SubFlight
 import json
 #xác nhận user
 def auth_user(user_name, password):
@@ -30,7 +30,10 @@ def count_tickets():
 
 def get_total_revenue():
     # Giả sử có cột price trong Ticket hoặc tính toán giá vé tổng
-    return db.session.query(db.func.sum(TicketPrice.price)).scalar()
+    query = db.session.query(Ticket.id, TicketPrice.price)\
+            .join(TicketPrice, Ticket.ticket_price_id.__eq__(TicketPrice.id))
+    total = query.with_entities(func.sum(TicketPrice.price)).scalar()
+    return total
 
 #lấy khách hàng theo id
 def get_customer_by_id(customer_id):
@@ -53,8 +56,4 @@ def load_reviews():
 def load_notifications():
     return Notification.query
 
-
-#đếm số notifications
-def count_notifications():
-    return Notification.query.count()
 
