@@ -5,7 +5,7 @@ from app import app, controller, login, dao,admin,db
 from app.models import User,Customer,SubFlight
 
 # load trang chủ
-app.add_url_rule("/", "index", controller.index)
+app.add_url_rule("/", "index", controller.index, methods=["GET", "POST"])
 
 
 # gọi tới file html của staff
@@ -23,21 +23,30 @@ app.add_url_rule("/login", "login", controller.login_my_user, methods=["POST", "
 #load trang đăng ký
 app.add_url_rule("/register", "register", controller.register, methods=["POST", "GET"])
 
-#load out
+# #api đăng ký
+# app.add_url_rule("/api/validate_register", "validate_register", controller.validate_register, methods=[ "POST"])
+
+#log out
 app.add_url_rule("/logout", "logout", controller.logout_my_user)
 
 #tìm user theo user_id
 @login.user_loader
-def load_user(user_id):
-    return dao.get_user_by_id(user_id)
+def load_user(id):
+    #nếu là customer
+    if dao.get_customer_by_id(id):
+        return dao.get_customer_by_id(id)
+    else:
+    # nếu là user
+        return dao.get_user_by_id(id)
 
-# @login.user_loader
-# def load_user(customer_id):
-#     # Tìm Customer trong cơ sở dữ liệu
-#     return dao.get_customer_by_id(customer_id)
+#load trang kết quả tìm kiếm
+app.add_url_rule("/search_result", "search_result", controller.search_result, methods=["GET", "POST"])
+
+#load trang đặt vé
+app.add_url_rule("/booking", "booking", controller.booking, methods=["GET", "POST"])
 
 #load trang chu admin
-app.add_url_rule("/login-admin", "login_admin", controller.admin_login, methods=['post'])
+app.add_url_rule("/login-admin", "login_admin", controller.admin_login, methods=['POST'])
 
 
 if __name__ == "__main__":

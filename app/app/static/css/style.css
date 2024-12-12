@@ -2,13 +2,19 @@
     --primary-color: #66ccff;
     --secondary_color: #ffffff;
 }
+* {
+     box-sizing: border-box
+}
+
 
 body {
     background-color: var(--primary-color);
+
 }
 
  body {
       font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+
       font-size: 14px;
       color: #000;
       margin: 0;
@@ -68,12 +74,12 @@ body .first-row .inner-col{
 
 body .second-row{
     height: 500px;
-    width: 103%;
-    margin-left: -12px
+    width: 101.2%;
+
 }
 
 body .third-row{
     height: 600px;
-    width: 103%;
-    margin-left: -12px
+    width: 101.2%;
+
 }

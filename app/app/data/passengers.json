@@ -4,82 +4,48 @@
             "last_name": "Cristiano",
             "id_card_number": "1039413",
             "phone_number": "0369852147",
-            "id": 1,
-            "ticket": [
-                {
-                    "seat_id": 1,
-                    "flight_id": 1,
-                    "passenger_id": 1,
-                    "ticket_price_id": 1,
-                    "receipt_id": 1,
-                    "id": 1
-                }
-            ]
+            "id": 1
         },
         {
             "first_name": "Gates",
             "last_name": "Bill",
             "id_card_number": "02154234542",
             "phone_number": "025147896",
-            "id": 2,
-            "ticket": []
+            "id": 2
         },
         {
             "first_name": "Dat",
             "last_name": "Nguyen",
             "id_card_number": "077204002635",
             "phone_number": "0363729430",
-            "id": 3,
-            "ticket": [
-                {
-                    "seat_id": 2,
-                    "flight_id": 1,
-                    "passenger_id": 3,
-                    "ticket_price_id": 2,
-                    "receipt_id": 1,
-                    "id": 2
-                }
-            ]
+            "id": 3
         },
         {
             "first_name": "Dun",
             "last_name": "Nguyen",
             "id_card_number": "023813947",
             "phone_number": "025136897",
-            "id": 4,
-            "ticket": []
+            "id": 4
         },
         {
             "first_name": "Duc",
             "last_name": "Nguyen",
             "id_card_number": "021845842574",
             "phone_number": "02513645879",
-            "id": 5,
-            "ticket": [
-                {
-                    "seat_id": 1,
-                    "flight_id": 2,
-                    "passenger_id": 5,
-                    "ticket_price_id": 3,
-                    "receipt_id": 1,
-                    "id": 3
-                }
-            ]
+            "id": 5
         },
         {
             "first_name": "Hieu",
             "last_name": "Tang",
             "id_card_number": "02154644157",
             "phone_number": "0215486231",
-            "id": 6,
-            "ticket": []
+            "id": 6
         },
         {
             "first_name": "Hao",
             "last_name": "Pham",
             "id_card_number": "01551646",
             "phone_number": "02616466847",
-            "id": 7,
-            "ticket": []
+            "id": 7
         }
     ]

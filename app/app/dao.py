@@ -1,7 +1,9 @@
 
 import hashlib
 from typing import TextIO
+from flask import request, jsonify
 from sqlalchemy import func
+from sqlalchemy.orm import aliased
 from app import app, db
 from app.models import User, Customer
 from app.models import Review, Notification,Ticket,TicketPrice,Passenger,SubFlight
@@ -12,14 +14,33 @@ def auth_user(user_name, password):
     return User.query.filter(User.user_name.__eq__(user_name.strip()),
                              User.password.__eq__(password)).first()
 
+#=================================Validate đăng ký======================================#
+#check đã tồn tại user_name hay chưa
+def get_user_by_user_name(user_name):
+    return User.query.filter_by(user_name=user_name).first()
+
+def get_customer_by_phone_number(phone_number):
+    return Customer.query.filter_by(phone_number=phone_number).first()
+
+def get_customer_by_email(email):
+    return Customer.query.filter_by(email=email).first()
+
+def register(user_name, password, first_name, last_name, phone_number, email, avatar):
+    password = str(hashlib.md5(password.strip().encode("utf-8")).digest())
+    customer = Customer(user_name=user_name, password=password, first_name=first_name, last_name=last_name,
+                        phone_number=phone_number, email=email, avatar=avatar)
+    db.session.add(customer)
+    db.session.commit()
+
+#end==============================Validate đăng ký======================================#
 
 #lấy thông tin người dùng
 def get_user_by_id(user_id):
     return User.query.get(user_id)
 
+#xác nhận customer
 def auth_customer(user_name, password):
     password = str(hashlib.md5(password.strip().encode('utf-8')).digest())
-
     return Customer.query.filter(Customer.user_name.__eq__(user_name.strip()),
                              Customer.password.__eq__(password)).first()
 
@@ -27,7 +48,7 @@ def auth_customer(user_name, password):
 def count_tickets():
     return Ticket.query.count()
 
-
+#tính tổng doanh thu
 def get_total_revenue():
     # Giả sử có cột price trong Ticket hoặc tính toán giá vé tổng
     query = db.session.query(Ticket.id, TicketPrice.price)\
@@ -57,3 +78,25 @@ def load_notifications():
     return Notification.query
 
 
+#đếm số notifications
+def count_notifications():
+    return Notification.query.count()
+
+
+#lấy các chuyến bay phổ biến cho trang chủ
+def load_popular_flight():
+    DepartureAirport = aliased(Airport)
+    ArrivalAirport = aliased(Airport)
+    return db.session.query(Route.id,
+                            DepartureAirport.address.label("departure_airport"),
+                            ArrivalAirport.address.label("arrival_airport"),
+                            func.avg(TicketPrice.price).label("average_price")
+                            ).join(Flight, Route.id.__eq__(Flight.route_id)
+                            ).join(TicketPrice, Flight.id.__eq__(TicketPrice.flight_id)
+                            ).join(DepartureAirport, Route.departure_airport_id.__eq__(DepartureAirport.id)
+                            ).join(ArrivalAirport, Route.arrival_airport_id.__eq__(ArrivalAirport.id)
+                            ).group_by(Route.id)
+
+if __name__ == "__main__":
+    with app.app_context():
+        print(get_total_revenue())
