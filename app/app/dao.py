@@ -3,10 +3,12 @@ import hashlib
 from typing import TextIO
 from flask import request, jsonify
 from sqlalchemy import func
+from sqlalchemy.orm import aliased
 from app import app, db
 from app.models import User, Customer
 from app.models import Review, Notification, Ticket, TicketPrice, Passenger, Flight, Route, Airport
 import json
+
 #xác nhận user
 def auth_user(user_name, password):
     password = str(hashlib.md5(password.strip().encode('utf-8')).digest())
@@ -47,14 +49,13 @@ def auth_customer(user_name, password):
 def count_tickets():
     return Ticket.query.count()
 
-
+#tính tổng doanh thu
 def get_total_revenue():
     # Giả sử có cột price trong Ticket hoặc tính toán giá vé tổng
     query = db.session.query(Ticket.id, TicketPrice.price)\
             .join(TicketPrice, Ticket.ticket_price_id.__eq__(TicketPrice.id))
     total = query.with_entities(func.sum(TicketPrice.price)).scalar()
     return total
-
 
 #lấy khách hàng theo id
 def get_customer_by_id(customer_id):
@@ -84,6 +85,21 @@ def count_notifications():
 #đọc lấy dữ liệu để trả ra sau khi tìm kiếm
 def load_flight_search_result(start_point=None, end_point=None, flight_date=None):
     query = db.session.query
+    return query
+
+#lấy các chuyến bay phổ biến cho trang chủ
+def load_popular_flight():
+    DepartureAirport = aliased(Airport)
+    ArrivalAirport = aliased(Airport)
+    return db.session.query(Route.id,
+                            DepartureAirport.address.label("departure_airport"),
+                            ArrivalAirport.address.label("arrival_airport"),
+                            func.avg(TicketPrice.price).label("average_price")
+                            ).join(Flight, Route.id.__eq__(Flight.route_id)
+                            ).join(TicketPrice, Flight.id.__eq__(TicketPrice.flight_id)
+                            ).join(DepartureAirport, Route.departure_airport_id.__eq__(DepartureAirport.id)
+                            ).join(ArrivalAirport, Route.arrival_airport_id.__eq__(ArrivalAirport.id)
+                            ).group_by(Route.id)
 
 if __name__ == "__main__":
     with app.app_context():
