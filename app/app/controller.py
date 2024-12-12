@@ -1,5 +1,6 @@
 import math
 import re
+from datetime import datetime
 from re import search
 
 from flask_login import login_user,current_user, logout_user
@@ -113,7 +114,14 @@ def search_result():
     start_point = request.args.get("start_point")
     end_point = request.args.get("end_point")
     flight_date = request.args.get("flight_date")
+    if flight_date:
+        flight_date = datetime.strptime(flight_date, "%Y-%m-%d")
+    print(type(flight_date))
     return render_template("search_result.html", start_point=start_point, end_point=end_point, flight_date=flight_date)
+
+#trang đặt vé
+def booking():
+    return render_template("booking.html")
 
 #trang chu admin
 def admin_login():
