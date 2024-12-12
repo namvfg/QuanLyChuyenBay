@@ -1,8 +1,8 @@
-
-from flask import request, redirect, render_template
+import json
+from flask import request, redirect, render_template,jsonify
 from flask_login import login_user
 from app import app, controller, login, dao,admin,db
-
+from app.models import User,Customer,SubFlight
 
 # load trang chủ
 app.add_url_rule("/", "index", controller.index, methods=["GET", "POST"])
@@ -47,7 +47,6 @@ app.add_url_rule("/booking", "booking", controller.booking, methods=["GET", "POS
 
 #load trang chu admin
 app.add_url_rule("/login-admin", "login_admin", controller.admin_login, methods=['POST'])
-
 
 
 if __name__ == "__main__":

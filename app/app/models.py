@@ -143,6 +143,7 @@ class SubFlight(BaseModel):
 
 
 
+
 # gia ve
 class TicketPrice(BaseModel):
     price = Column(Float, nullable=False)
@@ -165,6 +166,7 @@ class User(BaseModel, UserMixin):
         return self.first_name
 
 
+
 # admin
 class AdminWebsite(User):
     admin_id = Column(Integer, ForeignKey(User.id), primary_key=True)
@@ -180,6 +182,8 @@ class Customer(User):
     email = Column(String(50), unique=True, nullable=False)
     avatar = Column(String(100), nullable=False)
     receipts = relationship("Receipt", backref="receipts_customer", lazy=True)
+
+
 
 
 # staff role

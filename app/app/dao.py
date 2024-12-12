@@ -6,9 +6,8 @@ from sqlalchemy import func
 from sqlalchemy.orm import aliased
 from app import app, db
 from app.models import User, Customer
-from app.models import Review, Notification, Ticket, TicketPrice, Passenger, Flight, Route, Airport
+from app.models import Review, Notification,Ticket,TicketPrice,Passenger,SubFlight
 import json
-
 #xác nhận user
 def auth_user(user_name, password):
     password = str(hashlib.md5(password.strip().encode('utf-8')).digest())
@@ -38,7 +37,7 @@ def register(user_name, password, first_name, last_name, phone_number, email, av
 #lấy thông tin người dùng
 def get_user_by_id(user_id):
     return User.query.get(user_id)
-  
+
 #xác nhận customer
 def auth_customer(user_name, password):
     password = str(hashlib.md5(password.strip().encode('utf-8')).digest())
@@ -78,14 +77,11 @@ def load_reviews():
 def load_notifications():
     return Notification.query
 
+
 #đếm số notifications
 def count_notifications():
     return Notification.query.count()
 
-#đọc lấy dữ liệu để trả ra sau khi tìm kiếm
-def load_flight_search_result(start_point=None, end_point=None, flight_date=None):
-    query = db.session.query
-    return query
 
 #lấy các chuyến bay phổ biến cho trang chủ
 def load_popular_flight():
