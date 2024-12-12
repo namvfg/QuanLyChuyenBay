@@ -26,7 +26,7 @@ app.add_url_rule("/register", "register", controller.register, methods=["POST", 
 # #api đăng ký
 # app.add_url_rule("/api/validate_register", "validate_register", controller.validate_register, methods=[ "POST"])
 
-#load out
+#log out
 app.add_url_rule("/logout", "logout", controller.logout_my_user)
 
 #tìm user theo user_id
@@ -39,11 +39,14 @@ def load_user(id):
     # nếu là user
         return dao.get_user_by_id(id)
 
-# #load trang kết quả tìm kiếm
+#load trang kết quả tìm kiếm
 app.add_url_rule("/search_result", "search_result", controller.search_result, methods=["GET", "POST"])
 
+#load trang đặt vé
+app.add_url_rule("/booking", "booking", controller.booking, methods=["GET", "POST"])
+
 #load trang chu admin
-app.add_url_rule("/login-admin", "login_admin", controller.admin_login, methods=['post'])
+app.add_url_rule("/login-admin", "login_admin", controller.admin_login, methods=['POST'])
 
 
 

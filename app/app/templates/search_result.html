@@ -2,13 +2,36 @@
 {% block content %}
 <div class="d-flex flex-column align-items-center">
     <div class="row bg-info-subtle p-3 border border-dark" style="width:100%">
-        <div class="col-md-4 d-flex align-items-center justify-content-center border-end border-dark">
-            <p class="text-center mt-4 fs-3 text-danger"><span>Sài Gòn</span> <i class="fa-solid fa-minus"></i><i
-                    class="fa-solid fa-minus"></i><i class="fa-solid fa-arrow-right"></i> <span>Hà Nội</span></p>
+        <div class="col-md-4 d-flex align-items-center flex-column justify-content-center border-end border-dark">
+            <p class="text-center fs-3 text-danger">
+                {% if start_point %}
+                {{ start_point }}
+                {% else %}
+                some where
+                {% endif %}
+            </p>
+            <p class="fs-3 text-danger">
+                <i class="fa-solid fa-minus"></i>
+                <i class="fa-solid fa-minus"></i>
+                <i class="fa-solid fa-arrow-right"></i>
+            </p>
+            <p class="fs-3 text-danger">
+                {% if end_point %}
+                {{ end_point }}
+                {% else %}
+                some where
+                {% endif %}
+            </p>
         </div>
         <div class="col-md-4 d-flex flex-column align-items-center justify-content-center border-end border-dark">
-            <p class="text-center fs-4">Chuyến đi</p>
-            <p class="text-center fs-4 text-danger">19/04/2004</p>
+            <p class="text-center fs-4">Ngày bay</p>
+            <p class="text-center fs-4 text-danger">
+                {% if flight_date %}
+                <span>{{ flight_date.strftime("%d-%m-%Y") }}</span>
+                {% else %}
+                <span>whenever</span>
+                {% endif %}
+            </p>
         </div>
         <div class="ms-auto col-md-4 d-flex align-items-center justify-content-center">
             <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#myModal">
@@ -79,7 +102,7 @@
                 <p>Thời gian bay: 2h</p>
             </div>
             <div class="col-md-4 d-flex align-items-center justify-content-center">
-                <button class="btn btn-primary">Đặt vé</button>
+                <a href="/booking"><button class="btn btn-primary">Đặt vé</button></a>
             </div>
         </div>
     </div>

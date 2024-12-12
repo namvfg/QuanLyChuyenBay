@@ -1,5 +1,4 @@
 from pickle import FALSE
-
 from sqlalchemy import Column, Integer, String, Float, Text, Boolean, ForeignKey, DateTime, Enum
 from sqlalchemy.orm import relationship
 from app import app, db
@@ -7,6 +6,8 @@ from flask_login import UserMixin
 from enum import Enum as UserEnum
 from datetime import datetime
 import json
+
+
 
 
 # base model
@@ -26,7 +27,6 @@ class Manufacturer(BaseModel):
 
     def __str__(self):
         return self.name
-
 
 
 
@@ -76,7 +76,7 @@ class Seat(BaseModel):
 class Airport(BaseModel):
     name = Column(String(50), nullable=False, unique=True)
     address = Column(String(100), nullable=False, unique=True)
-    image = Column(String(150), nullable=False)
+    image = Column(String(150))
 
     start_routes = relationship("Route", foreign_keys="Route.departure_airport_id", backref="departure_airport",
                                 lazy=True)
@@ -266,9 +266,9 @@ if __name__ == "__main__":
     with app.app_context():
 
         db.create_all()
-
-        with open("%s/data/review.json" %app.root_path, encoding="utf-8") as f1:
-            data = json.load(f1)
+        # #load review vao csdl
+        with open("%s/data/reviews.json" % app.root_path, encoding="utf-8") as f:
+            data = json.load(f)
             for x in data:
                 date = x["review_date"]
                 date = datetime.fromisoformat(date)
@@ -276,26 +276,163 @@ if __name__ == "__main__":
                 x = Review(**x)
                 db.session.add(x)
             db.session.commit()
-        with open("%s/data/notification.json" %app.root_path, encoding="utf-8") as f2:
-             data = json.load(f2)
-             for x in data:
+
+        # #load notification vao csdl
+        with open("%s/data/notifications.json" % app.root_path, encoding="utf-8") as f:
+            data = json.load(f)
+            for x in data:
                 date = datetime.now()
                 x = Notification(**x)
                 x.posting_date = date
                 db.session.add(x)
             db.session.commit()
-            
-        import hashlib
 
-        password = str(hashlib.md5('123456'.encode('utf-8')).digest())
-        u = AdminWebsite(first_name='Dat', last_name='Nguyen', user_name='admin', password=password)
-        db.session.add(u)
-        customer = Customer(first_name='Dun', last_name='Nguyen', user_name='customer', password=password,
-                            avatar="https://res.cloudinary.com/dcee16rsp/image/upload/v1732182639/My%20Brand/deadlock_rz3for.jpg",
-                            phone_number="123456", email="123@gmail.com")
-        
-        db.session.add(customer)
+        #load manufacturer vao csdl
+        with open("%s/data/manufacturers.json" % app.root_path, encoding="utf-8") as f:
+            data = json.load(f)
+            for x in data:
+                x = Manufacturer(**x)
+                db.session.add(x)
+            db.session.commit()
 
-        u = Staff(first_name='Dat', last_name='Nguyen', user_name='staff', password=password)
-        db.session.add(u)
-        db.session.commit()
+        # #load airplane vào csdl
+        with open("%s/data/airplanes.json" % app.root_path, encoding="utf-8") as f:
+            data = json.load(f)
+            for x in data:
+                date = x["mfg_date"]
+                date = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
+                x["mfg_date"] = date
+                x = Airplane(**x)
+                db.session.add(x)
+            db.session.commit()
+
+        # #load airport vào csdl
+        with open("%s/data/airports.json" % app.root_path, encoding="utf-8") as f:
+            data = json.load(f)
+            for x in data:
+                x = Airport(**x)
+                db.session.add(x)
+            db.session.commit()
+
+
+        # #load route vào csdl
+        with open("%s/data/routes.json" % app.root_path, encoding="utf-8") as f:
+            data = json.load(f)
+            for x in data:
+                x = Route(**x)
+                db.session.add(x)
+            db.session.commit()
+
+        # #load intermediate_airport vào csdl
+        with open("%s/data/intermediate_airports.json" % app.root_path, encoding="utf-8") as f:
+            data = json.load(f)
+            for x in data:
+                x = IntermediateAirport(**x)
+                db.session.add(x)
+            db.session.commit()
+
+        # #load seat_class vào csdl
+        with open("%s/data/seat_classes.json" % app.root_path, encoding="utf-8") as f:
+            data = json.load(f)
+            for x in data:
+                x = SeatClass(**x)
+                db.session.add(x)
+            db.session.commit()
+
+
+        # #load seat vào csdl
+        with open("%s/data/seats.json" % app.root_path, encoding="utf-8") as f:
+            data = json.load(f)
+            for x in data:
+                x = Seat(**x)
+                db.session.add(x)
+            db.session.commit()
+
+        # #load user vào csdl
+        # with open("%s/data/users.json" % app.root_path, encoding="utf-8") as f:
+        #     data = json.load(f)
+        #     for x in data:
+        #         x = User(**x)
+        #         db.session.add(x)
+        #     db.session.commit()
+
+        # #load admin vào csdl
+        with open("%s/data/admin_websites.json" % app.root_path, encoding="utf-8") as f:
+            data = json.load(f)
+            for x in data:
+                x = AdminWebsite(**x)
+                db.session.add(x)
+            db.session.commit()
+
+        # #load customer vào csdl
+        with open("%s/data/customers.json" % app.root_path, encoding="utf-8") as f:
+            data = json.load(f)
+            for x in data:
+                x = Customer(**x)
+                db.session.add(x)
+            db.session.commit()
+
+
+        # #load staff vào csdl
+        with open("%s/data/staffs.json" % app.root_path, encoding="utf-8") as f:
+            data = json.load(f)
+            for x in data:
+                x = Staff(**x)
+                db.session.add(x)
+            db.session.commit()
+
+        # #load receipt vào csdl
+        with open("%s/data/receipts.json" % app.root_path, encoding="utf-8") as f:
+            data = json.load(f)
+            for x in data:
+                date = x["pay_date"]
+                date = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
+                x["pay_date"] = date
+                x = Receipt(**x)
+                db.session.add(x)
+            db.session.commit()
+
+        # # load flight vào csdl
+        with open("%s/data/flights.json" % app.root_path, encoding="utf-8") as f:
+            data = json.load(f)
+            for x in data:
+                date = x["flight_date"]
+                date = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
+                x["flight_date"] = date
+                x = Flight(**x)
+                db.session.add(x)
+            db.session.commit()
+
+        # #load subflights vào csdl
+        with open("%s/data/sub_flights.json" % app.root_path, encoding="utf-8") as f:
+            data = json.load(f)
+            for x in data:
+                x = SubFlight(**x)
+                db.session.add(x)
+            db.session.commit()
+
+        # #load ticket_price vào csdl
+        with open("%s/data/ticket_prices.json" % app.root_path, encoding="utf-8") as f:
+            data = json.load(f)
+            for x in data:
+                x = TicketPrice(**x)
+                db.session.add(x)
+            db.session.commit()
+
+        # #load passenger vào csdl
+        with open("%s/data/passengers.json" % app.root_path, encoding="utf-8") as f:
+            data = json.load(f)
+            for x in data:
+                x = Passenger(**x)
+                db.session.add(x)
+            db.session.commit()
+
+        # #load ticket vào csdl
+        with open("%s/data/tickets.json" % app.root_path, encoding="utf-8") as f:
+            data = json.load(f)
+            for x in data:
+                x = Ticket(**x)
+                db.session.add(x)
+            db.session.commit()
+
+

@@ -1,0 +1,16 @@
+[
+        {
+            "order": 1,
+            "flight_time": 1,
+            "flying_duration": 120,
+            "waiting_duration": 40,
+            "flight_id": 2
+        },
+        {
+            "order": 1,
+            "flight_time": 2,
+            "flying_duration": 150,
+            "waiting_duration": 30,
+            "flight_id": 1
+        }
+    ]
