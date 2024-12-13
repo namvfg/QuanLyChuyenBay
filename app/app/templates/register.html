@@ -56,20 +56,34 @@
                     <input type="file" class="form-control" id="avatar" name="avatar" required>
                     <label for="avatar">Ảnh đại diện</label>
                 </div>
-
+                <div class="row">
+                    <div class="col-md-5">
+                        <input type="text" class="form-control" placeholder="Mã xác nhận" name="verify_code"
+                               id="verify_code"
+                               autocomplete="off"
+                               required readonly>
+                    </div>
+                    <div class="col-md-3">
+                        <button href="" class="btn btn-success" id="send-verify-code">Gửi mã</button>
+                    </div>
+                    <div class="col-md-4">
+                        <button href="#" class="btn btn-danger" id="change_info">Sửa thông tin</button>
+                    </div>
+                </div>
                 <div class="forgot">
                     <section>
 
                     </section>
-                    <section>
+                    <section class="mt-3">
                         <a href="#" class="text-primary">Điều khoản dịch vụ</a>
                     </section>
                 </div>
-                <div class="input-submit">
+                <div class="input-submit ">
                     <button type="submit" class="submit-btn" id="submit_btn"></button>
                     <label for="submit_btn">Đăng ký</label>
+
                 </div>
-                <div class="sign-up-link">
+                <div class="sign-up-link mb-3">
                     <p>Đã có tài khoản? <a href="/login">Đăng nhập</a></p>
                 </div>
             </div>

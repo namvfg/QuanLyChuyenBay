@@ -79,7 +79,13 @@ body .second-row{
 }
 
 body .third-row{
-    height: 600px;
+    height: 650px;
     width: 101.2%;
 
 }
+
+.seat-toggle {
+    width: 40px;
+    height: 40px;
+}
+

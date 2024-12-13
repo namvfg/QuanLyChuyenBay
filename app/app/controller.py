@@ -2,30 +2,22 @@ import math
 import re
 from datetime import datetime
 from re import search
-
+from app import mail
 from flask_login import login_user,current_user, logout_user
 from flask import render_template, request, jsonify, session, url_for, flash
 from flask import request, redirect, render_template
 from app import app, db, dao
+from app.dao import load_popular_routes
 from app.decorators import annonymous_user
 import cloudinary.uploader
 
+
 #trang chủ
 def index():
-    # if request.method.__eq__("POST"):
-    #     start_point = request.form["start_point"]
-    #     end_point = request.form["end_point"]
-    #     flight_date = request.form["flight_date"]
-    #     query = {
-    #         "start_point": start_point,
-    #         "end_point": end_point,
-    #         "flight_date": flight_date
-    #     }
-    #     print(query)
-    #     return redirect(url_for("search_result", **query))
     reviews = dao.load_reviews()
     notifications = dao.load_notifications()
-    return render_template("index.html", reviews=reviews, notifications=notifications)
+    popular_routes = load_popular_routes()
+    return render_template("index.html", reviews=reviews, notifications=notifications, popular_routes=popular_routes)
 
 #đăng nhập
 @annonymous_user
@@ -64,7 +56,7 @@ def register():
         email = request.form.get("email").strip()
         #email không hợp lệ
         valid = re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email)
-        if not valid:
+        if not valid or not mail.verify_email(email)["status"].__eq__("valid"):
             return jsonify({"status": "error", "message": "Email không hợp lệ"})
         #email đã tồn tại
         existing_customer = dao.get_customer_by_email(email=email)
@@ -80,7 +72,12 @@ def register():
         if not password.__eq__(confirm_password):
             return jsonify({"status": "error", "message": "Mật khẩu không khớp"})
 
-
+        key = app.config["VERIFY_EMAIL"]
+        verify_code = session[key]["verify_code"]
+        code = int(request.form.get("verify_code").strip())
+        print(type(verify_code), type(code))
+        if code != verify_code:
+            return jsonify({"status": "error", "message": "Sai mã xác nhận"})
 
         first_name = request.form.get("first_name").strip()
         last_name = request.form.get("last_name").strip()
@@ -96,13 +93,31 @@ def register():
                          phone_number=phone_number,
                          email=email,
                          avatar=avatar)
-            flash("Tạo tài khoản thành công.", "success")
             return jsonify({"status": "success", "redirect": "/login"})
         except Exception as e:
-            flash(f"Lỗi không xác định: {str(e)}", "error")
             return jsonify({"status": "error", "message": {str(e)}})
     return render_template("register.html")
 
+#nhập mã xác nhận
+def type_verify_code():
+    key = app.config["VERIFY_EMAIL"]
+    data = request.json
+    session[key] = data
+    email_target = data["email_target"]
+    verify_code = data["verify_code"]
+    print(verify_code)
+    valid = re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email_target)
+    if not valid or not mail.verify_email(email_target)["status"].__eq__("valid"):
+        return jsonify({"status": "error", "message": "Email không hợp lệ"})
+    else:
+        mail.send_authenticate_mail(email_target, subject="Verify Code", body=str(verify_code))
+        return jsonify({"status": "success", "message": "Gửi mã thành công. Bạn có thể ấn vào nút Đổi thông tin để nhập lại"})
+
+#xóa mã xác nhận
+def clear_verify_code():
+    key = app.config["VERIFY_EMAIL"]
+    session[key] = {}
+    return jsonify({"status": "success", "message": "Mã xác nhận đã xóa, bạn có thể nhập lại thông tin"})
 
 #dang xuat
 def logout_my_user():
@@ -133,6 +148,9 @@ def admin_login():
         login_user(user)
         print(current_user)
     return redirect('/admin')
+
+
+
 
 
 

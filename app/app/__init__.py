@@ -19,6 +19,15 @@ app.config["PHONE_NUMBER_LENGTH"] = 10
 #độ dài mật khẩu tối thiểu
 app.config["PASSWORD_LENGTH"] = 6
 
+#key cho session chứa email_target và verify_code
+app.config["VERIFY_EMAIL"] = "verify_email"
+#email để gửi mail xác nhận
+app.config["EMAIL"] = "duakhongchau1234@gmail.com"
+#password 2 lớp
+app.config["PASSWORD_EMAIL"] = "prnksqarnigvvjkq"
+#key cho api hunter.io
+app.config["KEY_HUNTER.IO"] = "32b4507da8872ff43ad7ef9122de8bee777c1db5"
+
 cloudinary.config(cloud_name="dnpodiilj",
                   api_key="874131819545712",
                   api_secret="xHDsHPIIbwKkoT6qfPYTAvn4pmA")
