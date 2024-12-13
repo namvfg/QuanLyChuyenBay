@@ -16,7 +16,8 @@
     <div class="card p-3 shadow-sm scheduling-box">
         <div class="d-flex align-items-center">
             <div>
-                <h5 class="mb-1 "><i class="fa-regular fa-calendar"></i>    LẬP LỊCH CHUYẾN BAY<i class="fa-solid fa-plane ms-3"></i>
+                <h5 class="mb-1 "><i class="fa-regular fa-calendar"></i> LẬP LỊCH CHUYẾN BAY<i
+                        class="fa-solid fa-plane ms-3"></i>
                 </h5>
             </div>
         </div>
@@ -25,33 +26,34 @@
 <div class="container border border-dark bg-white mb-5">
     <div class="form-container">
         <form>
-            <!-- Dòng 1: Mã chuyến bay -->
+            <!-- Dòng 1:  máy bay -->
             <div class="row mb-3">
                 <div class="col-md-12">
-                    <label for="flight-code" class="form-label mt-2">Mã chuyến bay</label>
-                    <input type="text" class="form-control border border-dark" id="flight-code" placeholder="Nhập mã chuyến bay">
+                    <label for="flight" class="form-label mt-2">Tên máy bay</label>
+                    <select class="form-select border border-dark" id="flight" name="flight">
+                        <option value="" selected>chọn máy bay</option>
+                        {% for airplane in airplane_info %}
+                        <option value="{{ airplane['id'] }}">{{ airplane['name'] }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
             </div>
-            <!-- Dòng 2: Sân bay đi và sân bay đến -->
+            <!-- Dòng 2: tuyến bay -->
             <div class="row mb-3">
-                <div class="col-md-6">
-                    <label for="departure" class="form-label">Sân bay đi</label>
-                <select class="form-select" id="departure" aria-label="Sân bay đi">
-                    <option selected value="Sân bay Nội Bài">Sân bay Nội Bài</option>
-                    <option value="Sân bay Tân Sơn Nhất">Sân bay Tân Sơn Nhất</option>
-                    <option value="Sân bay Đà Nẵng">Sân bay Đà Nẵng</option>
-                </select>
-                </div>
-                <div class="col-md-6">
-                    <label for="arrival" class="form-label">Sân bay đến</label>
-                <select class="form-select" id="arrival" aria-label="Sân bay đến">
-                    <option selected value="Sân bay Tân Sơn Nhất">Sân bay Tân Sơn Nhất</option>
-                    <option value="Sân bay Nội Bài">Sân bay Nội Bài</option>
-                    <option value="Sân bay Đà Nẵng">Sân bay Đà Nẵng</option>
-                </select>
+                <div class="col-md-12">
+                    <label for="routes" class="form-label mt-2"> Tuyến bay</label>
+                    <select class="form-select border border-dark" id="routes" name="routes">
+                        <option value="" selected>Chọn tuyến bay</option>
+                        {% for route in route_info %}
+                        <option value="{{ route['id'] }}"
+                                data-departure-airport="{{ route['departure_airport'] }}"
+                                data-arrival-airport="{{ route['arrival_airport'] }}">
+                            {{ route['departure_airport'] }} - {{ route['arrival_airport'] }}
+                        </option>
+                        {% endfor %}
+                    </select>
                 </div>
             </div>
-
             <!-- Dòng 3: Ngày – giờ và Thời gian bay -->
             <div class="row mb-3">
                 <div class="col-md-6">
@@ -60,43 +62,76 @@
                 </div>
             </div>
 
-            <!-- Dòng 4: Số lượng ghế hạng 1 và hạng 2 -->
+            <!-- Dòng 4: Giá vé ghế hạng 1 và hạng 2 -->
+            <div class="row mb-3">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="first-class-seats-price" class="form-label">Giá vé ghế hạng 1</label>
+                        <div class="d-flex align-items-center">
+                            <input type="text" class="form-control border border-dark" id="first-class-seats-price"
+                                   placeholder="Nhập giá vé ghế hạng 1"
+                                   style="border-top-right-radius: 0; border-bottom-right-radius: 0;">
+                            <span class="input-group-text border border-dark bg-light"
+                                  style="border-top-left-radius: 0; border-bottom-left-radius: 0;">VND</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6 ">
+                        <label for="second-class-seats-price" class="form-label ">Giá vé ghế hạng 2</label>
+                        <div class="d-flex align-items-center">
+                            <input type="number" class="form-control border border-dark" id="second-class-seats-price"
+                                   maxlength="7"
+                                   placeholder="Nhập giá vé ghế hạng 2"
+                                   style="border-top-right-radius: 0; border-bottom-right-radius: 0;">
+                            <span class="input-group-text border border-dark bg-light"
+                                  style="border-top-left-radius: 0; border-bottom-left-radius: 0;">VND</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dòng 5: số lợng ghế hạng 1 và hạng 2 -->
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label for="first-class-seats" class="form-label">Số lượng ghế hạng 1</label>
-                    <input type="number" class="form-control border border-dark" id="first-class-seats" placeholder="Nhập số lượng ghế hạng 1">
+                    <div class="d-flex align-items-center">
+                        <input type="number" class="form-control border border-dark" id="first-class-seats"
+                               placeholder="Nhập số lượng ghế hạng 1"
+                               style="border-top-right-radius: 0; border-bottom-right-radius: 0;">
+                        <span class="input-group-text border border-dark bg-light"
+                              style="border-top-left-radius: 0; border-bottom-left-radius: 0;">Ghế</span>
+                    </div>
 
                 </div>
                 <div class="col-md-6">
-                    <label for="second-class-seats" class="form-label">Số lượng ghế hạng 2</label>
-                    <input type="number" class="form-control border border-dark" id="second-class-seats" placeholder="Nhập số lượng ghế hạng 2">
+                    <label for="second-class-seats" class="form-label"> Số lượng ghế hạng 2</label>
+                    <div class="d-flex align-items-center">
+                        <input type="number" class="form-control border border-dark" id="second-class-seats"
+                               placeholder="Nhập số lượng ghế hạng 1"
+                               style="border-top-right-radius: 0; border-bottom-right-radius: 0;">
+                        <span class="input-group-text border border-dark bg-light"
+                              style="border-top-left-radius: 0; border-bottom-left-radius: 0;">Ghế</span>
+                    </div>
                 </div>
             </div>
 
-            <!-- Dòng 5: Sân bay trung gian và thời gian dừng -->
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label for="IntermediateAirport1" class="form-label">Sân bay trung gian 1</label>
-                    <select class="form-select border border-dark" id="IntermediateAirport1" aria-label="Sân bay đến">
-                    <option selected value="Sân bay Tân Sơn Nhất">Sân bay Tân Sơn Nhất</option>
-                    <option value="Sân bay Nội Bài">Sân bay Nội Bài</option>
-                    <option value="Sân bay Đà Nẵng">Sân bay Đà Nẵng</option>
-                </select>
-                </div>
-                <div class="col-md-6">
-                    <label for="IntermediateAirport2" class="form-label">Sân bay trung gian 2</label>
-                    <select class="form-select border border-dark" id="IntermediateAirport2" aria-label="Sân bay đến">
-                    <option selected value="Sân bay Tân Sơn Nhất">Sân bay Tân Sơn Nhất</option>
-                    <option value="Sân bay Nội Bài">Sân bay Nội Bài</option>
-                    <option value="Sân bay Đà Nẵng">Sân bay Đà Nẵng</option>
-                </select>
-                </div>
-            </div>
+            <!-- Dòng 5: Sân bay trung gian  -->
+           <div class="row mb-3">
+    <div class="col-md-12">
+        <label class="form-label mt-2">Sân bay trung gian</label>
+        <div id="intermediate-airports-container">
+            <!-- Các sân bay trung gian sẽ được thêm vào đây -->
+        </div>
+        <button type="button" class="btn btn-primary mt-2" id="add-intermediate-airport">Thêm sân bay trung gian</button>
+    </div>
+</div>
+
+
             <!-- Dòng 6: Ghi chú -->
             <div class="row mb-3">
                 <div class="col-md-12">
                     <label for="notes" class="form-label">Ghi chú</label>
-                    <textarea class="form-control border border-dark" id="notes" rows="3" placeholder="Nhập ghi chú"></textarea>
+                    <textarea class="form-control border border-dark" id="notes" rows="3"
+                              placeholder="Nhập ghi chú"></textarea>
                 </div>
             </div>
 
@@ -106,69 +141,209 @@
                     <button type="reset" class="btn btn-danger w-100">Xóa</button>
                 </div>
                 <div class="col-md-6">
-                    <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#additionalInfoModal">Lưu</button>
+                    <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-route-id="1"
+                            data-bs-target="#additionalInfoModal">Lưu
+                    </button>
                 </div>
 
             </div>
         </form>
 
-<!-- Modal -->
-<div class="modal fade" id="additionalInfoModal" tabindex="-1" aria-labelledby="additionalInfoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="additionalInfoModalLabel">Thông tin bổ sung</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <!-- Hiển thị thông tin tuyến bay -->
-                <div class="row border border-dark mb-2">
-                    <div class="col-md-6">
-                        <p><strong>Từ:</strong> sân bay đi </p>
-                        <p><strong>Đến:</strong> sân bay trung gian thứ 1</p>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="flightTime" class="form-label">Thời gian bay:</label>
-                        <input type="number" class="form-control" id="flightTime" name="flight_time" placeholder="Nhập thời gian bay">
-                    </div>
-                </div>
-                <div class="row border border-dark mb-2">
-                    <div class="col-md-6">
-                        <p><strong>Từ:</strong> sân bay trung gian thứ 1 </p>
-                        <p><strong>Đến:</strong> sân bay trung gian thứ 2</p>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="flightTime" class="form-label">Thời gian bay:</label>
-                        <input type="number" class="form-control" id="flightTime1" name="flight_time" placeholder="Nhập thời gian bay">
+        <!-- Modal -->
 
-                        <label for="stopTime1" class="form-label mt-3">Thời gian dừng:</label>
-                        <input type="number" class="form-control mb-2" id="stopTime1" name="stop_time" placeholder="Nhập thời gian dừng">
+        <div class="modal fade" id="additionalInfoModal" tabindex="-1" aria-labelledby="additionalInfoModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="additionalInfoModalLabel">Thông tin bổ sung</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                </div>
-                <div class="row border border-dark">
-                    <div class="col-md-6">
-                        <p><strong>Từ:</strong> sân bay trung gian thứ 2 </p>
-                        <p><strong>Đến:</strong> sân bay đến</p>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="flightTime" class="form-label">Thời gian bay:</label>
-                        <input type="number" class="form-control" id="flightTime2" name="flight_time" placeholder="Nhập thời gian bay">
+                    <div class="modal-body">
+                        <!-- Hiển thị thông tin tuyến bay -->
+                        <div class="row border border-dark mb-2">
+                            <div class="col-md-6">
+                                <p><strong>Từ:</strong> <span id="modal-departure-airport">Sân bay đi</span></p>
+                                <p><strong>Đến:</strong> <span
+                                        id="modal-intermediate-airport1">Sân bay trung gian thứ 1</span></p>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="flightTime" class="form-label">Thời gian bay:</label>
+                                <input type="number" class="form-control" id="flightTime" name="flight_time"
+                                       placeholder="Nhập thời gian bay">
+                            </div>
+                        </div>
+                        <div class="row border border-dark mb-2">
+                            <div class="col-md-6">
+                                <p><strong>Từ:</strong> <span
+                                        id="modal-intermediate-airport1-duplicate">Sân bay trung gian 1</span></p>
+                                <p><strong>Đến:</strong> <span
+                                        id="modal-intermediate-airport2">Sân bay trung gian 2</span></p>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="flightTime1" class="form-label">Thời gian bay:</label>
+                                <input type="number" class="form-control" id="flightTime1" name="flight_time"
+                                       placeholder="Nhập thời gian bay">
 
-                        <label for="stopTime2" class="form-label mt-3">Thời gian dừng:</label>
-                        <input type="number" class="form-control mb-2" id="stopTime2" name="stop_time" placeholder="Nhập thời gian dừng">
+                                <label for="stopTime1" class="form-label mt-3">Thời gian dừng:</label>
+                                <input type="number" class="form-control mb-2" id="stopTime1" name="stop_time"
+                                       placeholder="Nhập thời gian dừng">
+                            </div>
+                        </div>
+                        <div class="row border border-dark">
+                            <div class="col-md-6">
+                                <p><strong>Từ:</strong> <span
+                                        id="modal-intermediate-airport2-duplicate">Sân bay trung gian 2</span></p>
+                                <p><strong>Đến:</strong> <span id="modal-arrival-airport">Sân bay đến</span></p>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="flightTime2" class="form-label">Thời gian bay:</label>
+                                <input type="number" class="form-control" id="flightTime2" name="flight_time"
+                                       placeholder="Nhập thời gian bay">
+
+                                <label for="stopTime2" class="form-label mt-3">Thời gian dừng:</label>
+                                <input type="number" class="form-control mb-2" id="stopTime2" name="stop_time"
+                                       placeholder="Nhập thời gian dừng">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Lưu</button>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                <button type="submit" class="btn btn-primary">Lưu</button>
             </div>
         </div>
     </div>
+
 </div>
-    </div>
-</div>
+
 </body>
+<script >
+    document.addEventListener("DOMContentLoaded", function () {
+    const addButton = document.getElementById("add-intermediate-airport");
+    const container = document.getElementById("intermediate-airports-container");
+
+    const routeSelect = document.getElementById("routes");
+    const maxAirports = 2; // Số lượng sân bay trung gian tối đa
+
+    // Hàm lấy danh sách sân bay đi và đến
+    function getExistingAirports() {
+        const selectedRoute = routeSelect.options[routeSelect.selectedIndex];
+        const departureAirport = selectedRoute.dataset.departureAirport || "N/A";
+        const arrivalAirport = selectedRoute.dataset.arrivalAirport || "N/A";
+        return [departureAirport, arrivalAirport];
+    }
+
+    // Hàm kiểm tra trùng lặp
+    function checkDuplicateSelection() {
+        const selects = container.querySelectorAll("select");
+        const selectedAirports = Array.from(selects).map(select => select.value);
+        const existingAirports = getExistingAirports();
+
+        selects.forEach(select => {
+            const isDuplicate = selectedAirports.filter(value => value === select.value).length > 1;
+            const isConflicting = existingAirports.includes(select.value);
+
+            if (isDuplicate || isConflicting) {
+                select.classList.add("is-invalid"); // Đánh dấu không hợp lệ
+            } else {
+                select.classList.remove("is-invalid"); // Xóa đánh dấu không hợp lệ
+            }
+        });
+    }
 
 
+    // Hàm tạo combo box sân bay trung gian
+    function createAirportSelect(index) {
+        const div = document.createElement("div");
+        div.classList.add("d-flex", "align-items-center", "mb-2");
+        div.id = `airport-${index}`;
+
+        const select = document.createElement("select");
+        select.classList.add("form-select", "border", "border-dark", "me-2");
+        select.name = `intermediate-airport-${index}`;
+        select.innerHTML = `
+            <option value="" selected>Chọn sân bay trung gian</option>
+            {% for airport in airport_info %}
+            <option value="{{ airport['id'] }}">{{ airport['name'] }}</option>
+            {% endfor %}
+        `;
+
+        const removeButton = document.createElement("button");
+        removeButton.type = "button";
+        removeButton.classList.add("btn", "btn-danger");
+        removeButton.textContent = "Xóa";
+
+        // Sự kiện xóa sân bay
+        removeButton.addEventListener("click", function () {
+            div.remove();
+            checkDuplicateSelection(); // Kiểm tra lại sau khi xóa
+            if (container.children.length < maxAirports) {
+                addButton.disabled = false; // Cho phép thêm sân bay nếu chưa đủ
+            }
+        });
+
+        // Sự kiện khi thay đổi sân bay
+        select.addEventListener("change", checkDuplicateSelection);
+
+        div.appendChild(select);
+        div.appendChild(removeButton);
+
+        return div;
+    }
+
+    // Sự kiện thêm sân bay trung gian
+    addButton.addEventListener("click", function () {
+        const currentCount = container.children.length;
+
+        if (currentCount < maxAirports) {
+            const newAirport = createAirportSelect(currentCount + 1);
+            container.appendChild(newAirport);
+            checkDuplicateSelection();
+        }
+
+        if (container.children.length >= maxAirports) {
+            addButton.disabled = true; // Vô hiệu hóa nút nếu đủ số lượng
+        }
+    });
+
+    // Kiểm tra khi tuyến bay thay đổi
+    routeSelect.addEventListener("change", function () {
+        checkDuplicateSelection(); // Kiểm tra lại khi sân bay đi/đến thay đổi
+    });
+});
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Bắt sự kiện khi nhấn nút Lưu
+    const saveButton = document.querySelector("button[data-bs-target='#additionalInfoModal']");
+    saveButton.addEventListener("click", function () {
+        // Lấy giá trị sân bay đi, đến, và sân bay trung gian
+        const routeSelect = document.getElementById("routes");
+        const departureAirport = routeSelect.options[routeSelect.selectedIndex]?.dataset.departureAirport || "N/A";
+        const arrivalAirport = routeSelect.options[routeSelect.selectedIndex]?.dataset.arrivalAirport || "N/A";
+        const intermediateAirports = [];
+        document.querySelectorAll("#intermediate-airports-container select").forEach((select) => {
+            if (select.value) {
+                intermediateAirports.push(select.options[select.selectedIndex]?.text || "N/A");
+            }
+        });
+
+        // Gán dữ liệu vào modal
+        document.getElementById("modal-departure-airport").textContent = departureAirport;
+        document.getElementById("modal-arrival-airport").textContent = arrivalAirport;
+
+        // Hiển thị sân bay trung gian 1 (lần 1) và (lần 2)
+        document.getElementById("modal-intermediate-airport1").textContent = intermediateAirports[0] || "N/A";
+        document.getElementById("modal-intermediate-airport1-duplicate").textContent = intermediateAirports[0] || "N/A";
+
+        // Hiển thị sân bay trung gian 2
+        document.getElementById("modal-intermediate-airport2").textContent = intermediateAirports[1] || "N/A";
+        document.getElementById("modal-intermediate-airport2-duplicate").textContent = intermediateAirports[1] || "N/A";
+    });
+});
+
+</script>
 {% endblock %}
+

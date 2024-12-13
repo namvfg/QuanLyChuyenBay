@@ -2,7 +2,8 @@ import json
 from flask import request, redirect, render_template,jsonify
 from flask_login import login_user
 from app import app, controller, login, dao,admin,db
-from app.models import User,Customer,SubFlight
+from app.dao import load_airplane, load_airport, load_route
+from app.models import User, Customer, SubFlight, Airplane
 
 # load trang chủ
 app.add_url_rule("/", "index", controller.index, methods=["GET", "POST"])
@@ -15,7 +16,10 @@ def staff_page():
 
 @app.route('/staff/scheduling')
 def staff_scheduling():
-    return render_template('staff/scheduling.html')
+    airplane_info = load_airplane()
+    airport_info = load_airport()
+    route_info = load_route()
+    return render_template('staff/scheduling.html',airplane_info = airplane_info,airport_info = airport_info,route_info = route_info)
 
 #load trang đăng nhập
 app.add_url_rule("/login", "login", controller.login_my_user, methods=["POST", "GET"])
