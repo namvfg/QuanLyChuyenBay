@@ -8,13 +8,14 @@
 
 {% block js %}
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="{{ url_for('static', filename='js/fill_form.js') }}"></script>
 {% endblock %}
 
 {% block content %}
 <div class="mb-3 d-flex flex-column align-items-center">
     <div class="row gap-3 flex-nowrap" style="width:100%">
-        <div class="col-md-7 col-12 border border-dark first-row bg-white" >
-            <div class="row  flex-nowrap align-items-center" >
+        <div class="col-md-7 col-12 border border-dark first-row bg-white">
+            <div class="row  flex-nowrap align-items-center">
                 <div class="col-md-4 inner-col d-flex align-items-center justify-content-center">
                     <div class="ps-3">
                         <h3>Tìm kiếm chuyến bay</h3>
@@ -43,7 +44,8 @@
 
                                     <!-- Modal footer -->
                                     <div class="modal-footer">
-                                         <p class="me-4">Copyright &copy 2024 Đông Thành Airline. All rights reserved.</p>
+                                        <p class="me-4">Copyright &copy 2024 Đông Thành Airline. All rights
+                                            reserved.</p>
                                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close
                                         </button>
                                     </div>
@@ -54,7 +56,7 @@
                     </div>
 
                 </div>
-                <div class="col-md-7 border border-dark m-3 inner-col align-self-center bg-white" >
+                <div class="col-md-7 border border-dark m-3 inner-col align-self-center bg-white">
                     <form action="/search_result" method="get" style="width:100%">
                         <div class="mb-5 mt-4">
                             <label for="start_point" class="mb-1 ps-1">Nơi đi</label>
@@ -72,7 +74,9 @@
                                    name="flight_date">
                         </div>
                         <div class="mb-5 mt-3 d-flex justify-content-center">
-                            <a href=""><button type="submit" class="btn btn-outline-primary">Tìm kiếm</button></a>
+                            <a href="">
+                                <button type="submit" class="btn btn-outline-primary">Tìm kiếm</button>
+                            </a>
                         </div>
                     </form>
                 </div>
@@ -138,19 +142,25 @@
     <div class="">
         <div class="swiper mySwiper">
             <div class="swiper-wrapper">
-                {% for i in range(6) %}
+                {% for popular_route in popular_routes %}
+
                 <div class="swiper-slide">
-                    <div class="card mt-3 mb-3 border border-dark col-md-5" style="height: 370px; width: 90%">
-                        <div style="height: 200px">
+                    <div class="card mt-3 mb-3 border border-dark col-md-5" style="height: 400px; width: 90%">
+                        <div style="height: 180px">
                             <img class=" card-image-top" style="width:100%"
                                  src="https://res.cloudinary.com/dnpodiilj/image/upload/v1733980936/may-bay-phuong-tien-di-chuyen-tien-loi-va-an-toan-nhat-1_fr5hhk.jpg"
                                  alt="Card image">
                         </div>
                         <div class="mt-1">
-                            <div style="height: 60px" class="mt-1">
-                                <h4 class="text-center card-title">Hà Nội đến Vũng Tàu</h4>
+                            <div style="" class="mt-1">
+                                <h4 class="text-center card-title">
+                                    <p>{{ popular_route.departure_airport }}</p>
+                                    <p>đến</p>
+                                    <p>{{ popular_route.arrival_airport }}</p></h4>
+                                <p class="text-center card-text mb-2">Giá trung bình: <span class="text-danger">{{ "{:,.0f}".format(popular_route.average_price) }} VNĐ</span>
+                                </p>
+                                <a href="javascript:;" class="btn btn-primary" onclick="fillForm('{{ popular_route.departure_airport }}', '{{ popular_route.arrival_airport }}')">Đặt ngay</a>
                             </div>
-                            <p class="text-center card-text">Giá trung bình</p>
                         </div>
                     </div>
                 </div>

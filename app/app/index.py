@@ -1,4 +1,5 @@
 import json
+
 from flask import request, redirect, render_template,jsonify
 from flask_login import login_user
 from app import app, controller, login, dao,admin,db
@@ -27,8 +28,8 @@ app.add_url_rule("/login", "login", controller.login_my_user, methods=["POST", "
 #load trang đăng ký
 app.add_url_rule("/register", "register", controller.register, methods=["POST", "GET"])
 
-# #api đăng ký
-# app.add_url_rule("/api/validate_register", "validate_register", controller.validate_register, methods=[ "POST"])
+#load trang nhập mã xác nhận
+app.add_url_rule("/api/verify_code", "verify_code", controller.type_verify_code, methods=["POST"])
 
 #log out
 app.add_url_rule("/logout", "logout", controller.logout_my_user)
@@ -51,6 +52,8 @@ app.add_url_rule("/booking", "booking", controller.booking, methods=["GET", "POS
 
 #load trang chu admin
 app.add_url_rule("/login-admin", "login_admin", controller.admin_login, methods=['POST'])
+
+
 
 
 if __name__ == "__main__":

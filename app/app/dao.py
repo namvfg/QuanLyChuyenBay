@@ -1,7 +1,7 @@
 
 import hashlib
 from typing import TextIO
-from flask import request, jsonify
+from flask import request, jsonify, session
 from sqlalchemy import func
 from sqlalchemy.orm import aliased
 from app import app, db
@@ -84,18 +84,33 @@ def count_notifications():
 
 
 #lấy các chuyến bay phổ biến cho trang chủ
-def load_popular_flight():
+def load_popular_routes():
     DepartureAirport = aliased(Airport)
     ArrivalAirport = aliased(Airport)
-    return db.session.query(Route.id,
+    average_price_query = (db.session.query(Route.id,
                             DepartureAirport.address.label("departure_airport"),
                             ArrivalAirport.address.label("arrival_airport"),
-                            func.avg(TicketPrice.price).label("average_price")
+                            func.avg(TicketPrice.price).label("average_price"),
+                            func.count(Flight.id).label("flight_amount")
                             ).join(Flight, Route.id.__eq__(Flight.route_id)
                             ).join(TicketPrice, Flight.id.__eq__(TicketPrice.flight_id)
                             ).join(DepartureAirport, Route.departure_airport_id.__eq__(DepartureAirport.id)
                             ).join(ArrivalAirport, Route.arrival_airport_id.__eq__(ArrivalAirport.id)
-                            ).group_by(Route.id)
+                            ).group_by(Route.id).limit(10)).subquery()
+
+    flight_amount_query = (db.session.query(Route.id, func.count(Flight.id).label("flight_amount")
+                            ).join(Flight, Route.id.__eq__(Flight.route_id)
+                            ).group_by(Route.id)).subquery()
+
+    return db.session.query(
+        average_price_query.c.id,
+        average_price_query.c.departure_airport,
+        average_price_query.c.arrival_airport,
+        average_price_query.c.average_price,
+        flight_amount_query.c.flight_amount
+    ).join(flight_amount_query, flight_amount_query.c.id.__eq__(average_price_query.c.id)
+    ).order_by(flight_amount_query.c.flight_amount.desc()).all()
+
 #truy xuat du lieu airplane
 def load_airplane():
     return db.session.query(Airplane.id,Airplane.name).all()
@@ -126,3 +141,5 @@ if __name__ == "__main__":
         print(load_airplane())
         print(load_route())
         print(get_total_revenue())
+        print(load_popular_routes())
+
