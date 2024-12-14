@@ -75,8 +75,7 @@ def register():
         key = app.config["VERIFY_EMAIL"]
         verify_code = session[key]["verify_code"]
         code = int(request.form.get("verify_code").strip())
-        print(type(verify_code), type(code))
-        if code != verify_code:
+        if verify_code and code and code != verify_code:
             return jsonify({"status": "error", "message": "Sai mã xác nhận"})
 
         first_name = request.form.get("first_name").strip()

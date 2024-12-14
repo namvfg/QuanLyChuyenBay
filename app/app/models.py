@@ -34,6 +34,7 @@ class Manufacturer(BaseModel):
 class Airplane(BaseModel):
     name = Column(String(100), nullable=False)
     mfg_date = Column(DateTime, nullable=False)
+    seat_quantity = Column(Integer, nullable=False)
 
     manufacturer_id = Column(Integer, ForeignKey(Manufacturer.id), nullable=False)
 
@@ -139,9 +140,6 @@ class SubFlight(BaseModel):
     waiting_duration = Column(Integer, nullable=False, default=0)
 
     flight_id = Column(Integer, ForeignKey(Flight.id), nullable=False)
-
-
-
 
 
 # gia ve
