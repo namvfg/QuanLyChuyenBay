@@ -10,7 +10,7 @@ class ManufacturerView(ModelView):
 
 #máy bay
 class AirplaneView(ModelView):
-    column_list = ["id", "name", "mfg_date", "manufacturer", "seats", "flights"]
+    column_list = ["id", "name", "mfg_date", "seat_quantity","manufacturer", "seats", "flights"]
 
 #hạng ghế
 class SeatClassView(ModelView):
