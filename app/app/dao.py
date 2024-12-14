@@ -6,7 +6,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import aliased
 from app import app, db
 from app.models import User, Customer
-from app.models import Review, Notification, Ticket, TicketPrice, Passenger, SubFlight, Flight, Route, Airport
+from app.models import Review, Notification,Ticket,TicketPrice,Passenger,SubFlight, Airport, Airplane, Route, Flight
 import json
 #xác nhận user
 def auth_user(user_name, password):
@@ -111,7 +111,35 @@ def load_popular_routes():
     ).join(flight_amount_query, flight_amount_query.c.id.__eq__(average_price_query.c.id)
     ).order_by(flight_amount_query.c.flight_amount.desc()).all()
 
+#truy xuat du lieu airplane
+def load_airplane():
+    return db.session.query(Airplane.id,Airplane.name).all()
 
+#truy xuat du lieu airport
+def load_airport():
+    return db.session.query(Airport.id,Airport.name).all()
+
+#truuy xuat du lieu routes
+def load_route():
+    DepartureAirport = aliased(Airport)
+    ArrivalAirport = aliased(Airport)
+    return db.session.query(
+            Route.id,
+            DepartureAirport.name.label("departure_airport"),
+            ArrivalAirport.name.label("arrival_airport")
+        ).join(
+            DepartureAirport, Route.departure_airport_id == DepartureAirport.id
+        ).join(
+            ArrivalAirport, Route.arrival_airport_id == ArrivalAirport.id
+        ).filter(
+        Route.departure_airport_id != Route.arrival_airport_id ).all() # Bỏ tuyến bay có sân bay đi = sân bay đến
+
+# #truuy xuat du lieu routes
+# def load_subflight():
 if __name__ == "__main__":
     with app.app_context():
+        print(load_airplane())
+        print(load_route())
+        print(get_total_revenue())
         print(load_popular_routes())
+
