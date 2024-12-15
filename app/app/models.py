@@ -32,7 +32,7 @@ class Manufacturer(BaseModel):
 
 # may bay
 class Airplane(BaseModel):
-    name = Column(String(100), nullable=False)
+    name = Column(String(100), nullable=False, unique=True)
     mfg_date = Column(DateTime, nullable=False)
     seat_quantity = Column(Integer, nullable=False)
 
@@ -61,7 +61,7 @@ class SeatClass(BaseModel):
 
 # cho ngoi
 class Seat(BaseModel):
-    name = Column(String(10), nullable=False, unique=True)
+    name = Column(String(10), nullable=False)
     active = Column(Boolean, default=False)
 
     seat_class_id = Column(Integer, ForeignKey(SeatClass.id), nullable=False)
@@ -92,7 +92,7 @@ class Airport(BaseModel):
 
 # Tuyen bay
 class Route(BaseModel):
-    note = Column(Text)
+    name = Column(String(10), nullable=False, unique=True)
 
     departure_airport_id = Column(Integer, ForeignKey(Airport.id), nullable=False)
     arrival_airport_id = Column(Integer, ForeignKey(Airport.id), nullable=False)
@@ -105,7 +105,6 @@ class Route(BaseModel):
 # san bay trung gian
 class IntermediateAirport(BaseModel):
     order = Column(Integer, nullable=False)
-    note = Column(Text)
 
     airport_id = Column(Integer, ForeignKey(Airport.id), nullable=False)
     route_id = Column(Integer, ForeignKey(Route.id), nullable=False)

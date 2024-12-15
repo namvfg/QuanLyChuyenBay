@@ -1,0 +1,49 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<div class="border border-dark p-3">
+    <div>
+        <h2 class="text-center text-danger">Nhập thông tin máy bay</h2>
+    </div>
+    <div>
+        <form id="add-airplane-form" action="/admin/add_airplane/" method="post">
+            <div class="mb-3">
+                <label for="name" class="form-label ">Tên máy bay</label>
+                <input type="text" class="form-control border border-dark" id="name" placeholder="Nhập tên máy bay" required>
+            </div>
+            <div class="mb-3">
+                <label for="manufacturer" class="">Hãng sản xuất</label>
+                <select class="form-control border border-dark" id="manufacturer" name="manufacturer" required>
+                    <option value="" disabled selected>-- Chọn hãng --</option>
+                    {% for manufacturer in manufacturers %}
+                    <option value="{{ manufacturer['id'] }}">{{ manufacturer['name'] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="mfg_date" class="form-label ">Ngày sản xuất</label>
+                <input type="datetime-local" class="form-control border border-dark" id="mfg_date" required>
+            </div>
+            {% for seat_class in seat_classes %}
+            <div class="mb-3">
+                <label for="seat_class_{{ seat_class.id }}" class="form-label">Số lượng ghế hạng {{ seat_class.name }}</label>
+                    <div class="d-flex align-items-center">
+                        <input type="number" class="form-control border border-dark seat_quantity " id="seat_class_{{ seat_class.id }}"
+                               placeholder="Nhập số lượng ghế {{ seat_class.name }}" name="seat_class_{{ seat_class.id }}"
+                               style="border-top-right-radius: 0; border-bottom-right-radius: 0;" required>
+                        <span class="input-group-text border border-dark bg-light"
+                              style="border-top-left-radius: 0; border-bottom-left-radius: 0;">Ghế</span>
+                    </div>
+            </div>
+            {% endfor %}
+            <div class="input-submit ">
+                    <button type="submit" class="btn btn-primary" id="submit_btn">Thêm</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='js/add_airplane.js') }}"></script>
+{% endblock %}

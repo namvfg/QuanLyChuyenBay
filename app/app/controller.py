@@ -102,8 +102,10 @@ def type_verify_code():
     key = app.config["VERIFY_EMAIL"]
     data = request.json
     session[key] = data
+    import random
+    verify_code = random.randint(1000, 9999)
     email_target = data["email_target"]
-    verify_code = data["verify_code"]
+    data["verify_code"] = verify_code
     print(verify_code)
     valid = re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email_target)
     if not valid or not mail.verify_email(email_target)["status"].__eq__("valid"):
@@ -114,8 +116,9 @@ def type_verify_code():
 
 #xóa mã xác nhận
 def clear_verify_code():
+    data = request.json
     key = app.config["VERIFY_EMAIL"]
-    session[key] = {}
+    session[key] = data
     return jsonify({"status": "success", "message": "Mã xác nhận đã xóa, bạn có thể nhập lại thông tin"})
 
 #dang xuat
@@ -137,6 +140,8 @@ def search_result():
 def booking():
     return render_template("booking.html")
 
+#=========admin========#
+
 #trang chu admin
 def admin_login():
     user_name = request.form['username']
@@ -147,6 +152,13 @@ def admin_login():
         login_user(user)
         print(current_user)
     return redirect('/admin')
+
+
+
+#end======admin========#
+
+#======staff=======#
+
 
 
 

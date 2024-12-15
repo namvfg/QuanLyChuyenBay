@@ -1,0 +1,58 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+<div class="border border-dark p-3">
+    <div>
+        <h2 class="text-center text-danger">Nhập thông tin tuyến bay</h2>
+    </div>
+    <div>
+        <form id="add-route-form" action="/admin/add_route/" method="post">
+            <div class="mb-3">
+                <label for="name" class="form-label ">Tên tuyến bay</label>
+                <input type="text" class="form-control border border-dark" id="name" placeholder="Nhập tên tuyến bay" required>
+            </div>
+            <div class="mb-3">
+                <label for="departure_airport" class="">Sân bay đi</label>
+                <select class="form-control border border-dark airport_value" id="departure_airport" name="departure_airport" required>
+                    <option value="" disabled selected>-- Chọn sân bay đi --</option>
+                    {% for departure_airport in airports %}
+                    <option value="{{ departure_airport.id }}">{{ departure_airport.name }} ({{ departure_airport.address }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="arrival_airport" class="">Sân bay đến</label>
+                <select class="form-control border border-dark airport_value" id="arrival_airport" name="arrival_airport" required>
+                    <option value="" disabled selected>-- Chọn sân bay đến --</option>
+                    {% for arrival_airport in airports %}
+                    <option value="{{ arrival_airport.id }}">{{ arrival_airport.name }} ({{ arrival_airport.address }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% for i in range(1, max_intermediate_airport_quantity + 1) %}
+            <div class="mb-3">
+                <label for="intermediate_airport_{{ i }}" class="">Sân bay trung gian {{ i }}</label>
+                <select class="form-control border border-dark airport_value" id="intermediate_airport_{{ i }}" name="intermediate_airport_{{ i }}" >
+                    <option value="" disabled selected>-- Chọn sân bay trung gian {{ i }} --</option>
+                    {% for intermediate_airport in airports %}
+                    <option value="{{ intermediate_airport.id }}">{{ intermediate_airport.name }} ({{ intermediate_airport.address }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% endfor %}
+            <div class="input-submit ">
+                    <button type="submit" class="btn btn-primary" id="submit_btn">Thêm</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='js/add_route.js') }}"></script>
+
+
+
+{% endblock %}

@@ -5,7 +5,7 @@ from flask import request, jsonify, session
 from sqlalchemy import func
 from sqlalchemy.orm import aliased
 from app import app, db
-from app.models import User, Customer
+from app.models import User, Customer, Manufacturer, SeatClass, Seat, IntermediateAirport
 from app.models import Review, Notification,Ticket,TicketPrice,Passenger,SubFlight, Airport, Airplane, Route, Flight
 import json
 #xác nhận user
@@ -70,12 +70,12 @@ def get_user_by_id(user_id):
 
 #đọc lấy review từ bảng Review
 def load_reviews():
-    return Review.query
+    return Review.query.all()
 
 
 #đọc lấy notification từ bảng Notification
 def load_notifications():
-    return Notification.query
+    return Notification.query.all()
 
 
 #đếm số notifications
@@ -111,15 +111,25 @@ def load_popular_routes():
     ).join(flight_amount_query, flight_amount_query.c.id.__eq__(average_price_query.c.id)
     ).order_by(flight_amount_query.c.flight_amount.desc()).all()
 
+
+
 #truy xuat du lieu airplane
-def load_airplane():
+def load_airplanes():
     return db.session.query(Airplane.id,Airplane.name).all()
 
 #truy xuat du lieu airport
-def load_airport():
-    return db.session.query(Airport.id,Airport.name).all()
+def load_airports():
+    return Airport.query.all()
 
-#truuy xuat du lieu routes
+#truy xuất dữ liệu manufacturer
+def load_manufacturers():
+    return Manufacturer.query.all()
+
+#truy xuất dữ liệu hạng ghế
+def load_seat_classes():
+    return SeatClass.query.order_by("id").all()
+
+#truy xuat du lieu routes
 def load_route():
     DepartureAirport = aliased(Airport)
     ArrivalAirport = aliased(Airport)
@@ -134,11 +144,47 @@ def load_route():
         ).filter(
         Route.departure_airport_id != Route.arrival_airport_id ).all() # Bỏ tuyến bay có sân bay đi = sân bay đến
 
-# #truuy xuat du lieu routes
-# def load_subflight():
+#lấy số lượng hạng ghế
+def count_seat_classes():
+    return SeatClass.query.count()
+
+#tạo dữ liệu máy bay
+def add_airplane(name, manufacturer_id, mfg_date, seat_quantity):
+    airplane = Airplane(name=name, manufacturer_id=manufacturer_id, mfg_date=mfg_date, seat_quantity=seat_quantity)
+    db.session.add(airplane)
+    db.session.commit()
+
+#lấy airplane theo tên
+def get_air_plane_by_name(name):
+    return Airplane.query.filter_by(name=name).first()
+
+#tạo seat
+def add_seats(airplane_id, seat_class_id, start_number, quantity):
+    for i in range(start_number, start_number + quantity):
+        seat = Seat(name=str(i), seat_class_id=seat_class_id, airplane_id=airplane_id)
+        db.session.add(seat)
+    db.session.commit()
+
+#tạo tuyến bay
+def add_route(name, departure_airport_id, arrival_airport_id):
+    route = Route(name=name, departure_airport_id=departure_airport_id, arrival_airport_id=arrival_airport_id)
+    db.session.add(route)
+    db.session.commit()
+
+#lấy route theo tên
+def get_route_by_name(name):
+    return Route.query.filter_by(name=name).first()
+
+#tạo sân bay trung gian
+def add_intermediate_airport(order, airport_id, route_id):
+    intermediate_airport = IntermediateAirport(order=order, airport_id=airport_id, route_id=route_id)
+    db.session.add(intermediate_airport)
+    db.session.commit()
+
+
 if __name__ == "__main__":
     with app.app_context():
-        print(load_airplane())
+        print(load_airplanes())
         print(load_route())
         print(get_total_revenue())
         print(load_popular_routes())
