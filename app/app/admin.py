@@ -1,7 +1,11 @@
 from app import app, db, dao
+from flask import request, jsonify
+
+from app.dao import add_seats
 from app.models import Manufacturer, SeatClass, Seat, Airplane, Airport, Route, IntermediateAirport, Flight, SubFlight, TicketPrice, User, AdminWebsite, Customer, Staff, StaffRole, Receipt, Passenger, Ticket, Review, Notification, Rule
 from flask_admin import Admin, BaseView, expose, AdminIndexView
 from flask_admin.contrib.sqla import ModelView
+from datetime import datetime
 from flask_login import current_user
 
 #hãng sản xuất
@@ -94,9 +98,40 @@ class MyAdminView(AdminIndexView):
         total_revenue = dao.get_total_revenue()
         return self.render("admin/index.html", tickets=tickets, passengers = passengers,total_revenue = total_revenue)
 
+#thêm máy bay
+class AddAirplaneView(BaseView):
+    @expose('/', methods=["GET", "POST"]) #chỉ định đường dẫn để map vào admin
+    def index(self):
+        if request.method.__eq__('POST'):
+            data = request.json
+            name = data["name"]
+            manufacturer_id = int(data["manufacturer_id"])
+            mfg_date = datetime.fromisoformat(data["mfg_date"])
+            seat_quantity = int(data["seat_quantity"])
+            seat_inputs = data["seat_input"]
+            seat_class_id = 1
+            start_number = 1
+            seat_class_quantity = dao.count_seat_classes()
+            print(seat_inputs)
+            try:
+                dao.add_airplane(name=name, manufacturer_id=manufacturer_id, mfg_date=mfg_date, seat_quantity=seat_quantity)
+                airplane = dao.get_air_plane_by_name(name)
+                print(airplane.id)
+                for i in range(1, seat_class_quantity + 1):
+                    seat_quantity = seat_inputs[str(i)]
+                    add_seats(airplane_id=airplane.id, seat_class_id=seat_class_id,
+                              start_number=start_number, quantity=seat_quantity)
+                    start_number += seat_quantity
+                    seat_class_id += 1
+                return jsonify({"status": "success", "message": "Thành công"})
+            except Exception as e:
+                return jsonify({"status": "error", "message": {str(e)}})
+        manufacturers = dao.load_manufacturers()
+        seat_classes = dao.load_seat_classes()
+        return self.render('admin/add_airplane.html', manufacturers=manufacturers, seat_classes=seat_classes)
 
 
-admin = Admin(app=app, name="Trang quản trị", template_mode="bootstrap4",index_view=MyAdminView())
+admin = Admin(app=app, name="Trang quản trị", template_mode="bootstrap4", index_view=MyAdminView())
 
 
 admin.add_view(ManufacturerView(Manufacturer, db.session))
@@ -118,3 +153,9 @@ admin.add_view(TicketView(Ticket, db.session))
 admin.add_view(ReviewView(Review, db.session))
 admin.add_view(NotificationView(Notification, db.session))
 admin.add_view(RuleView(Rule, db.session))
+
+#=========View=========#
+admin.add_view(AddAirplaneView(name="Add Airplane", endpoint='add_airplane'))
+
+
+#end======View=========#

@@ -32,7 +32,7 @@ class Manufacturer(BaseModel):
 
 # may bay
 class Airplane(BaseModel):
-    name = Column(String(100), nullable=False)
+    name = Column(String(100), nullable=False, unique=True)
     mfg_date = Column(DateTime, nullable=False)
     seat_quantity = Column(Integer, nullable=False)
 
@@ -61,7 +61,7 @@ class SeatClass(BaseModel):
 
 # cho ngoi
 class Seat(BaseModel):
-    name = Column(String(10), nullable=False, unique=True)
+    name = Column(String(10), nullable=False)
     active = Column(Boolean, default=False)
 
     seat_class_id = Column(Integer, ForeignKey(SeatClass.id), nullable=False)

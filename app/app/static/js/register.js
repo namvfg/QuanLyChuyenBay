@@ -35,13 +35,12 @@ document.getElementById('send-verify-code').addEventListener('click', function(e
     document.getElementById('verify_code').removeAttribute("readonly");
 
     let emailTarget = document.getElementById("email").value;
-    let verifyCode = Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;
     // Gửi yêu cầu POST bằng fetch
     fetch('/api/verify_code', {
         method: 'POST',
         body: JSON.stringify({
             "email_target": emailTarget,
-            "verify_code": verifyCode
+            "verify_code": -1
         }),
         headers: {
             "Content-Type": "application/json"
@@ -73,6 +72,8 @@ document.getElementById('change_info').addEventListener('click', function(event)
     fetch('/api/clear_verify_code', {
         method: 'POST',
         body: JSON.stringify({
+            "email_target": "",
+            "verify_code": -1
         }),
         headers: {
             "Content-Type": "application/json"
