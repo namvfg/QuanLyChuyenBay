@@ -98,6 +98,14 @@ class MyAdminView(AdminIndexView):
         total_revenue = dao.get_total_revenue()
         return self.render("admin/index.html", tickets=tickets, passengers = passengers,total_revenue = total_revenue)
 
+
+class StatsView(BaseView):
+    @expose("/")
+    def index(self):
+        return self.render('admin/stats.html')
+    def is_accessible(self):
+        return current_user.is_authenticated
+
 #thêm máy bay
 class AddAirplaneView(BaseView):
     @expose('/', methods=["GET", "POST"]) #chỉ định đường dẫn để map vào admin
@@ -158,8 +166,6 @@ class AddRouteView(BaseView):
                 return jsonify({"status": "success", "message": "Thành công"})
             except Exception as e:
                 return jsonify({"status": "error", "message": {str(e)}})
-
-
         airports = dao.load_airports()
         max_intermediate_airport_quantity = app.config["MAX_INTERMEDIATE_AIRPORT_QUANTITY"]
         return self.render("admin/add_route.html", airports=airports,
@@ -168,7 +174,6 @@ class AddRouteView(BaseView):
 
 
 admin = Admin(app=app, name="Trang quản trị", template_mode="bootstrap4", index_view=MyAdminView())
-
 
 admin.add_view(ManufacturerView(Manufacturer, db.session))
 admin.add_view(AirplaneView(Airplane, db.session))
@@ -190,8 +195,12 @@ admin.add_view(ReviewView(Review, db.session))
 admin.add_view(NotificationView(Notification, db.session))
 admin.add_view(RuleView(Rule, db.session))
 
+
+
+
 #=========View=========#
 admin.add_view(AddAirplaneView(name="Add Airplane", endpoint='add_airplane'))
 admin.add_view(AddRouteView(name="Add Route", endpoint="add_route"))
-
+admin.add_view(StatsView(name='Thong ke'))
 #end======View=========#
+

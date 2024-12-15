@@ -1,0 +1,148 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .admin-box {
+    max-width: 600px;
+    max-height: 300px;
+}
+
+.admin-button {
+    align-self: stretch; /* Kéo nút theo chiều cao của ô */
+    padding: 0 20px; /* Điều chỉnh khoảng cách trong nút */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    white-space: nowrap; /* Đảm bảo nút không bị xuống dòng */
+}
+    </style>
+</head>
+<body>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<div class="container">
+    <!-- Admin Greeting Box -->
+    <div class="card p-3 shadow-sm admin-box mb-4">
+        <div class="d-flex align-items-center">
+            <h5>THỐNG KÊ BÁO CÁO <i class="fa-solid fa-plane ms-3"></i></h5>
+        </div>
+    </div>
+
+    <!-- Date Pickers and Button -->
+    <div class="d-flex align-items-end">
+        <!-- From Date -->
+        <div class="form-group me-3">
+            <label for="fromMonth">Tháng thống kê:</label>
+            <input type="month" id="fromMonth" class="form-control admin-date-picker"/>
+        </div>
+
+        <!-- Submit Button -->
+        <button class="btn btn-primary mb-3">Thống kê</button>
+    </div>
+</div>
+
+
+<!-- Statistics Section -->
+<div class="row text-center">
+    <!-- Tổng số vé -->
+    <div class="col-md-4 mb-3">
+        <div class="card stat-box shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Tổng số vé</h5>
+                <p class="display-6 text-primary">{{ tickets }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tổng giá vé -->
+    <div class="col-md-4 mb-3">
+        <div class="card stat-box shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Tổng doanh thu</h5>
+                <p class="display-6 text-success">{{ total_revenue }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tổng khách hàng -->
+    <div class="col-md-4 mb-3">
+        <div class="card stat-box shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Tổng khách hàng</h5>
+                <p class="display-6 text-warning">{{ passengers }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <!-- Biểu đồ 1 -->
+    <div class="col-md-6 col-12">
+        <canvas id="myChart1" style="height: 400px;"></canvas>
+    </div>
+    <!-- Biểu đồ 2 -->
+    <div class="col-md-6 col-12">
+        <canvas id="myChart2" style="height: 400px;"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    window.onload = function() {
+        // Cấu hình cho biểu đồ 1 (Pie Chart)
+        const ctx1 = document.getElementById('myChart1').getContext('2d');
+            new Chart(ctx1, {
+                type: 'pie',
+                data: {
+                    labels: ['Blue', 'Red', 'Yellow'],
+                    datasets: [
+                        {
+                            label: '3 Days', // Tên tập dữ liệu 1
+                            data: [30, 37, 31], // Giá trị cho từng nhãn
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'top' },
+                        title: { display: true, text: 'Biểu đồ 1: Pie Chart' }
+                    }
+                }
+            });
+
+        // Cấu hình cho biểu đồ 2 (Bar Chart)
+        const ctx2 = document.getElementById('myChart2').getContext('2d');
+            new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: ['Day1', 'Day2', 'Day3'],
+                    datasets: [
+                        {
+                            label: 'Blue',
+                            data: [12, 7, 11],
+                        },
+                        {
+                            label: 'Red',
+                            data: [5, 19, 12],
+                        },
+                        {
+                            label: 'Yellow',
+                            data: [13, 11, 8],
+                        }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'right' },
+                        title: { display: true, text: 'Chart.js Horizontal Bar Chart' }
+                    }
+                }
+            });
+
+    }
+</script>
+
+{% endblock %}
