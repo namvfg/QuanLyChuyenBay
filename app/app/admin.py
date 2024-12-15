@@ -94,11 +94,16 @@ class MyAdminView(AdminIndexView):
         total_revenue = dao.get_total_revenue()
         return self.render("admin/index.html", tickets=tickets, passengers = passengers,total_revenue = total_revenue)
 
+class StatsView(BaseView):
+    @expose("/")
+    def index(self):
+        return self.render('admin/stats.html')
+    def is_accessible(self):
+        return current_user.is_authenticated
+
 
 
 admin = Admin(app=app, name="Trang quản trị", template_mode="bootstrap4",index_view=MyAdminView())
-
-
 admin.add_view(ManufacturerView(Manufacturer, db.session))
 admin.add_view(AirplaneView(Airplane, db.session))
 admin.add_view(SeatClassView(SeatClass, db.session))
@@ -118,3 +123,4 @@ admin.add_view(TicketView(Ticket, db.session))
 admin.add_view(ReviewView(Review, db.session))
 admin.add_view(NotificationView(Notification, db.session))
 admin.add_view(RuleView(Rule, db.session))
+admin.add_view(StatsView(name='Thong ke'))
