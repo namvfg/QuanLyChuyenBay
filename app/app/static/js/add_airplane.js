@@ -6,11 +6,11 @@ document.getElementById('add-airplane-form').addEventListener('submit', function
     let seatQuantities = document.getElementsByClassName("seat_quantity");
     let seatTotal = 0;
     let i = 1;
-    let seatInput = {};
+    let seatInputs = {};
     for (let seatQuantity of seatQuantities) {
         let seatValue = parseInt(seatQuantity.value) || 0;
         seatTotal = seatTotal + seatValue
-        seatInput[`${i}`] = seatValue
+        seatInputs[`${i}`] = seatValue
         i++;
     }
     console.log(seatInput, seatTotal)
@@ -22,7 +22,7 @@ document.getElementById('add-airplane-form').addEventListener('submit', function
             "manufacturer_id": manufacturerId,
             "mfg_date": mfgDate,
             "seat_quantity": seatTotal,
-            "seat_input": seatInput
+            "seat_inputs": seatInputs
         }),
         headers: {
             "Content-Type": "application/json"
@@ -42,3 +42,8 @@ document.getElementById('add-airplane-form').addEventListener('submit', function
         toastr.error("Có lỗi xảy ra. Vui lòng thử lại.");
     });
 });
+
+
+
+
+

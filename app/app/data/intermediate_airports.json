@@ -1,28 +1,24 @@
 [
         {
             "order": 1,
-            "note": "",
             "airport_id": 3,
             "route_id": 1,
             "id": 1
         },
         {
             "order": 1,
-            "note": "",
             "airport_id": 1,
             "route_id": 2,
             "id": 2
         },
         {
             "order": 1,
-            "note": "",
             "airport_id": 1,
             "route_id": 3,
             "id": 3
         },
         {
             "order": 1,
-            "note": "",
             "airport_id": 3,
             "route_id": 5,
             "id": 4

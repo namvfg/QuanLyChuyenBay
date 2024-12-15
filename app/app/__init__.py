@@ -28,6 +28,9 @@ app.config["PASSWORD_EMAIL"] = "prnksqarnigvvjkq"
 #key cho api hunter.io
 app.config["KEY_HUNTER.IO"] = "32b4507da8872ff43ad7ef9122de8bee777c1db5"
 
+#số lượng sân bay trung gian tối đa
+app.config["MAX_INTERMEDIATE_AIRPORT_QUANTITY"] = 2
+
 cloudinary.config(cloud_name="dnpodiilj",
                   api_key="874131819545712",
                   api_secret="xHDsHPIIbwKkoT6qfPYTAvn4pmA")

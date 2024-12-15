@@ -92,7 +92,7 @@ class Airport(BaseModel):
 
 # Tuyen bay
 class Route(BaseModel):
-    note = Column(Text)
+    name = Column(String(10), nullable=False, unique=True)
 
     departure_airport_id = Column(Integer, ForeignKey(Airport.id), nullable=False)
     arrival_airport_id = Column(Integer, ForeignKey(Airport.id), nullable=False)
@@ -105,7 +105,6 @@ class Route(BaseModel):
 # san bay trung gian
 class IntermediateAirport(BaseModel):
     order = Column(Integer, nullable=False)
-    note = Column(Text)
 
     airport_id = Column(Integer, ForeignKey(Airport.id), nullable=False)
     route_id = Column(Integer, ForeignKey(Route.id), nullable=False)

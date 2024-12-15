@@ -5,7 +5,7 @@ from flask import request, jsonify, session
 from sqlalchemy import func
 from sqlalchemy.orm import aliased
 from app import app, db
-from app.models import User, Customer, Manufacturer, SeatClass, Seat
+from app.models import User, Customer, Manufacturer, SeatClass, Seat, IntermediateAirport
 from app.models import Review, Notification,Ticket,TicketPrice,Passenger,SubFlight, Airport, Airplane, Route, Flight
 import json
 #xác nhận user
@@ -119,7 +119,7 @@ def load_airplanes():
 
 #truy xuat du lieu airport
 def load_airports():
-    return db.session.query(Airport.id,Airport.name).all()
+    return Airport.query.all()
 
 #truy xuất dữ liệu manufacturer
 def load_manufacturers():
@@ -163,6 +163,22 @@ def add_seats(airplane_id, seat_class_id, start_number, quantity):
     for i in range(start_number, start_number + quantity):
         seat = Seat(name=str(i), seat_class_id=seat_class_id, airplane_id=airplane_id)
         db.session.add(seat)
+    db.session.commit()
+
+#tạo tuyến bay
+def add_route(name, departure_airport_id, arrival_airport_id):
+    route = Route(name=name, departure_airport_id=departure_airport_id, arrival_airport_id=arrival_airport_id)
+    db.session.add(route)
+    db.session.commit()
+
+#lấy route theo tên
+def get_route_by_name(name):
+    return Route.query.filter_by(name=name).first()
+
+#tạo sân bay trung gian
+def add_intermediate_airport(order, airport_id, route_id):
+    intermediate_airport = IntermediateAirport(order=order, airport_id=airport_id, route_id=route_id)
+    db.session.add(intermediate_airport)
     db.session.commit()
 
 
