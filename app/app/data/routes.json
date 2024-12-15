@@ -1,30 +1,30 @@
 [
         {
-            "note": "",
+            "name": "T01",
             "departure_airport_id": 1,
             "arrival_airport_id": 4,
             "id": 1
         },
         {
-            "note": "",
+            "name": "T02",
             "departure_airport_id": 2,
             "arrival_airport_id": 4,
             "id": 2
         },
         {
-            "note": "",
+            "name": "T03",
             "departure_airport_id": 2,
             "arrival_airport_id": 3,
             "id": 3
         },
         {
-            "note": "",
+            "name": "T04",
             "departure_airport_id": 3,
             "arrival_airport_id": 4,
             "id": 4
         },
         {
-            "note": "",
+            "name": "T05",
             "departure_airport_id": 4,
             "arrival_airport_id": 1,
             "id": 5

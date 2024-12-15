@@ -3,7 +3,6 @@
 
             // Tạo FormData từ form
             const formData = new FormData(this);
-            console.log(formData)
             // Gửi yêu cầu POST bằng fetch
             fetch('/register', {
                 method: 'POST',

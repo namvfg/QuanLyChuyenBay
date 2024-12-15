@@ -30,11 +30,11 @@ class AirportView(ModelView):
 
 #tuyến bay
 class RouteView(ModelView):
-    column_list = ["id", "note", "departure_airport", "intermediate_airports", "arrival_airport", "flights"]
+    column_list = ["id", "name", "departure_airport", "intermediate_airports", "arrival_airport", "flights"]
 
 #sân bay trung gian
 class IntermediateAirportView(ModelView):
-    column_list = ["id", "order", "note", "intermediate_airport", "intermediate_airports_route"]
+    column_list = ["id", "order", "intermediate_airport", "intermediate_airports_route"]
 
 #chuyến bay
 class FlightView(ModelView):
@@ -105,10 +105,13 @@ class AddAirplaneView(BaseView):
         if request.method.__eq__('POST'):
             data = request.json
             name = data["name"]
+            existing_airplane = dao.get_route_by_name(name=name)
+            if existing_airplane:
+                return jsonify({"status": "error", "message": "Đã tồn tại tên máy bay này"})
             manufacturer_id = int(data["manufacturer_id"])
             mfg_date = datetime.fromisoformat(data["mfg_date"])
             seat_quantity = int(data["seat_quantity"])
-            seat_inputs = data["seat_input"]
+            seat_inputs = data["seat_inputs"]
             seat_class_id = 1
             start_number = 1
             seat_class_quantity = dao.count_seat_classes()
@@ -129,6 +132,39 @@ class AddAirplaneView(BaseView):
         manufacturers = dao.load_manufacturers()
         seat_classes = dao.load_seat_classes()
         return self.render('admin/add_airplane.html', manufacturers=manufacturers, seat_classes=seat_classes)
+
+
+#thêm tuyến bay
+class AddRouteView(BaseView):
+    @expose('/', methods=["GET", "POST"])
+    def index(self):
+        if request.method.__eq__("POST"):
+            data = request.json
+            name = data["name"]
+            existing_route = dao.get_route_by_name(name=name)
+            if existing_route:
+                return jsonify({"status": "error", "message": "Đã tồn tại tên tuyến bay này"})
+
+            departure_airport_id = int(data["departure_airport_id"])
+            arrival_airport_id = int(data["arrival_airport_id"])
+            intermediate_airport_quantity = int(data["intermediate_airport_quantity"])
+            intermediate_airports = data["intermediate_airports"]
+            try:
+                dao.add_route(name=name, departure_airport_id=departure_airport_id, arrival_airport_id=arrival_airport_id)
+                route = dao.get_route_by_name(name=name)
+                for i in range(1, intermediate_airport_quantity + 1):
+                    airport_id = intermediate_airports[str(i)]
+                    dao.add_intermediate_airport(order=i, airport_id=airport_id, route_id=route.id)
+                return jsonify({"status": "success", "message": "Thành công"})
+            except Exception as e:
+                return jsonify({"status": "error", "message": {str(e)}})
+
+
+        airports = dao.load_airports()
+        max_intermediate_airport_quantity = app.config["MAX_INTERMEDIATE_AIRPORT_QUANTITY"]
+        return self.render("admin/add_route.html", airports=airports,
+                           max_intermediate_airport_quantity=max_intermediate_airport_quantity)
+
 
 
 admin = Admin(app=app, name="Trang quản trị", template_mode="bootstrap4", index_view=MyAdminView())
@@ -156,6 +192,6 @@ admin.add_view(RuleView(Rule, db.session))
 
 #=========View=========#
 admin.add_view(AddAirplaneView(name="Add Airplane", endpoint='add_airplane'))
-
+admin.add_view(AddRouteView(name="Add Route", endpoint="add_route"))
 
 #end======View=========#
