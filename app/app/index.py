@@ -22,6 +22,10 @@ def staff_scheduling():
     route_info = load_route()
     return render_template('staff/scheduling.html',airplane_info = airplane_info,airport_info = airport_info,route_info = route_info)
 
+@app.route('/staff/selling.html')
+def staff_selling():
+    return render_template('staff/selling.html')
+
 #load trang đăng nhập
 app.add_url_rule("/login", "login", controller.login_my_user, methods=["POST", "GET"])
 
