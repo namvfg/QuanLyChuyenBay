@@ -93,18 +93,23 @@
         <div class="title mb-5">
             <h3 class="text-decoration-underline">Chọn chuyến bay của bạn đi nào</h3>
         </div>
-        <div class="row border border-dark rounded">
+        {% for flight in flights %}
+        <div class="row border border-dark rounded mb-3">
             <div class="col-md-4 d-flex align-items-center justify-content-center flex-column mt-3">
-                <p>Thời điểm bay: </p>
-                <p>Số sân bay trung gian: </p>
+                <p>Thời điểm bay: {{ flight.flight_date }}</p>
+                <p>Số sân bay trung gian: {{ flight.intermediate_airport_quantity }}</p>
             </div>
-            <div class="col-md-4 d-flex align-items-center justify-content-center mt-3">
-                <p>Thời gian bay: 2h</p>
+            <div class="col-md-4 d-flex align-items-center flex-column justify-content-center mt-3">
+                <div>
+                    <p><span class="text-danger">{{ flight.departure_airport_address }}</span> - <span class="text-danger">{{ flight.arrival_airport_address }}</span></p>
+                </div>
+                <div><p>Thời gian bay: {{ flight.total_time }} phút</p></div>
             </div>
             <div class="col-md-4 d-flex align-items-center justify-content-center">
-                <a href="/booking"><button class="btn btn-primary">Đặt vé</button></a>
+                <a href="/booking/{{ flight.id }}"><button class="btn btn-primary">Đặt vé</button></a>
             </div>
         </div>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}
