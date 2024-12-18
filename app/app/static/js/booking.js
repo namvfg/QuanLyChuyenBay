@@ -1,3 +1,4 @@
+
 function toggleSeat(seatId, seatName, ticketPrice, ticketPriceId, active) {
     if (active == false) {
         fetch("/api/add_seat", {

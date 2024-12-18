@@ -129,6 +129,10 @@ def staff_scheduling2():
                            seat_classes=seat_classes,
                            airport_array=airport_array)
 
+@app.route('/staff/selling.html')
+def staff_selling():
+    return render_template('staff/selling.html')
+
 #load trang đăng nhập
 app.add_url_rule("/login", "login", controller.login_my_user, methods=["POST", "GET"])
 
