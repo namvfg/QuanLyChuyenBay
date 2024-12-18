@@ -6,7 +6,7 @@ from app import mail
 from flask_login import login_user,current_user, logout_user
 from flask import render_template, request, jsonify, session, url_for, flash
 from flask import request, redirect, render_template
-from app import app, db, dao
+from app import app, db, dao, utils
 from app.dao import load_popular_routes
 from app.decorators import annonymous_user
 import cloudinary.uploader
@@ -56,7 +56,9 @@ def register():
         email = request.form.get("email").strip()
         #email không hợp lệ
         valid = re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email)
-        if not valid or not mail.verify_email(email)["status"].__eq__("valid"):
+
+        status = mail.verify_email(email)["status"]
+        if not valid or (status != "valid" and status != "webmail" and status != "accept_all"):
             return jsonify({"status": "error", "message": "Email không hợp lệ"})
         #email đã tồn tại
         existing_customer = dao.get_customer_by_email(email=email)
@@ -72,7 +74,7 @@ def register():
         if not password.__eq__(confirm_password):
             return jsonify({"status": "error", "message": "Mật khẩu không khớp"})
 
-        key = app.config["VERIFY_EMAIL"]
+        key = app.config["KEY_VERIFY_EMAIL"]
         verify_code = session[key]["verify_code"]
         code = int(request.form.get("verify_code").strip())
         if verify_code and code and code != verify_code:
@@ -99,16 +101,22 @@ def register():
 
 #nhập mã xác nhận
 def type_verify_code():
-    key = app.config["VERIFY_EMAIL"]
+    key = app.config["KEY_VERIFY_EMAIL"]
     data = request.json
     session[key] = data
+
     import random
     verify_code = random.randint(1000, 9999)
     email_target = data["email_target"]
     data["verify_code"] = verify_code
-    print(verify_code)
+
     valid = re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email_target)
-    if not valid or not mail.verify_email(email_target)["status"].__eq__("valid"):
+    status = mail.verify_email(email_target)["status"]
+    print(valid)
+    print(status)
+    if not valid or (status != "valid" and status != "webmail" and status != "accept_all"):
+
+
         return jsonify({"status": "error", "message": "Email không hợp lệ"})
     else:
         mail.send_authenticate_mail(email_target, subject="Verify Code", body=str(verify_code))
@@ -117,7 +125,7 @@ def type_verify_code():
 #xóa mã xác nhận
 def clear_verify_code():
     data = request.json
-    key = app.config["VERIFY_EMAIL"]
+    key = app.config["KEY_VERIFY_EMAIL"]
     session[key] = data
     return jsonify({"status": "success", "message": "Mã xác nhận đã xóa, bạn có thể nhập lại thông tin"})
 
@@ -133,12 +141,37 @@ def search_result():
     flight_date = request.args.get("flight_date")
     if flight_date:
         flight_date = datetime.strptime(flight_date, "%Y-%m-%d")
-    print(type(flight_date))
-    return render_template("search_result.html", start_point=start_point, end_point=end_point, flight_date=flight_date)
+    flights = dao.load_flight_for_search_result()
+    return render_template("search_result.html", flights=flights)
 
 #trang đặt vé
-def booking():
-    return render_template("booking.html")
+def booking(flight_id):
+    flight = dao.load_flight_by_id(flight_id)
+    seat_classes = dao.count_seats_in_seat_classes_by_airplane_id(flight.airplane_id)
+    seats = dao.load_seats_by_flight_id(flight_id)
+    return render_template("booking.html", seat_classes=seat_classes, seats=seats)
+
+#api thêm vé
+def add_seat():
+    key = app.config["KEY_CART"]
+    cart = session[key]
+    data = request.json
+    seat_id = str(data["seat_id"])
+    seat_name = data["seat_name"]
+    ticket_price = data["ticket_price"]
+    ticket_price_id = data["ticket_price_id"]
+    cart[seat_id] = {
+        "seat_id": seat_id,
+        "seat_name": seat_name,
+        "ticket_price": ticket_price,
+        "ticket_price_id": ticket_price_id
+    }
+    session[key] = cart
+
+    return jsonify()
+
+
+
 
 #=========admin========#
 

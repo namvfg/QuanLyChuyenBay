@@ -13,7 +13,6 @@ document.getElementById('add-airplane-form').addEventListener('submit', function
         seatInputs[`${i}`] = seatValue
         i++;
     }
-    console.log(seatInput, seatTotal)
 
     fetch('/admin/add_airplane/', {
         method: 'POST',

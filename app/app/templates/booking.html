@@ -3,7 +3,7 @@
 
 {% endblock %}
 {% block content %}
-<div class="mb-3 border border-dark bg-white" style="height:600px">
+<div class="mb-3 border border-dark bg-white" style="height:85vh">
     <div class="ms-3 mt-2 text-decoration-underline">
         <h3>Đặt vé</h3>
     </div>
@@ -11,15 +11,17 @@
         <div class="col-md-3 col-12 d-flex flex-column" style="height: 70vh">
             <div>
                 <div class="m-3">
-                    <label class="ms-3" for="chosen-seats">Read-Only Input:</label>
-                    <input class="form-control" type="text" id="chosen-seats" value="This is read-only" readonly>
+                    <label class="ms-3" for="chosen-seats">Các ghế đã đặt:</label>
+                    <input class="form-control" type="text" id="chosen-seats"
+                           placeholder="Các ghế đã đặt sẽ hiển thị ở đây" readonly>
                 </div>
                 <div class="m-3 ">
                     <label class="ms-3" for="myListBox">Chọn hạng ghế:</label>
                     <select id="myListBox" class="form-control">
-                        <option value="option1">Phổ thông siêu tiết kiệm</option>
-                        <option value="option2">Phổ thông</option>
-                        <option value="option3">Thương gia</option>
+                        <option value="" disabled selected>Chọn hạng ghế</option>
+                        {% for seat_class in seat_classes %}
+                        <option value="{{ seat_class.id }}">{{ seat_class.name }}</option>
+                        {% endfor %}
                     </select>
                 </div>
             </div>
@@ -118,15 +120,13 @@
         </div>
         <div class="col-md-4 col-12 d-flex align-item-center justify-content-center">
             <div class="border border-dark ms-5 text-center" style="height: 100%; width: 280px">
-                {% for i in range(1, 40 + 1) %}
-                {% if i % 4 == 1 %}
-                <button class="btn btn-outline-primary mt-2 ms-1 seat-toggle" style="">{{ i }}</button>
-                {% elif i % 4 == 2 %}
-                <button class="btn btn-outline-primary mt-2 seat-toggle" style="">{{ i }}</button>
-                {% elif i % 4 == 3 %}
-                <button class="btn btn-outline-primary ms-5 mt-2 seat-toggle" style="">{{ i }}</button>
-                {% else %}
-                <button class="btn btn-outline-primary mt-2 seat-toggle" style="">{{ i }}</button>
+                {% for i in range(1, seats|length + 1) %}
+                {% set extra_class = "ms-1" if i % 4 == 1 else "ms-5" if i % 4 == 3 else "" %}
+                <button class="btn btn-outline-primary mt-2 {{ extra_class }} seat-toggle" href="javascript:;" ontoggle=""
+                        id="seat_{{ seats[i - 1].name }}">
+                    {{ seats[i - 1].name }}
+                </button>
+                {% if i % 4 == 0 %}
                 <br>
                 {% endif %}
                 {% endfor %}

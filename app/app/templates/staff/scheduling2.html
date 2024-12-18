@@ -1,0 +1,77 @@
+{% extends 'staff/index.html' %}
+
+{% block content %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<div class="container">
+    <div class="mt-3 mb-3 " style="width: 30%">
+        <div class="card p-3 d-flex align-item-center justify-content-center shadow-sm scheduling-box">
+            <div class="">
+                <div>
+                    <h5 class="mb-1 "><i class="fa-regular fa-calendar"></i> LẬP LỊCH CHUYẾN BAY<i
+                            class="fa-solid fa-plane ms-3"></i>
+                    </h5>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class=" border border-dark bg-white mb-3">
+        <div class="p-3">
+            <form id="scheduling-form-2" onsubmit="return submitSchedulingForm2(event)">
+                 <div class="row mb-3">
+                    {% for seat_class in seat_classes %}
+                    <div class=" mb-3">
+                        <div class="">
+                            <label for="price_seat_class_{{ seat_class.id }}" class="form-label">Giá vé ghế {{ seat_class.name }}</label>
+                            <div class="d-flex align-items-center">
+                                <input type="number" min="0" step="100000" class="form-control border border-dark seat_class_price" id="price_seat_class_{{ seat_class.id }}"
+                                       placeholder="Nhập giá vé ghế {{ seat_class.name }}">
+                                <span class="input-group-text border border-dark bg-light">VND</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="mb-3">
+                    {% for i in range(1, airport_array|length) %}
+                    <div class="mb-3">
+                        <div>
+                            <h4>Chặng {{ i }} ({{ airport_array[i - 1].address }} - {{ airport_array[i].address }})</h4>
+                        </div>
+                        <div class="">
+                            <label for="waiting_duration_{{ i }}" class="form-label">Thời gian chờ chặng {{ i }}</label>
+                            <div class="d-flex align-items-center">
+                                <input type="number" min="0" step="5" class="form-control border border-dark waiting_duration" id="waiting_duration_{{ i }}"
+                                        {% if i == 1 %} value="0" readonly {% else %} placeholder="Nhập thời gian chờ chặng {{ i }}" {% endif %}>
+                                <span class="input-group-text border border-dark bg-light">phút</span>
+                            </div>
+                        </div>
+                        <div class="">
+                            <label for="flying_duration_{{ i }}" class="form-label ">Thời gian bay chặng {{ i }}</label>
+                            <div class="d-flex align-items-center">
+                                <input type="number" min="0" step="5" class="form-control border border-dark flying_duration" id="flying_duration_{{ i }}"
+                                       placeholder="Nhập thời gian bay chặng {{ i }}">
+                                <span class="input-group-text border border-dark bg-light">phút</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="d-flex">
+                    <div class="me-3">
+                        <button type="reset" class="btn btn-danger ">Xóa</button>
+                    </div>
+                    <div class="">
+                        <button type="submit" class="btn btn-primary "
+                                data-bs-target="">Lưu
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='js/scheduling.js') }}"></script>
+{% endblock %}

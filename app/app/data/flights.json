@@ -3,6 +3,7 @@
             "id": 1,
             "name": "DT-B001",
             "flight_date": "2024-12-31 14:37:00",
+            "total_time": 30,
             "airplane_id": 1,
             "route_id": 1,
             "planner_id": 3
@@ -11,6 +12,7 @@
             "id": 2,
             "name": "DT-B002",
             "flight_date": "2025-01-16 14:38:00",
+            "total_time": 30,
             "airplane_id": 1,
             "route_id": 2,
             "planner_id": 3
@@ -19,6 +21,7 @@
             "id": 3,
             "name": "DT-A001",
             "flight_date": "2024-12-29 14:41:00",
+            "total_time": 30,
             "airplane_id": 2,
             "route_id": 3,
             "planner_id": 3
@@ -27,6 +30,7 @@
             "id": 4,
             "name": "DT-E001",
             "flight_date": "2024-12-31 14:42:00",
+            "total_time": 30,
             "airplane_id": 3,
             "route_id": 5,
             "planner_id": 3
@@ -35,6 +39,7 @@
             "id": 5,
             "name": "DT-A002",
             "flight_date": "2025-01-04 14:43:00",
+            "total_time": 30,
             "airplane_id": 2,
             "route_id": 4,
             "planner_id": 3
@@ -43,6 +48,7 @@
             "id": 6,
             "name": "DT-E002",
             "flight_date": "2024-12-10 14:47:00",
+            "total_time": 30,
             "airplane_id": 3,
             "route_id": 4,
             "planner_id": 3

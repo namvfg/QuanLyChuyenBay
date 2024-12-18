@@ -20,7 +20,14 @@ app.config["PHONE_NUMBER_LENGTH"] = 10
 app.config["PASSWORD_LENGTH"] = 6
 
 #key cho session chứa email_target và verify_code
-app.config["VERIFY_EMAIL"] = "verify_email"
+app.config["KEY_VERIFY_EMAIL"] = "verify_email"
+
+#key cho session để lập lịch chuyến bay
+app.config["KEY_SCHEDULING"] = "scheduling"
+
+#key để đặt vé
+app.config["KEY_CART"] = "cart"
+
 #email để gửi mail xác nhận
 app.config["EMAIL"] = "duakhongchau1234@gmail.com"
 #password 2 lớp

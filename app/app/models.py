@@ -116,6 +116,7 @@ class IntermediateAirport(BaseModel):
 class Flight(BaseModel):
     name = Column(String(20), nullable=False, unique=True)
     flight_date = Column(DateTime, nullable=False)
+    total_time = Column(Integer, nullable=False)
 
     airplane_id = Column(Integer, ForeignKey(Airplane.id), nullable=False)
     route_id = Column(Integer, ForeignKey(Route.id), nullable=False)
@@ -129,12 +130,10 @@ class Flight(BaseModel):
         return self.name
 
 
-
-
 # chuyen bay nho
 class SubFlight(BaseModel):
     order = Column(Integer, nullable=False)
-    flight_time = Column(Integer, nullable=False) #xóa
+    flight_time = Column(DateTime, nullable=False) #xóa
     flying_duration = Column(Integer, nullable=False)
     waiting_duration = Column(Integer, nullable=False, default=0)
 
@@ -408,6 +407,9 @@ if __name__ == "__main__":
         with open("%s/data/sub_flights.json" % app.root_path, encoding="utf-8") as f:
             data = json.load(f)
             for x in data:
+                date = x["flight_time"]
+                date = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
+                x["flight_time"] = date
                 x = SubFlight(**x)
                 db.session.add(x)
             db.session.commit()

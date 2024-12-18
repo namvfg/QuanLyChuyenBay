@@ -2,10 +2,11 @@
 import hashlib
 from typing import TextIO
 from flask import request, jsonify, session
+from flask_admin import Admin
 from sqlalchemy import func
 from sqlalchemy.orm import aliased
 from app import app, db
-from app.models import User, Customer, Manufacturer, SeatClass, Seat, IntermediateAirport
+from app.models import User, Customer, Manufacturer, SeatClass, Seat, IntermediateAirport, Staff, AdminWebsite
 from app.models import Review, Notification,Ticket,TicketPrice,Passenger,SubFlight, Airport, Airplane, Route, Flight
 import json
 #xác nhận user
@@ -59,6 +60,14 @@ def get_total_revenue():
 #lấy khách hàng theo id
 def get_customer_by_id(customer_id):
     return Customer.query.get(customer_id)
+
+#lấy nhân viên theo id
+def get_staff_by_id(staff_id):
+    return Staff.query.get(staff_id)
+
+#lấy admin theo id
+def get_admin_by_id(admin_id):
+    return AdminWebsite.query.get(admin_id)
 
 #lấy thông tin khách đếm
 def count_passengers():
@@ -135,14 +144,16 @@ def load_route():
     ArrivalAirport = aliased(Airport)
     return db.session.query(
             Route.id,
+            Route.name,
+            DepartureAirport.id.label("departure_airport_id"),
             DepartureAirport.name.label("departure_airport"),
+            ArrivalAirport.id.label("arrival_airport_id"),
             ArrivalAirport.name.label("arrival_airport")
         ).join(
             DepartureAirport, Route.departure_airport_id == DepartureAirport.id
         ).join(
             ArrivalAirport, Route.arrival_airport_id == ArrivalAirport.id
-        ).filter(
-        Route.departure_airport_id != Route.arrival_airport_id ).all() # Bỏ tuyến bay có sân bay đi = sân bay đến
+        ).all()
 
 #lấy số lượng hạng ghế
 def count_seat_classes():
@@ -154,26 +165,18 @@ def add_airplane(name, manufacturer_id, mfg_date, seat_quantity):
     db.session.add(airplane)
     db.session.commit()
 
-#lấy airplane theo tên
-def get_air_plane_by_name(name):
-    return Airplane.query.filter_by(name=name).first()
-
-#tạo seat
+# tạo seat
 def add_seats(airplane_id, seat_class_id, start_number, quantity):
     for i in range(start_number, start_number + quantity):
         seat = Seat(name=str(i), seat_class_id=seat_class_id, airplane_id=airplane_id)
         db.session.add(seat)
     db.session.commit()
 
-#tạo tuyến bay
+# tạo tuyến bay
 def add_route(name, departure_airport_id, arrival_airport_id):
     route = Route(name=name, departure_airport_id=departure_airport_id, arrival_airport_id=arrival_airport_id)
     db.session.add(route)
     db.session.commit()
-
-#lấy route theo tên
-def get_route_by_name(name):
-    return Route.query.filter_by(name=name).first()
 
 #tạo sân bay trung gian
 def add_intermediate_airport(order, airport_id, route_id):
@@ -181,11 +184,116 @@ def add_intermediate_airport(order, airport_id, route_id):
     db.session.add(intermediate_airport)
     db.session.commit()
 
+#tạo flight
+def add_flight(name, flight_date, airplane_id, route_id, planner_id, total_time):
+    flight = Flight(name=name, flight_date=flight_date, airplane_id=airplane_id,
+                    route_id=route_id, planner_id=planner_id, total_time=total_time)
+    db.session.add(flight)
+    db.session.commit()
+
+#tạo subflight
+def add_sub_flight(order, flight_time, flying_duration, waiting_duration, flight_id):
+    sub_flight = SubFlight(order=order, flight_time=flight_time, flying_duration=flying_duration,
+                           waiting_duration=waiting_duration, flight_id=flight_id)
+    db.session.add(sub_flight)
+    db.session.commit()
+
+#tạo ticket price
+def add_ticket_price(price, seat_class_id, flight_id):
+    ticket_price = TicketPrice(price=price, seat_class_id=seat_class_id, flight_id=flight_id)
+    db.session.add(ticket_price)
+    db.session.commit()
+
+
+#lấy airplane theo tên
+def get_air_plane_by_name(name):
+    return Airplane.query.filter_by(name=name).first()
+
+#lấy seat class theo id máy bay
+def count_seats_in_seat_classes_by_airplane_id(airplane_id):
+    query = db.session.query(
+        SeatClass.id.label("id"),
+        SeatClass.name.label("name"),
+        db.func.count(Seat.id).label("total_seats")
+    ).join(Seat, Seat.seat_class_id.__eq__(SeatClass.id)
+    ).filter(
+        Seat.airplane_id.__eq__(airplane_id)
+    ).group_by(SeatClass.id).all()
+    return query
+
+#lấy seat trên 1 máy bay
+def load_seats_by_flight_id(flight_id):
+    flight = Flight.query.get(flight_id)
+    query = db.session.query(
+        Seat.id,
+        Seat.name,
+        Seat.seat_class_id,
+        Seat.active,
+        Airplane.id,
+        TicketPrice.id.label("ticket_price_id"),
+        TicketPrice.price.label("price")
+    ).join(Airplane, Seat.airplane_id.__eq__(Airplane.id)
+    ).join(SeatClass, SeatClass.id.__eq__(Seat.seat_class_id)
+    ).join(TicketPrice, SeatClass.id.__eq__(TicketPrice.seat_class_id)
+    ).filter(TicketPrice.flight_id.__eq__(flight_id)
+    ).filter(Airplane.id.__eq__(flight.airplane_id)
+    ).order_by(Seat.id).all()
+    return query
+
+#lấy flight theo tên
+def load_flight_by_name(name):
+    return Flight.query.filter_by(name=name).first()
+
+#lấy flight theo id
+def load_flight_by_id(flight_id):
+    return Flight.query.get(flight_id)
+
+#lấy flight cho search result
+def load_flight_for_search_result(kw1=None, kw2=None, flight_date=None):
+    DepartureAirport = aliased(Airport)
+    ArrivalAirport = aliased(Airport)
+    query = db.session.query(Flight.id, Flight.flight_date, Flight.total_time,
+                             DepartureAirport.address.label("departure_airport_address"),
+                             ArrivalAirport.address.label("arrival_airport_address"),
+                             func.count(IntermediateAirport.id).label("intermediate_airport_quantity")
+                             ).join(Route, Route.id.__eq__(Flight.route_id)
+                             ).join(DepartureAirport, Route.departure_airport_id.__eq__(DepartureAirport.id)
+                             ).join(ArrivalAirport, Route.arrival_airport_id.__eq__(ArrivalAirport.id)
+                             ).join(IntermediateAirport, Route.id.__eq__(IntermediateAirport.route_id)
+                             ).group_by(Flight.id).all()
+
+    if kw1:
+        query = query.filter(DepartureAirport.address.contains(kw1))
+
+    if kw2:
+        query = query.filter(ArrivalAirport.address.contains(kw1))
+
+    if flight_date:
+        query = query.filter(Flight.flight_date.date().__eq__(flight_date))
+
+    return query
+
+
+#lấy intermediate_airports theo route_id
+def load_intermediate_airports_by_route_id(route_id):
+    query = db.session.query(
+        IntermediateAirport.id,
+        IntermediateAirport.order,
+        IntermediateAirport.airport_id
+    ).filter(
+        IntermediateAirport.route_id.__eq__(route_id)
+    ).order_by(IntermediateAirport.order).all()
+    return query
+
+#lấy departure_airport theo id
+def load_airport_by_id(airport_id):
+    return Airport.query.get(airport_id)
+
+#lấy route theo tên
+def get_route_by_name(name):
+    return Route.query.filter_by(name=name).first()
 
 if __name__ == "__main__":
     with app.app_context():
-        print(load_airplanes())
-        print(load_route())
-        print(get_total_revenue())
-        print(load_popular_routes())
+        print(load_seats_by_flight_id(7))
 
