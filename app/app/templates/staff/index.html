@@ -35,22 +35,20 @@
             <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('staff_scheduling') }}">Lập lịch</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('staff_selling') }}">Bán vé</a>
+            </li>
         </ul>
 
         <ul class="navbar-nav ms-auto">
             <li class="nav-item ">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{{ url_for('staff_page') }}">
                     <button type="button" class="btn btn-outline-primary btn-pattern-custom btn-navbar-fixed-size">Đăng
                         nhập
                     </button>
                 </a>
             </li>
-            <li class="nav-item me-3">
-                <a class="nav-link text-white" href="#">
-                    <button type="button" class="btn btn-primary btn-pattern-custom btn-navbar-fixed-size">Đăng ký
-                    </button>
-                </a>
-            </li>
+
 
         </ul>
     </div>
