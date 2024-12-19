@@ -6,7 +6,7 @@ from flask_login import UserMixin
 from enum import Enum as UserEnum
 from datetime import datetime
 import json
-
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 
@@ -156,7 +156,7 @@ class User(BaseModel, UserMixin):
     first_name = Column(String(20), nullable=False)
     last_name = Column(String(100), nullable=False)
     user_name = Column(String(20), unique=True, nullable=False)
-    password = Column(String(50), nullable=False)
+    password = Column(String(100), nullable=False)
 
     def __str__(self):
         return self.first_name

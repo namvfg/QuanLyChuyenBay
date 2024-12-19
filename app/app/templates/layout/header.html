@@ -16,7 +16,7 @@
         <ul class="navbar-nav ms-auto">
             {% if current_user.is_authenticated %}
             <li class="nav-item">
-                <a class="nav-link text-danger" href="/"><button class="btn btn-outline-primary">
+                <a class="nav-link text-danger" href="/info_page"><button class="btn btn-outline-primary">
                     <img src="{{ current_user.avatar }}" width="25" class="rounded-circle"
                          alt="{{ current_user.first_name }}">
                     Chào <span class="text-info">{{ current_user.first_name }}</span>

@@ -1,0 +1,103 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+
+<body xmlns="">
+    <!-- Container chính -->
+    <div class="container mt-5 mb-5">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white text-center">
+                <h4>Thông Tin Tài Khoản</h4>
+            </div>
+            <div class="card-body">
+                <!-- Grid System -->
+                <div class="row align-items-center">
+                    <!-- Avatar -->
+                    <div class="col-md-3 text-center">
+                        <img src="{{ current_user.avatar }}" alt="Avatar" class="rounded-circle img-fluid" style="width: 150px; height: 150px; object-fit: cover;">
+                    </div>
+
+                    <!-- Thông Tin Tài Khoản -->
+                    <div class="col-md-9">
+                        <!-- Form Thông Tin Tài Khoản -->
+                        <form>
+                            <!-- Họ  -->
+                            <div class="mb-3">
+                                <label for="first_name" class="form-label fw-bold">Họ:</label>
+                                <input type="text" class="form-control-plaintext" id="first_name" value="{{ current_user.first_name }}" readonly>
+                            </div>
+                            <!--  tên -->
+                            <div class="mb-3">
+                                <label for="last_name" class="form-label fw-bold">Họ:</label>
+                                <input type="text" class="form-control-plaintext" id="last_name" value="{{ current_user.last_name }}" readonly>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="mb-3">
+                                <label for="email" class="form-label fw-bold">Email:</label>
+                                <input type="email" class="form-control-plaintext" id="email" value="{{ current_user.email }}" readonly>
+                            </div>
+
+                            <!-- Số điện thoại -->
+                            <div class="mb-3">
+                                <label for="phone" class="form-label fw-bold">Số điện thoại:</label>
+                                <input type="tel" class="form-control-plaintext" id="phone" value="{{ current_user.phone_number }}" readonly>
+                            </div>
+                        </form>
+
+                        <!-- Nút hành động -->
+                        <div class="mt-4 d-flex gap-3">
+                            <button class="btn btn-warning">Chỉnh sửa thông tin</button>
+                            <!-- Nút kích hoạt modal -->
+                            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#changePasswordModal">Đổi mật khẩu</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Đổi Mật Khẩu -->
+    <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="changePasswordModalLabel">Đổi Mật Khẩu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="passwordForm" action="/info_page" method="post">
+                        <!-- Mật khẩu cũ -->
+                        <div class="mb-3">
+                            <label for="oldPassword" class="form-label">Mật khẩu cũ:</label>
+                            <input type="password" class="form-control" id="oldPassword" placeholder="Nhập mật khẩu cũ" name="oldPassword">
+                        </div>
+
+                        <!-- Mật khẩu mới -->
+                        <div class="mb-3">
+                            <label for="newPassword" class="form-label">Mật khẩu mới:</label>
+                            <input type="password" class="form-control" id="newPassword" placeholder="Nhập mật khẩu mới" name="newPassword">
+                        </div>
+
+                        <!-- Xác nhận mật khẩu mới -->
+                        <div class="mb-3">
+                            <label for="confirmNewPassword" class="form-label">Xác nhận mật khẩu mới:</label>
+                            <input type="password" class="form-control" id="confirmNewPassword" placeholder="Nhập lại mật khẩu mới" name="confirmPassword">
+                        </div>
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type ="submit" class="btn btn-primary" id="submitPassword">Xác nhận</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+    <!-- Link JS Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/change_password.js') }}"></script>
+</body>
+
+{% endblock %}

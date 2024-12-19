@@ -9,6 +9,8 @@ from app import app, db
 from app.models import User, Customer, Manufacturer, SeatClass, Seat, IntermediateAirport, Staff, AdminWebsite
 from app.models import Review, Notification,Ticket,TicketPrice,Passenger,SubFlight, Airport, Airplane, Route, Flight
 import json
+from flask_login import current_user
+from werkzeug.security import generate_password_hash
 #xác nhận user
 def auth_user(user_name, password):
     password = str(hashlib.md5(password.strip().encode('utf-8')).digest())
@@ -120,7 +122,8 @@ def load_popular_routes():
     ).join(flight_amount_query, flight_amount_query.c.id.__eq__(average_price_query.c.id)
     ).order_by(flight_amount_query.c.flight_amount.desc()).all()
 
-
+def load_user():
+    return db.session.query(User.first_name,User.last_name)
 
 #truy xuat du lieu airplane
 def load_airplanes():
@@ -292,6 +295,14 @@ def load_airport_by_id(airport_id):
 #lấy route theo tên
 def get_route_by_name(name):
     return Route.query.filter_by(name=name).first()
+
+#doi mat khau
+def change_password(new_password):
+    user = User.query.get(current_user.id)
+    password =str(hashlib.md5(new_password.encode('utf-8')).digest())
+    user.password = password
+
+    db.session.commit()
 
 if __name__ == "__main__":
     with app.app_context():

@@ -3,7 +3,7 @@ import json
 from flask import request, redirect, render_template, jsonify, session
 from flask_login import login_user, current_user
 from datetime import datetime, timedelta
-
+import hashlib
 from app import app, controller, login, dao, admin, db
 from app.dao import add_ticket_price
 from app.models import User, Customer, SubFlight, Airplane
@@ -16,6 +16,31 @@ app.add_url_rule("/", "index", controller.index, methods=["GET", "POST"])
 @app.route('/staff')
 def staff_page():
     return render_template('staff/index.html')
+
+# gọi.qual tới file html của thong tin tai khoan
+@app.route("/info_page", methods=["GET","POST"])
+def info_page():
+    if request.method == "POST":
+        oldPassword = request.form["oldPassword"]
+        newPassword = request.form["newPassword"]
+        confirmPassword = request.form["confirmPassword"]
+
+        # Kiểm tra mật khẩu xác nhận
+        if newPassword != confirmPassword:
+            return jsonify({"status": "error", "message": "Mật khẩu xác nhận không khớp."})
+
+        # Hash mật khẩu cũ
+        oldPassword_hashed = str(hashlib.md5(oldPassword.encode('utf-8')).digest())
+
+        # Kiểm tra mật khẩu cũ
+        if oldPassword_hashed != current_user.password:
+            return jsonify({"status": "error", "message": "Mật khẩu cũ không chính xác."})
+
+        # Cập nhật mật khẩu mới
+        dao.change_password(newPassword)
+        return jsonify({"status": "success", "message": "Đổi mật khẩu thành công!"})
+
+    return render_template('info.html')
 
 #nhap id máy bay, tuyến bay, ngày giow
 @app.route('/staff/scheduling1', methods=["POST", "GET"])
