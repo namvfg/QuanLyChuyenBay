@@ -146,7 +146,10 @@ app.add_url_rule("/api/verify_code", "verify_code", controller.type_verify_code,
 app.add_url_rule("/api/clear_verify_code", "clear_verify_code", controller.clear_verify_code, methods=["POST"])
 
 #api thêm vé
-app.add_url_rule("/api/add_seat", "add_seat", controller.add_seat, methods=["POST"])
+app.add_url_rule("/api/cart", "add_seat", controller.add_seat, methods=["POST"])
+
+#api xóa vé
+app.add_url_rule("/api/cart/<seat_id>", "api_cart_seatId_delete", controller.delete_seat, methods=["DELETE"])
 
 #log out
 app.add_url_rule("/logout", "logout", controller.logout_my_user)
@@ -170,6 +173,9 @@ app.add_url_rule("/search_result", "search_result", controller.search_result, me
 
 #load trang đặt vé
 app.add_url_rule("/booking/<int:flight_id>", "booking", controller.booking, methods=["GET", "POST"])
+
+#load trang nhập thông tin hành khách
+app.add_url_rule("/passenger_information", "passenger_information", controller.passenger_information, methods=["GET", "POST"])
 
 #load trang chu admin
 app.add_url_rule("/login-admin", "login_admin", controller.admin_login, methods=['POST', 'GET'])

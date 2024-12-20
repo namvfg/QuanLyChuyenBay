@@ -12,7 +12,8 @@
             <div>
                 <div class="m-3">
                     <label class="ms-3" for="chosen-seats">Các ghế đã đặt:</label>
-                    <input class="form-control" type="text" id="chosen-seats"
+                    <input class="form-control chosen-seats" type="text" value=""
+                           id="chosen-seats"
                            placeholder="Các ghế đã đặt sẽ hiển thị ở đây" readonly>
                 </div>
                 <div class="m-3 ">
@@ -24,97 +25,89 @@
                         {% endfor %}
                     </select>
                 </div>
+                <button type="button" class="btn btn-success ms-3" data-bs-toggle="modal" data-bs-target="#myModal">
+                    Bảng giá
+                </button>
+                <!-- The Modal -->
+                <div class="modal fade" id="myModal">
+                    <div class="modal-dialog modal-md">
+                        <div class="modal-content">
+
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <h4 class="modal-title">Bảng giá</h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+
+                            <!-- Modal body -->
+                            <div class="modal-body">
+                                <ul>
+                                    {% for seat_class in seat_classes %}
+                                    <li><span>{{ seat_class.name }}</span>: <span>{{ seat_class.price }}VNĐ</span></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+
+                            <!-- Modal footer -->
+                            <div class="modal-footer">
+                                <p class="me-4">Copyright &copy 2024 Đông Thành Airline. All rights
+                                    reserved.</p>
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
             </div>
             <div class="mt-auto">
                 <div>
                     <div class="m-3">
                         <label class="ms-3" for="total-seats">Tổng ghế:</label>
-                        <input class="form-control" type="text" id="total-seats" value="0" readonly>
+                        <input class="form-control total-seats" value="0" type="text"
+                               id="total-seats" readonly>
                     </div>
                     <div class="m-3">
                         <label class="ms-3" for="amount-seats">Tổng tiền:</label>
-                        <input class="form-control" type="text" id="amount-seats" value="0" readonly>
+                        <input class="form-control amount-seats" value="0" type="text"
+                               id="amount-seats" readonly>
                     </div>
                 </div>
                 <div class="m-3">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
+                    {% if current_user.is_authenticated %}
+                    <a type="button" class="btn btn-primary" href="/passenger_information">
                         Thanh toán
-                    </button>
-                    <!-- The Modal -->
-                    <div class="modal fade" id="myModal">
-                        <div class="modal-dialog modal-md">
-                            <div class="modal-content">
-
-                                <!-- Modal Header -->
-                                <div class="modal-header">
-                                    <h4 class="modal-title">Nhập thông tin hành khách</h4>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                </div>
-
-                                <!-- Modal body -->
-                                <div class="modal-body">
-                                    <form action="/search_result" method="get" style="width:100%">
-                                        <div class="mb-5 mt-4">
-                                            <label for="start_point" class="mb-1 ps-1">Nơi đi</label>
-                                            <input type="text" class="form-control" id="start_point"
-                                                   placeholder="Nhập nơi đi ..."
-                                                   name="start_point">
-                                        </div>
-                                        <div class="mb-5 mt-3">
-                                            <label for="end_point" class="mb-1 ps-1">Nơi đến</label>
-                                            <input type="text" class="form-control" id="end_point"
-                                                   placeholder="Nhập nơi đến ..."
-                                                   name="end_point">
-                                        </div>
-                                        <div class="mb-5 mt-3">
-                                            <label for="flight_date" class="mb-1 ps-1">Ngày bay</label>
-                                            <input type="date" class="form-control" id="flight_date"
-                                                   placeholder="Chọn ngày bay ..."
-                                                   name="flight_date">
-                                        </div>
-                                        <div class="mb-5 mt-3 d-flex justify-content-center">
-                                            <a href="">
-                                                <button type="submit" class="btn btn-outline-primary">Tìm kiếm
-                                                </button>
-                                            </a>
-                                        </div>
-                                    </form>
-                                </div>
-
-                                <!-- Modal footer -->
-                                <div class="modal-footer">
-                                    <p class="me-4">Copyright &copy 2024 Đông Thành Airline. All rights
-                                        reserved.</p>
-                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close
-                                    </button>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
+                    </a>
                     <a href="#" class="btn btn-danger">Hủy</a>
-
+                    {% else %}
+                    <p>Vui lòng <a href="/login?next=/booking/{{ flight_id }}">đăng nhập</a> để thanh toán</p>
+                    {% endif %}
                 </div>
+
             </div>
         </div>
         <div class="col-md-5 col-12 ">
-            <div class="d-flex align-item-center justify-content-center">
-                <table class="table">
+            <div class=" " style="height: 80%; overflow-y: auto;">
+                <table class="table" id="booked-table">
+                    <thead class="sticky-header">
                     <tr>
                         <th>Mã ghế</th>
                         <th>Hạng ghế</th>
                         <th>Giá vé</th>
                         <th></th>
                     </tr>
-                    {% for i in range(3) %}
-                    <tr>
-                        <td>1</td>
-                        <td>Thương gia</td>
-                        <td>1,400,000</td>
-                        <td><input type="button" class="btn btn-danger" value="Xóa"></td>
+                    </thead>
+                    <tbody>
+                    {% for c in session["cart"].values() %}
+                    <tr id="seat{{ c.seat_id }}" style="height: 50px">
+                        <td>{{ c.seat_name }}</td>
+                        <td>{{ c.seat_class_name }}</td>
+                        <td>{{ c.ticket_price }}</td>
+                        <td><input type="button" class="btn btn-danger" value="Xóa"
+                                   onclick="deleteCart({{ c.seat_id }}"></td>
                     </tr>
                     {% endfor %}
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -122,10 +115,11 @@
             <div class="border border-dark ms-5 text-center" style="height: 100%; width: 280px">
                 {% for i in range(1, seats|length + 1) %}
                 {% set extra_class = "ms-1" if i % 4 == 1 else "ms-5" if i % 4 == 3 else "" %}
-                <button class="btn btn-outline-primary mt-2 {{ extra_class }} seat-toggle" href="javascript:;" ontoggle=""
-                        id="seat_{{ seats[i - 1].name }}">
+                <a class="btn btn-outline-primary mt-2 {{ extra_class }} seat-toggle" href="javascript:;"
+                   id="seat_{{ seats[i - 1].id }}"
+                   onclick="toggleSeat({{ seats[i - 1].id }}, '{{ seats[i - 1].name }}', '{{ seats[i - 1].seat_class_name }}', {{ seats[i - 1].price }}, {{ seats[i - 1].ticket_price_id }}, '{{ seats[i - 1].active }}')">
                     {{ seats[i - 1].name }}
-                </button>
+                </a>
                 {% if i % 4 == 0 %}
                 <br>
                 {% endif %}

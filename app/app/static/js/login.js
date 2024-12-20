@@ -2,8 +2,10 @@
             event.preventDefault();  // Ngừng reload trang khi submit form
 
             // Tạo FormData từ form
-            const formData = new FormData(this);
-
+            let formData = new FormData(this);
+            let params = new URLSearchParams(window.location.search);
+            let next = params.get('next') || '/';
+            formData.append('next', next);
             // Gửi yêu cầu POST bằng fetch
             fetch('/login', {
                 method: 'POST',
@@ -13,7 +15,7 @@
             .then(data => {
                 if (data.status === "success") {
                     // Hiển thị thông báo thành công
-                    toastr.success("Đăng ký thành công!");
+                    toastr.success("Đăng nhập thành công!");
                     // Chuyển hướng trang
                     window.location.href = data.redirect;
                 } else {
