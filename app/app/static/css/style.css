@@ -89,3 +89,13 @@ body .third-row{
     height: 40px;
 }
 
+.clicked {
+    background-color: var(--primary-color);
+}
+
+.sticky-header {
+    position: sticky;
+    top: 0;
+    background-color: white; /* Đảm bảo phần header có nền trắng */
+    z-index: 1; /* Đảm bảo phần header nằm trên các hàng khác khi cuộn */
+}

@@ -1,5 +1,6 @@
 
 import hashlib
+from cProfile import label
 from typing import TextIO
 from flask import request, jsonify, session
 from flask_admin import Admin
@@ -212,7 +213,7 @@ def add_ticket_price(price, seat_class_id, flight_id):
 def get_air_plane_by_name(name):
     return Airplane.query.filter_by(name=name).first()
 
-#lấy seat class theo id máy bay
+#lấy đếm seat trong seat class theo id máy bay
 def count_seats_in_seat_classes_by_airplane_id(airplane_id):
     query = db.session.query(
         SeatClass.id.label("id"),
@@ -224,6 +225,19 @@ def count_seats_in_seat_classes_by_airplane_id(airplane_id):
     ).group_by(SeatClass.id).all()
     return query
 
+#lấy seat class + ticket price theo flight id
+def load_seat_classes_with_ticket_price_by_flight_id(flight_id):
+    query = db.session.query(
+        SeatClass.id,
+        SeatClass.name,
+        TicketPrice.price
+    ).join(
+        TicketPrice, TicketPrice.seat_class_id.__eq__(SeatClass.id)
+    ).filter(
+        TicketPrice.flight_id.__eq__(flight_id)
+    ).all()
+    return query
+
 #lấy seat trên 1 máy bay
 def load_seats_by_flight_id(flight_id):
     flight = Flight.query.get(flight_id)
@@ -232,7 +246,8 @@ def load_seats_by_flight_id(flight_id):
         Seat.name,
         Seat.seat_class_id,
         Seat.active,
-        Airplane.id,
+        SeatClass.name.label("seat_class_name"),
+        Airplane.id.label("airplane_id"),
         TicketPrice.id.label("ticket_price_id"),
         TicketPrice.price.label("price")
     ).join(Airplane, Seat.airplane_id.__eq__(Airplane.id)
@@ -263,18 +278,18 @@ def load_flight_for_search_result(kw1=None, kw2=None, flight_date=None):
                              ).join(DepartureAirport, Route.departure_airport_id.__eq__(DepartureAirport.id)
                              ).join(ArrivalAirport, Route.arrival_airport_id.__eq__(ArrivalAirport.id)
                              ).join(IntermediateAirport, Route.id.__eq__(IntermediateAirport.route_id)
-                             ).group_by(Flight.id).all()
+                             ).group_by(Flight.id)
 
     if kw1:
         query = query.filter(DepartureAirport.address.contains(kw1))
 
     if kw2:
-        query = query.filter(ArrivalAirport.address.contains(kw1))
+        query = query.filter(ArrivalAirport.address.contains(kw2))
 
     if flight_date:
         query = query.filter(Flight.flight_date.date().__eq__(flight_date))
 
-    return query
+    return query.all()
 
 
 #lấy intermediate_airports theo route_id
@@ -306,5 +321,5 @@ def change_password(new_password):
 
 if __name__ == "__main__":
     with app.app_context():
-        print(load_seats_by_flight_id(7))
+        print(load_flight_for_search_result())
 

@@ -1,22 +1,24 @@
-import math
-import re
+
 from datetime import datetime
-from re import search
 from app import mail
 from flask_login import login_user,current_user, logout_user
-from flask import render_template, request, jsonify, session, url_for, flash
+from flask import jsonify, session, url_for
 from flask import request, redirect, render_template
 from app import app, db, dao, utils
-from app.dao import load_popular_routes
+from app.dao import load_popular_routes, load_seat_classes_with_ticket_price_by_flight_id
 from app.decorators import annonymous_user
 import cloudinary.uploader
 
 
 #trang chủ
 def index():
+    key = app.config["KEY_CART"]
+    session[key] = {}
+
     reviews = dao.load_reviews()
     notifications = dao.load_notifications()
     popular_routes = load_popular_routes()
+
     return render_template("index.html", reviews=reviews, notifications=notifications, popular_routes=popular_routes)
 
 #đăng nhập
@@ -28,7 +30,8 @@ def login_my_user():
         user = dao.auth_customer(user_name.strip(), password)
         if user:
             login_user(user=user)
-            return jsonify({"status": "success", "redirect": "/"})
+            next = request.form["next"]
+            return jsonify({"status": "success", "redirect": next})
         else:
             return jsonify({"status": "error", "message": "Tài khoản không tồn tại."})
     return render_template("login.html")
@@ -55,10 +58,7 @@ def register():
 
         email = request.form.get("email").strip()
         #email không hợp lệ
-        valid = re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email)
-
-        status = mail.verify_email(email)["status"]
-        if not valid or (status != "valid" and status != "webmail" and status != "accept_all"):
+        if utils.verify_email(email):
             return jsonify({"status": "error", "message": "Email không hợp lệ"})
         #email đã tồn tại
         existing_customer = dao.get_customer_by_email(email=email)
@@ -110,13 +110,7 @@ def type_verify_code():
     email_target = data["email_target"]
     data["verify_code"] = verify_code
 
-    valid = re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email_target)
-    status = mail.verify_email(email_target)["status"]
-    print(valid)
-    print(status)
-    if not valid or (status != "valid" and status != "webmail" and status != "accept_all"):
-
-
+    if utils.verify_email(email_target):
         return jsonify({"status": "error", "message": "Email không hợp lệ"})
     else:
         mail.send_authenticate_mail(email_target, subject="Verify Code", body=str(verify_code))
@@ -132,46 +126,71 @@ def clear_verify_code():
 #dang xuat
 def logout_my_user():
     logout_user()
-    return redirect("/login")
+    return redirect("/")
 
 #kết quả tìm kiếm
 def search_result():
+    key = app.config["KEY_CART"]
+    session[key] = {}
+
     start_point = request.args.get("start_point")
     end_point = request.args.get("end_point")
     flight_date = request.args.get("flight_date")
     if flight_date:
         flight_date = datetime.strptime(flight_date, "%Y-%m-%d")
-    flights = dao.load_flight_for_search_result()
-    return render_template("search_result.html", flights=flights)
+    flights = dao.load_flight_for_search_result(start_point, end_point, flight_date)
+    return render_template("search_result.html", flights=flights, start_point=start_point, end_point=end_point, flight_date=flight_date)
 
 #trang đặt vé
 def booking(flight_id):
-    flight = dao.load_flight_by_id(flight_id)
-    seat_classes = dao.count_seats_in_seat_classes_by_airplane_id(flight.airplane_id)
+    seat_classes = load_seat_classes_with_ticket_price_by_flight_id(flight_id)
     seats = dao.load_seats_by_flight_id(flight_id)
-    return render_template("booking.html", seat_classes=seat_classes, seats=seats)
+    return render_template("booking.html", seat_classes=seat_classes, seats=seats, flight_id=flight_id)
+
+#trang nhập thông tin khách hàng
+def passenger_information():
+    key = app.config["KEY_CART"]
+    cart = session[key]
+
+    seat_name_array = []
+    total_amount = 0
+    total_quantity = 0
+    for c in cart.values():
+        total_quantity += 1
+        total_amount += c["ticket_price"]
+        seat_name_array.append(c["seat_name"])
+    return render_template("passenger_information.html", seat_name_array=seat_name_array)
 
 #api thêm vé
 def add_seat():
     key = app.config["KEY_CART"]
-    cart = session[key]
+    cart = session[key] if key in session else {}
     data = request.json
     seat_id = str(data["seat_id"])
     seat_name = data["seat_name"]
+    seat_class_name = data["seat_class_name"]
     ticket_price = data["ticket_price"]
     ticket_price_id = data["ticket_price_id"]
     cart[seat_id] = {
         "seat_id": seat_id,
         "seat_name": seat_name,
+        "seat_class_name": seat_class_name,
         "ticket_price": ticket_price,
         "ticket_price_id": ticket_price_id
     }
     session[key] = cart
+    return jsonify(utils.cart_stats(cart))
 
-    return jsonify()
+#xóa vé
+def delete_seat(seat_id):
+    key = app.config["KEY_CART"]
+    cart = session.get(key)
 
+    if cart and seat_id in cart:
+        del cart[seat_id]
 
-
+    session[key] = cart
+    return jsonify(utils.cart_stats(cart=cart))
 
 #=========admin========#
 
