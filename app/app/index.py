@@ -8,10 +8,6 @@ from app import app, controller, login, dao, admin, db
 from app.dao import add_ticket_price
 from app.models import User, Customer, SubFlight, Airplane
 
-# load trang chủ
-app.add_url_rule("/", "index", controller.index, methods=["GET", "POST"])
-
-
 # gọi tới file html của staff
 app.add_url_rule("/staff/index.html", "staff", controller.staff_page, methods=["POST", "GET"])
 
@@ -27,6 +23,9 @@ app.add_url_rule("/staff/scheduling2", "scheduling2", controller.staff_schedulin
 
 #ban ve
 app.add_url_rule("/staff/selling.html", "selling", controller.staff_selling, methods=["POST", "GET"])
+
+# load trang chủ
+app.add_url_rule("/", "index", controller.index, methods=["GET", "POST"])
 
 #load trang đăng nhập
 app.add_url_rule("/login", "login", controller.login_my_user, methods=["POST", "GET"])
@@ -71,6 +70,12 @@ app.add_url_rule("/booking/<int:flight_id>", "booking", controller.booking, meth
 
 #load trang nhập thông tin hành khách
 app.add_url_rule("/passenger_information", "passenger_information", controller.passenger_information, methods=["GET", "POST"])
+
+#load trang thanh toán
+app.add_url_rule("/pay", "pay", controller.pay, methods=["GET", "POST"])
+
+#load trang kết quả thanh toán
+app.add_url_rule("/payment_return", "payment_return", controller.payment_return, methods=["GET", "POST"])
 
 #load trang chu admin
 app.add_url_rule("/login-admin", "login_admin", controller.admin_login, methods=['POST', 'GET'])

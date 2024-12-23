@@ -1,9 +1,10 @@
-
-
-from datetime import datetime, timedelta
-from app.dao import add_ticket_price
-from app import mail
-from flask_login import login_user,current_user, logout_user
+import hmac
+import urllib.parse
+import hashlib
+from datetime import datetime
+from app import mail, vnpay
+from app.models import PaymentMethod
+from flask_login import login_user,current_user, logout_user, login_required
 from flask import jsonify, session, url_for
 from flask import request, redirect, render_template
 from app import app, db, dao, utils
@@ -127,6 +128,7 @@ def clear_verify_code():
     return jsonify({"status": "success", "message": "Mã xác nhận đã xóa, bạn có thể nhập lại thông tin"})
 
 #dang xuat
+@login_required
 def logout_my_user():
     logout_user()
     return redirect("/")
@@ -151,43 +153,53 @@ def search_result():
 
 #trang đặt vé
 def booking(flight_id):
+    app.config["FLIGHT_ID"] = flight_id
     seat_classes = load_seat_classes_with_ticket_price_by_flight_id(flight_id)
     seats = dao.load_seats_by_flight_id(flight_id)
-    return render_template("booking.html", seat_classes=seat_classes, seats=seats, flight_id=flight_id)
-
-#trang nhập thông tin khách hàng
-def passenger_information():
-    key = app.config["KEY_CART"]
-    cart = session[key]
-
-    seat_name_array = []
+    cart = session[app.config["KEY_CART"]]
     total_amount = 0
     total_quantity = 0
+    chosen_seats = ""
     for c in cart.values():
+        chosen_seats += c["seat_name"] + " "
         total_quantity += 1
         total_amount += c["ticket_price"]
-        seat_name_array.append(c["seat_name"])
-    return render_template("passenger_information.html", seat_name_array=seat_name_array)
+    return render_template("booking.html",
+                           seat_classes=seat_classes,
+                           seats=seats,
+                           flight_id=flight_id,
+                           total_amount=total_amount,
+                           total_quantity=total_quantity,
+                           chosen_seats=chosen_seats)
 
 #api thêm vé
 def add_seat():
     key = app.config["KEY_CART"]
     cart = session[key] if key in session else {}
     data = request.json
-    seat_id = str(data["seat_id"])
-    seat_name = data["seat_name"]
-    seat_class_name = data["seat_class_name"]
-    ticket_price = data["ticket_price"]
-    ticket_price_id = data["ticket_price_id"]
-    cart[seat_id] = {
-        "seat_id": seat_id,
-        "seat_name": seat_name,
-        "seat_class_name": seat_class_name,
-        "ticket_price": ticket_price,
-        "ticket_price_id": ticket_price_id
-    }
-    session[key] = cart
-    return jsonify(utils.cart_stats(cart))
+    seat_id = data["seat_id"]
+
+    seat = dao.get_seat_by_id(seat_id)
+    if seat.active:
+        return jsonify({"status": "error", "message": "Ghế đã được đặt rồi"})
+
+    seat_id = str(seat_id)
+    if seat_id in cart:
+        return jsonify({"status": "error", "message": "Bạn đã chọn ghế này rồi"})
+    else:
+        seat_name = data["seat_name"]
+        seat_class_name = data["seat_class_name"]
+        ticket_price = data["ticket_price"]
+        ticket_price_id = data["ticket_price_id"]
+        cart[seat_id] = {
+            "seat_id": seat_id,
+            "seat_name": seat_name,
+            "seat_class_name": seat_class_name,
+            "ticket_price": ticket_price,
+            "ticket_price_id": ticket_price_id
+        }
+        session[key] = cart
+        return jsonify(utils.cart_stats(cart))
 
 #xóa vé
 def delete_seat(seat_id):
@@ -199,6 +211,78 @@ def delete_seat(seat_id):
 
     session[key] = cart
     return jsonify(utils.cart_stats(cart=cart))
+
+#trang nhập thông tin khách hàng
+@login_required
+def passenger_information():
+    key = app.config["KEY_CART"]
+    cart = session[key]
+    session[app.config["KEY_PASSENGER"]] = {}
+
+    seat_name_array = []
+    seat_id_array = []
+    total_amount = 0
+    total_quantity = 0
+    for c in cart.values():
+        total_quantity += 1
+        total_amount += c["ticket_price"]
+        seat_id_array.append(c["seat_id"])
+        seat_name_array.append(c["seat_name"])
+    if request.method.__eq__("POST"):
+        data = request.json
+        session[app.config["KEY_PASSENGER"]] = data
+        # print(session[app.config["KEY_PASSENGER"]])
+        # print(cart)
+
+        return jsonify({"status": "success", "redirect": "/pay"})
+
+    return render_template("passenger_information.html",
+                           seat_name_array=seat_name_array)
+
+#thanh toán
+@login_required
+def pay():
+    key_cart = app.config["KEY_CART"]
+    cart = session[key_cart]
+
+    total_amount = 0
+    total_quantity = 0
+    for c in cart.values():
+        total_quantity += 1
+        total_amount += c["ticket_price"]
+    if request.method.__eq__("POST"):
+        order_id = str(current_user.id) + str(datetime.now())
+        vnpay_payment_url = vnpay.generate_payment_url(order_id=order_id, amount=total_amount)
+        return jsonify({"status": "success", "redirect": vnpay_payment_url})
+
+
+    return render_template("pay.html",
+                           total_amount=total_amount,
+                           total_quantity=total_quantity)
+
+#kết quả thanh toán
+@login_required
+def payment_return():
+    query_params = request.args.to_dict()
+    vnp_secure_hash = query_params.pop("vnp_SecureHash", None)
+
+    sorted_params = sorted(query_params.items())
+    query_string = "&".join(f"{k}={urllib.parse.quote_plus(str(v))}" for k, v in sorted_params)
+    hmac_obj = hmac.new(vnpay.VNP_HASH_SECRET.encode('utf-8'), query_string.encode('utf-8'), hashlib.sha512)
+    expected_hash = hmac_obj.hexdigest()
+
+    is_success = True
+
+    if vnp_secure_hash == expected_hash and query_params.get("vnp_ResponseCode") == "00":
+        order_id = query_params.get("vnp_TxnRef")
+        amount = int(query_params.get("vnp_Amount")) // 100
+        payment_method = PaymentMethod.BANKING
+        cart = session[app.config["KEY_CART"]]
+        passenger_infos = session[app.config["KEY_PASSENGER"]]
+        dao.add_receipt(cart=cart, passenger_infos=passenger_infos, order_id=order_id, payment_method=payment_method)
+        return render_template("payment_return.html", is_success=True)
+    else:
+        return render_template("payment_return.html", is_success=False)
 
 #dat lich1
 def staff_scheduling1():

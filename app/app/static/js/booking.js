@@ -4,48 +4,47 @@
 function toggleSeat(seatId, seatName, seatClassName,ticketPrice, ticketPriceId, active) {
     if (active == "False") {
         button = document.getElementById(`seat_${seatId}`)
-        if (!button.classList.contains("clicked")) {
-
-            fetch("/api/cart", {
-            method: "post",
-            body: JSON.stringify({
-                "seat_id": seatId,
-                "seat_name": seatName,
-                "seat_class_name": seatClassName,
-                "ticket_price": ticketPrice,
-                "ticket_price_id": ticketPriceId
-            }),
-            headers: {
-                "Content-Type": "application/json"
-            }
-        }).then(res => res.json()).then(data => {
+        fetch("/api/cart", {
+        method: "post",
+        body: JSON.stringify({
+            "seat_id": seatId,
+            "seat_name": seatName,
+            "seat_class_name": seatClassName,
+            "ticket_price": ticketPrice,
+            "ticket_price_id": ticketPriceId
+        }),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    }).then(res => res.json()).then(data => {
+        if (data.status === "success") {
             document.getElementById("total-seats").value = data.total_quantity
-            document.getElementById("amount-seats").value = data.total_amount
+            document.getElementById("amount-seats").value = data.total_amount.toLocaleString("en-US")
             document.getElementById("chosen-seats").value = data.chosen_seats
             array = data.chosen_id_seats
             array.pop()
             let mySet = new Set(array.map(item => item.toString()));
-            console.log(mySet, seatId, mySet.has(seatId.toString()))
             if (mySet.has(seatId.toString()) == false) {
                 document.getElementById("booked-table").innerHTML +=
                 `
                     <tr id="seat${seatId}">
                         <td>${seatName}</td>
                         <td>${seatClassName}</td>
-                        <td>${ticketPrice}</td>
+                        <td>${ticketPrice.toLocaleString("en-US")}</td>
                         <td><input type="button" class="btn btn-danger" value="Xóa" onclick="deleteCart(${seatId})"></td>
                     </tr>
                 `
             }
             button.classList.add("clicked");
-        }) //promise
         }
         else {
-            toastr.error("Bạn đã chọn ghế này rồi")
+            toastr.error(data.message)
         }
-
-
-}
+    }) //promise
+    }
+    else {
+        toastr.error("Ghế này đã được đặt rồi")
+    }
 }
 
 function deleteCart(seatId) {
@@ -55,7 +54,7 @@ function deleteCart(seatId) {
         }).then(res => res.json()).then(data => {
             console.info(data);
             document.getElementById("total-seats").value = data.total_quantity;
-            document.getElementById("amount-seats").value = data.total_amount;
+            document.getElementById("amount-seats").value = data.total_amount.toLocaleString("en-US");
             document.getElementById("chosen-seats").value = data.chosen_seats;
 
             // Kiểm tra và ẩn phần tử seatId nếu tồn tại
@@ -70,15 +69,6 @@ function deleteCart(seatId) {
                 button.classList.remove("clicked");
             }
 
-            // Kiểm tra xem có phải phần tử đã bị xóa hoàn toàn không
-            setTimeout(() => {
-                seatElement = document.getElementById(`seat${seatId}`);
-                if (seatElement) {
-                    console.log("Phần tử vẫn còn trong DOM");
-                } else {
-                    console.log("Phần tử đã bị xóa khỏi DOM");
-                }
-            }, 1000);
         }).catch(err => console.info(err)); // Promise
     }
 }

@@ -4,10 +4,10 @@ from cProfile import label
 from typing import TextIO
 from flask import request, jsonify, session
 from flask_admin import Admin
-from sqlalchemy import func
+from sqlalchemy import func, Column
 from sqlalchemy.orm import aliased
 from app import app, db
-from app.models import User, Customer, Manufacturer, SeatClass, Seat, IntermediateAirport, Staff, AdminWebsite
+from app.models import User, Customer, Manufacturer, SeatClass, Seat, IntermediateAirport, Staff, AdminWebsite, Receipt
 from app.models import Review, Notification,Ticket,TicketPrice,Passenger,SubFlight, Airport, Airplane, Route, Flight
 import json
 from flask_login import current_user
@@ -84,6 +84,9 @@ def count_passengers():
 
 def get_user_by_id(user_id):
     return User.query.get(user_id)
+
+def get_seat_by_id(seat_id):
+    return Seat.query.get(seat_id)
 
 
 #đọc lấy review từ bảng Review
@@ -212,6 +215,52 @@ def add_sub_flight(order, flight_time, flying_duration, waiting_duration, flight
 def add_ticket_price(price, seat_class_id, flight_id):
     ticket_price = TicketPrice(price=price, seat_class_id=seat_class_id, flight_id=flight_id)
     db.session.add(ticket_price)
+    db.session.commit()
+
+#tạo passenger nhưng chưa commit
+def add_passenger_no_commit(last_name, first_name, id_card_number, phone_number):
+    passenger = Passenger(last_name=last_name, first_name=first_name,
+                          id_card_number=id_card_number, phone_number=phone_number)
+    db.session.add(passenger)
+    return passenger
+
+#tạo ticket nhưng chưa commit
+def add_ticket_no_commit(seat_id, flight_id, ticket_passenger, ticket_price_id, tickets_receipt):
+    ticket = Ticket(seat_id=seat_id, flight_id=flight_id, ticket_passenger=ticket_passenger,
+                    ticket_price_id=ticket_price_id, tickets_receipt=tickets_receipt)
+    db.session.add(ticket)
+    return ticket
+
+#tạo receipt
+def add_receipt(cart, passenger_infos, order_id, payment_method):
+    receipt = Receipt(customer_id=current_user.id, order_id=order_id, payment_method=payment_method)
+    db.session.add(receipt)
+    cart_data = list(cart.values())
+    passenger_data = list(passenger_infos.values())
+    for i in range(len(cart_data)):
+        #tạo passenger
+        passenger_info = passenger_data[i]
+        last_name = passenger_info["last_name"]
+        first_name = passenger_info["first_name"]
+        id_card_number = passenger_info["id_card_number"]
+        phone_number = passenger_info["phone_number"]
+        passenger = add_passenger_no_commit(last_name=last_name,
+                                            first_name=first_name,
+                                            id_card_number=id_card_number,
+                                            phone_number=phone_number)
+        #tạo ticket
+        ticket_info = cart_data[i]
+        flight_id = app.config["FLIGHT_ID"]
+        seat_id = int(ticket_info["seat_id"])
+        ticket_price_id = ticket_info["ticket_price_id"]
+        ticket = add_ticket_no_commit(seat_id=seat_id,
+                                      flight_id=flight_id,
+                                      ticket_price_id=ticket_price_id,
+                                      tickets_receipt=receipt,
+                                      ticket_passenger=passenger)
+        seat = get_seat_by_id(seat_id)
+        seat.active = True
+
     db.session.commit()
 
 

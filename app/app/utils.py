@@ -14,6 +14,7 @@ def cart_stats(cart):
             chosen_id_seats.append(c["seat_id"])
 
     return {
+        "status": "success",
         "total_amount": total_amount,
         "total_quantity": total_quantity,
         "chosen_seats": chosen_seats,
@@ -21,7 +22,7 @@ def cart_stats(cart):
     }
 
 def verify_email(email):
-    valid = re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email_target)
+    valid = re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email)
     status = mail.verify_email(email)["status"]
     if not valid or (status != "valid" and status != "webmail" and status != "accept_all"):
         return False
