@@ -48,6 +48,12 @@ def auth_customer(user_name, password):
     return Customer.query.filter(Customer.user_name.__eq__(user_name.strip()),
                              Customer.password.__eq__(password)).first()
 
+#xác nhận staff
+def auth_staff(user_name, password):
+    password = str(hashlib.md5(password.strip().encode('utf-8')).digest())
+    return Staff.query.filter(Staff.user_name.__eq__(user_name.strip()),
+                             Staff.password.__eq__(password)).first()
+
 #lấy thông tin vé đếm
 def count_tickets():
     return Ticket.query.count()
