@@ -28,6 +28,12 @@ app.config["KEY_SCHEDULING"] = "scheduling"
 #key để đặt vé
 app.config["KEY_CART"] = "cart"
 
+#key để lưu flight_id
+app.config["FLIGHT_ID"] = -1
+
+#key để lưu thông tin hành khách
+app.config["KEY_PASSENGER"] = "passenger"
+
 #email để gửi mail xác nhận
 app.config["EMAIL"] = "duakhongchau1234@gmail.com"
 #password 2 lớp

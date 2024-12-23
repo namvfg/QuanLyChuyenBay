@@ -25,12 +25,10 @@ function submitSchedulingForm1(event) {
        .then(respond => respond.json())
        .then(data => {
                 if (data.status === "success") {
-                    // Hiển thị thông báo thành công
                     toastr.success("Nhập thành công!");
-                    // Chuyển hướng trang
                     window.location.href = data.redirect;
                 } else {
-                    // Hiển thị thông báo lỗi
+
                     toastr.error(data.message);
                 }
             })

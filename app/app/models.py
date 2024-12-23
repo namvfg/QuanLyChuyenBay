@@ -3,7 +3,7 @@ from sqlalchemy import Column, Integer, String, Float, Text, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
 from app import app, db
 from flask_login import UserMixin
-from enum import Enum as UserEnum
+from enum import Enum as PythonEnum
 from datetime import datetime
 import json
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -55,8 +55,6 @@ class SeatClass(BaseModel):
 
     def __str__(self):
         return self.name
-
-
 
 
 # cho ngoi
@@ -180,10 +178,8 @@ class Customer(User):
     receipts = relationship("Receipt", backref="receipts_customer", lazy=True)
 
 
-
-
 # staff role
-class StaffRole(UserEnum):
+class StaffRole(PythonEnum):
     PLANNER = 1
     SELLER = 2
 
@@ -198,18 +194,20 @@ class Staff(User):
     receipts = relationship("Receipt", backref="receipts_seller", lazy=True)
 
 
-
+class PaymentMethod(PythonEnum):
+    BANKING = 1
+    CASHING = 2
 
 # hoa don
 class Receipt(BaseModel):
     pay_date = Column(DateTime, default=datetime.now())
+    order_id = Column(String(15), nullable=False)
+    payment_method = Column(Enum(PaymentMethod), default=PaymentMethod.CASHING)
 
     customer_id = Column(Integer, ForeignKey(Customer.customer_id), nullable=False)
-    seller_id = Column(Integer, ForeignKey(Staff.staff_id), nullable=False)
+    seller_id = Column(Integer, ForeignKey(Staff.staff_id), default=1, nullable=False)
 
     tickets = relationship("Ticket", backref="tickets_receipt", lazy=True)
-
-
 
 
 # nguoi di
@@ -225,8 +223,6 @@ class Passenger(BaseModel):
         return self.first_name
 
 
-
-
 # ve may bay
 class Ticket(BaseModel):
     seat_id = Column(Integer, ForeignKey(Seat.id), nullable=False)
@@ -234,8 +230,6 @@ class Ticket(BaseModel):
     passenger_id = Column(Integer, ForeignKey(Passenger.id), nullable=False, unique=True)
     ticket_price_id = Column(Integer, ForeignKey(TicketPrice.id), nullable=False)
     receipt_id = Column(Integer, ForeignKey(Receipt.id), nullable=False)
-
-
 
 # review
 class Review(BaseModel):
@@ -296,15 +290,15 @@ if __name__ == "__main__":
             db.session.commit()
 
         # #load airplane vào csdl
-        with open("%s/data/airplanes.json" % app.root_path, encoding="utf-8") as f:
-            data = json.load(f)
-            for x in data:
-                date = x["mfg_date"]
-                date = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
-                x["mfg_date"] = date
-                x = Airplane(**x)
-                db.session.add(x)
-            db.session.commit()
+        # with open("%s/data/airplanes.json" % app.root_path, encoding="utf-8") as f:
+        #     data = json.load(f)
+        #     for x in data:
+        #         date = x["mfg_date"]
+        #         date = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
+        #         x["mfg_date"] = date
+        #         x = Airplane(**x)
+        #         db.session.add(x)
+        #     db.session.commit()
 
         # #load airport vào csdl
         with open("%s/data/airports.json" % app.root_path, encoding="utf-8") as f:
@@ -316,20 +310,20 @@ if __name__ == "__main__":
 
 
         # #load route vào csdl
-        with open("%s/data/routes.json" % app.root_path, encoding="utf-8") as f:
-            data = json.load(f)
-            for x in data:
-                x = Route(**x)
-                db.session.add(x)
-            db.session.commit()
+        # with open("%s/data/routes.json" % app.root_path, encoding="utf-8") as f:
+        #     data = json.load(f)
+        #     for x in data:
+        #         x = Route(**x)
+        #         db.session.add(x)
+        #     db.session.commit()
 
         # #load intermediate_airport vào csdl
-        with open("%s/data/intermediate_airports.json" % app.root_path, encoding="utf-8") as f:
-            data = json.load(f)
-            for x in data:
-                x = IntermediateAirport(**x)
-                db.session.add(x)
-            db.session.commit()
+        # with open("%s/data/intermediate_airports.json" % app.root_path, encoding="utf-8") as f:
+        #     data = json.load(f)
+        #     for x in data:
+        #         x = IntermediateAirport(**x)
+        #         db.session.add(x)
+        #     db.session.commit()
 
         # #load seat_class vào csdl
         with open("%s/data/seat_classes.json" % app.root_path, encoding="utf-8") as f:
@@ -341,12 +335,12 @@ if __name__ == "__main__":
 
 
         # #load seat vào csdl
-        with open("%s/data/seats.json" % app.root_path, encoding="utf-8") as f:
-            data = json.load(f)
-            for x in data:
-                x = Seat(**x)
-                db.session.add(x)
-            db.session.commit()
+        # with open("%s/data/seats.json" % app.root_path, encoding="utf-8") as f:
+        #     data = json.load(f)
+        #     for x in data:
+        #         x = Seat(**x)
+        #         db.session.add(x)
+        #     db.session.commit()
 
         # #load user vào csdl
         # with open("%s/data/users.json" % app.root_path, encoding="utf-8") as f:
@@ -355,6 +349,14 @@ if __name__ == "__main__":
         #         x = User(**x)
         #         db.session.add(x)
         #     db.session.commit()
+
+        # #load staff vào csdl
+        with open("%s/data/staffs.json" % app.root_path, encoding="utf-8") as f:
+            data = json.load(f)
+            for x in data:
+                x = Staff(**x)
+                db.session.add(x)
+            db.session.commit()
 
         # #load admin vào csdl
         with open("%s/data/admin_websites.json" % app.root_path, encoding="utf-8") as f:
@@ -372,70 +374,61 @@ if __name__ == "__main__":
                 db.session.add(x)
             db.session.commit()
 
-
-        # #load staff vào csdl
-        with open("%s/data/staffs.json" % app.root_path, encoding="utf-8") as f:
-            data = json.load(f)
-            for x in data:
-                x = Staff(**x)
-                db.session.add(x)
-            db.session.commit()
-
         # #load receipt vào csdl
-        with open("%s/data/receipts.json" % app.root_path, encoding="utf-8") as f:
-            data = json.load(f)
-            for x in data:
-                date = x["pay_date"]
-                date = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
-                x["pay_date"] = date
-                x = Receipt(**x)
-                db.session.add(x)
-            db.session.commit()
+        # with open("%s/data/receipts.json" % app.root_path, encoding="utf-8") as f:
+        #     data = json.load(f)
+        #     for x in data:
+        #         date = x["pay_date"]
+        #         date = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
+        #         x["pay_date"] = date
+        #         x = Receipt(**x)
+        #         db.session.add(x)
+        #     db.session.commit()
 
         # # load flight vào csdl
-        with open("%s/data/flights.json" % app.root_path, encoding="utf-8") as f:
-            data = json.load(f)
-            for x in data:
-                date = x["flight_date"]
-                date = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
-                x["flight_date"] = date
-                x = Flight(**x)
-                db.session.add(x)
-            db.session.commit()
+        # with open("%s/data/flights.json" % app.root_path, encoding="utf-8") as f:
+        #     data = json.load(f)
+        #     for x in data:
+        #         date = x["flight_date"]
+        #         date = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
+        #         x["flight_date"] = date
+        #         x = Flight(**x)
+        #         db.session.add(x)
+        #     db.session.commit()
 
         # #load subflights vào csdl
-        with open("%s/data/sub_flights.json" % app.root_path, encoding="utf-8") as f:
-            data = json.load(f)
-            for x in data:
-                date = x["flight_time"]
-                date = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
-                x["flight_time"] = date
-                x = SubFlight(**x)
-                db.session.add(x)
-            db.session.commit()
+        # with open("%s/data/sub_flights.json" % app.root_path, encoding="utf-8") as f:
+        #     data = json.load(f)
+        #     for x in data:
+        #         date = x["flight_time"]
+        #         date = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
+        #         x["flight_time"] = date
+        #         x = SubFlight(**x)
+        #         db.session.add(x)
+        #     db.session.commit()
 
         # #load ticket_price vào csdl
-        with open("%s/data/ticket_prices.json" % app.root_path, encoding="utf-8") as f:
-            data = json.load(f)
-            for x in data:
-                x = TicketPrice(**x)
-                db.session.add(x)
-            db.session.commit()
+        # with open("%s/data/ticket_prices.json" % app.root_path, encoding="utf-8") as f:
+        #     data = json.load(f)
+        #     for x in data:
+        #         x = TicketPrice(**x)
+        #         db.session.add(x)
+        #     db.session.commit()
 
         # #load passenger vào csdl
-        with open("%s/data/passengers.json" % app.root_path, encoding="utf-8") as f:
-            data = json.load(f)
-            for x in data:
-                x = Passenger(**x)
-                db.session.add(x)
-            db.session.commit()
+        # with open("%s/data/passengers.json" % app.root_path, encoding="utf-8") as f:
+        #     data = json.load(f)
+        #     for x in data:
+        #         x = Passenger(**x)
+        #         db.session.add(x)
+        #     db.session.commit()
 
         # #load ticket vào csdl
-        with open("%s/data/tickets.json" % app.root_path, encoding="utf-8") as f:
-            data = json.load(f)
-            for x in data:
-                x = Ticket(**x)
-                db.session.add(x)
-            db.session.commit()
+        # with open("%s/data/tickets.json" % app.root_path, encoding="utf-8") as f:
+        #     data = json.load(f)
+        #     for x in data:
+        #         x = Ticket(**x)
+        #         db.session.add(x)
+        #     db.session.commit()
 
 

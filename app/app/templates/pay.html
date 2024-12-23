@@ -1,0 +1,24 @@
+{% extends 'layout/base.html' %}
+{% block js %}
+
+{% endblock %}
+{% block content %}
+<div class="mb-3 border border-dark bg-white">
+    <div class="ms-3 mt-2 text-decoration-underline">
+        <h3>Trang thanh toán</h3>
+    </div>
+    <div class="ms-3 me-3">
+        <div>
+            <h4>Khách hàng <span>{{ current_user.first_name }}</span></h4>
+        </div>
+        <div>
+            <h4>Tổng vé: {{ total_quantity }}</h4>
+            <h4>Tổng tiền: {{ "{:,.0f}".format(total_amount) }}</h4>
+        </div>
+        <div>
+            <button type="button" class="btn btn-danger mb-3" onclick="pay()">Thanh toán</button>
+        </div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='js/pay.js') }}"></script>
+{% endblock %}
