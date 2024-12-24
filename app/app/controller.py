@@ -147,7 +147,11 @@ def search_result():
 
 #trang đặt vé
 def booking(flight_id):
+    if app.config["FLIGHT_ID"] and app.config["FLIGHT_ID"] != flight_id:
+        key = app.config["KEY_CART"]
+        session[key] = {}
     app.config["FLIGHT_ID"] = flight_id
+
     seat_classes = load_seat_classes_with_ticket_price_by_flight_id(flight_id)
     seats = dao.load_seats_by_flight_id(flight_id)
     cart = session[app.config["KEY_CART"]]
@@ -264,8 +268,6 @@ def payment_return():
     query_string = "&".join(f"{k}={urllib.parse.quote_plus(str(v))}" for k, v in sorted_params)
     hmac_obj = hmac.new(vnpay.VNP_HASH_SECRET.encode('utf-8'), query_string.encode('utf-8'), hashlib.sha512)
     expected_hash = hmac_obj.hexdigest()
-
-    is_success = True
 
     if vnp_secure_hash == expected_hash and query_params.get("vnp_ResponseCode") == "00":
         order_id = query_params.get("vnp_TxnRef")
