@@ -1,23 +1,107 @@
 [
-        {
-            "id": 1,
-            "name": "Boeing 737",
-            "mfg_date": "2019-12-03 14:23:00",
-            "seat_quantity": 40,
-            "manufacturer_id": 1
-        },
-        {
-            "id": 2,
-            "name": "Airbus A320",
-            "mfg_date": "2020-12-22 14:24:00",
-            "seat_quantity": 40,
-            "manufacturer_id": 2
-        },
-        {
-            "id": 3,
-            "name": "Embraer B01",
-            "mfg_date": "2018-12-31 14:24:00",
-            "seat_quantity": 40,
-            "manufacturer_id": 3
-        }
-    ]
+    {
+        "id": 1,
+        "name": "DT-A01",
+        "seat_quantity": 38,
+        "mfg_date": "2018-12-21 13:30:00",
+        "manufacturer_id": 2
+    },
+    {
+        "id": 2,
+        "name": "DT-A02",
+        "seat_quantity": 40,
+        "mfg_date": "2019-12-21 13:30:00",
+        "manufacturer_id": 2
+    },
+    {
+        "id": 3,
+        "name": "DT-A03",
+        "seat_quantity": 40,
+        "mfg_date": "2019-12-26 12:30:00",
+        "manufacturer_id": 2
+    },
+    {
+        "id": 4,
+        "name": "DT-A04",
+        "seat_quantity": 40,
+        "mfg_date": "2020-01-01 12:30:00",
+        "manufacturer_id": 2
+    },
+    {
+        "id": 5,
+        "name": "DT-A05",
+        "seat_quantity": 40,
+        "mfg_date": "2020-01-17 08:30:00",
+        "manufacturer_id": 2
+    },
+    {
+        "id": 6,
+        "name": "DT-B01",
+        "seat_quantity": 40,
+        "mfg_date": "2020-01-08 09:45:00",
+        "manufacturer_id": 1
+    },
+    {
+        "id": 7,
+        "name": "DT-B02",
+        "seat_quantity": 40,
+        "mfg_date": "2020-01-03 02:50:00",
+        "manufacturer_id": 1
+    },
+    {
+        "id": 8,
+        "name": "DT-B03",
+        "seat_quantity": 38,
+        "mfg_date": "2018-01-10 12:35:00",
+        "manufacturer_id": 1
+    },
+    {
+        "id": 9,
+        "name": "DT-B04",
+        "seat_quantity": 37,
+        "mfg_date": "2018-01-25 10:35:00",
+        "manufacturer_id": 1
+    },
+    {
+        "id": 10,
+        "name": "DT-B05",
+        "seat_quantity": 38,
+        "mfg_date": "2018-01-15 11:35:00",
+        "manufacturer_id": 1
+    },
+    {
+        "id": 11,
+        "name": "DT-E01",
+        "seat_quantity": 39,
+        "mfg_date": "2019-01-02 13:30:00",
+        "manufacturer_id": 3
+    },
+    {
+        "id": 12,
+        "name": "DT-E02",
+        "seat_quantity": 40,
+        "mfg_date": "2019-01-10 12:30:00",
+        "manufacturer_id": 3
+    },
+    {
+        "id": 13,
+        "name": "DT-E03",
+        "seat_quantity": 40,
+        "mfg_date": "2020-02-07 22:30:00",
+        "manufacturer_id": 3
+    },
+    {
+        "id": 14,
+        "name": "DT-E04",
+        "seat_quantity": 38,
+        "mfg_date": "2019-12-22 03:35:00",
+        "manufacturer_id": 3
+    },
+    {
+        "id": 15,
+        "name": "DT-E05",
+        "seat_quantity": 40,
+        "mfg_date": "2019-12-27 05:35:00",
+        "manufacturer_id": 3
+    }
+]

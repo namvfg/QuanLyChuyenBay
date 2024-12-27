@@ -4,6 +4,7 @@ from typing import TextIO
 from flask import request, jsonify, session
 from flask_admin import Admin
 from sqlalchemy import func, Column
+from datetime import datetime
 from sqlalchemy.orm import aliased
 from app import app, db
 from app.models import User, Customer, Manufacturer, SeatClass, Seat, IntermediateAirport, Staff, AdminWebsite, Receipt, Rule
@@ -477,6 +478,321 @@ def get_rule_by_name(rule_name):
     return Rule.query.filter_by(name=rule_name).first()
 
 
+# Hàm thêm Manufacturer
+def add_manufacturer(name):
+    manufacturer = Manufacturer(name=name)
+    db.session.add(manufacturer)
+    db.session.commit()
+
+# Hàm lấy tất cả Manufacturer
+def get_all_manufacturers():
+    return Manufacturer.query.all()
+
+# Hàm xuất dữ liệu ra file JSON cho Manufacturer
+def export_manufacturers_to_json():
+    manufacturers = get_all_manufacturers()
+    manufacturers_data = [manufacturer.as_dict() for manufacturer in manufacturers]
+    with open('manufacturers.json', 'w') as json_file:
+        json.dump(manufacturers_data, json_file, indent=4)
+
+# Hàm thêm Airplane
+def add_airplane(name, mfg_date, manufacturer_id):
+    airplane = Airplane(name=name, mfg_date=mfg_date, manufacturer_id=manufacturer_id)
+    db.session.add(airplane)
+    db.session.commit()
+
+# Hàm lấy tất cả Airplanes
+def get_all_airplanes():
+    return Airplane.query.all()
+
+# Hàm xuất dữ liệu ra file JSON cho Airplane
+def export_airplanes_to_json():
+    airplanes = get_all_airplanes()
+    airplanes_data = [airplane.as_dict() for airplane in airplanes]
+    with open('airplanes.json', 'w') as json_file:
+        json.dump(airplanes_data, json_file, indent=4)
+
+# Hàm thêm SeatClass
+def add_seat_class(name):
+    seat_class = SeatClass(name=name)
+    db.session.add(seat_class)
+    db.session.commit()
+
+# Hàm lấy tất cả SeatClass
+def get_all_seat_classes():
+    return SeatClass.query.all()
+
+# Hàm xuất dữ liệu ra file JSON cho SeatClass
+def export_seat_classes_to_json():
+    seat_classes = get_all_seat_classes()
+    seat_classes_data = [seat_class.as_dict() for seat_class in seat_classes]
+    with open('seat_classes.json', 'w') as json_file:
+        json.dump(seat_classes_data, json_file, indent=4)
+
+# Hàm thêm Seat
+def add_seat(name, seat_class_id, airplane_id, active=False):
+    seat = Seat(name=name, seat_class_id=seat_class_id, airplane_id=airplane_id, active=active)
+    db.session.add(seat)
+    db.session.commit()
+
+# Hàm lấy tất cả Seat
+def get_all_seats():
+    return Seat.query.all()
+
+# Hàm xuất dữ liệu ra file JSON cho Seat
+def export_seats_to_json():
+    seats = get_all_seats()
+    seats_data = [seat.as_dict() for seat in seats]
+    with open('seats.json', 'w') as json_file:
+        json.dump(seats_data, json_file, indent=4)
+
+# Hàm thêm Airport
+def add_airport(name, address):
+    airport = Airport(name=name, address=address)
+    db.session.add(airport)
+    db.session.commit()
+
+# Hàm lấy tất cả Airport
+def get_all_airports():
+    return Airport.query.all()
+
+# Hàm xuất dữ liệu ra file JSON cho Airport
+def export_airports_to_json():
+    airports = get_all_airports()
+    airports_data = [airport.as_dict() for airport in airports]
+    with open('airports.json', 'w') as json_file:
+        json.dump(airports_data, json_file, indent=4)
+
+# Hàm thêm Route
+def add_route(departure_airport_id, arrival_airport_id, note):
+    route = Route(departure_airport_id=departure_airport_id, arrival_airport_id=arrival_airport_id, note=note)
+    db.session.add(route)
+    db.session.commit()
+
+# Hàm lấy tất cả Routes
+def get_all_routes():
+    return Route.query.all()
+
+# Hàm xuất dữ liệu ra file JSON cho Route
+def export_routes_to_json():
+    routes = get_all_routes()
+    routes_data = [route.as_dict() for route in routes]
+    with open('routes.json', 'w') as json_file:
+        json.dump(routes_data, json_file, indent=4)
+
+# Hàm thêm IntermediateAirport
+def add_intermediate_airport(order, note, airport_id, route_id):
+    intermediate_airport = IntermediateAirport(order=order, note=note, airport_id=airport_id, route_id=route_id)
+    db.session.add(intermediate_airport)
+    db.session.commit()
+
+# Hàm lấy tất cả IntermediateAirport
+def get_all_intermediate_airports():
+    return IntermediateAirport.query.all()
+
+# Hàm xuất dữ liệu ra file JSON cho IntermediateAirport
+def export_intermediate_airports_to_json():
+    intermediate_airports = get_all_intermediate_airports()
+    intermediate_airports_data = [airport.as_dict() for airport in intermediate_airports]
+    with open('intermediate_airports.json', 'w') as json_file:
+        json.dump(intermediate_airports_data, json_file, indent=4)
+
+
+
+# Hàm lấy tất cả Flights
+def get_all_flights():
+    return Flight.query.all()
+
+# Hàm xuất dữ liệu ra file JSON cho Flight
+def export_flights_to_json():
+    flights = get_all_flights()
+    flights_data = [flight.as_dict() for flight in flights]
+    with open('flights.json', 'w') as json_file:
+        json.dump(flights_data, json_file, indent=4)
+
+# Hàm thêm SubFlight
+def add_sub_flight(order, flight_time, flying_duration, waiting_duration, flight_id):
+    sub_flight = SubFlight(order=order, flight_time=flight_time, flying_duration=flying_duration, waiting_duration=waiting_duration, flight_id=flight_id)
+    db.session.add(sub_flight)
+    db.session.commit()
+
+# Hàm lấy tất cả SubFlights
+def get_all_sub_flights():
+    return SubFlight.query.all()
+
+# Hàm xuất dữ liệu ra file JSON cho SubFlight
+def export_sub_flights_to_json():
+    sub_flights = get_all_sub_flights()
+    sub_flights_data = [sub_flight.as_dict() for sub_flight in sub_flights]
+    with open('sub_flights.json', 'w') as json_file:
+        json.dump(sub_flights_data, json_file, indent=4)
+
+# Hàm thêm TicketPrice
+def add_ticket_price(price, seat_class_id, flight_id):
+    ticket_price = TicketPrice(price=price, seat_class_id=seat_class_id, flight_id=flight_id)
+    db.session.add(ticket_price)
+    db.session.commit()
+
+# Hàm lấy tất cả TicketPrices
+def get_all_ticket_prices():
+    return TicketPrice.query.all()
+
+# Hàm xuất dữ liệu ra file JSON cho TicketPrice
+def export_ticket_prices_to_json():
+    ticket_prices = get_all_ticket_prices()
+    ticket_prices_data = [ticket_price.as_dict() for ticket_price in ticket_prices]
+    with open('ticket_prices.json', 'w') as json_file:
+        json.dump(ticket_prices_data, json_file, indent=4)
+
+# Hàm thêm Ticket
+def add_ticket(seat_id, flight_id, passenger_id, ticket_price_id, receipt_id):
+    ticket = Ticket(seat_id=seat_id, flight_id=flight_id, passenger_id=passenger_id, ticket_price_id=ticket_price_id, receipt_id=receipt_id)
+    db.session.add(ticket)
+    db.session.commit()
+
+# Hàm lấy tất cả Tickets
+def get_all_tickets():
+    return Ticket.query.all()
+
+# Hàm xuất dữ liệu ra file JSON cho Ticket
+def export_tickets_to_json():
+    tickets = get_all_tickets()
+    tickets_data = [ticket.as_dict() for ticket in tickets]
+    with open('tickets.json', 'w') as json_file:
+        json.dump(tickets_data, json_file, indent=4)
+
+# Hàm thêm Passenger
+def add_passenger(first_name, last_name, id_card_number, phone_number):
+    passenger = Passenger(first_name=first_name, last_name=last_name, id_card_number=id_card_number, phone_number=phone_number)
+    db.session.add(passenger)
+    db.session.commit()
+
+# Hàm lấy tất cả Passengers
+def get_all_passengers():
+    return Passenger.query.all()
+
+# Hàm xuất dữ liệu ra file JSON cho Passenger
+def export_passengers_to_json():
+    passengers = get_all_passengers()
+    passengers_data = [passenger.as_dict() for passenger in passengers]
+    with open('passengers.json', 'w', encoding='utf-8') as json_file:
+        json.dump(passengers_data, json_file, ensure_ascii=False, indent=4)  # Ghi dữ liệu vào file JSON
+
+
+# Hàm lấy tất cả Receipts
+def get_all_receipts():
+    return
+
+
+def export_to_json(queryset, filename):
+    """Chuyển đổi queryset thành danh sách dictionary và lưu vào file JSON"""
+    data = [item.as_dict() for item in queryset]
+    with open(filename, 'w', encoding='utf-8') as json_file:
+        json.dump(data, json_file, ensure_ascii=False, indent=4)
+
+
+def export_all_tables():
+    """Xuất dữ liệu của tất cả các bảng ra file JSON riêng biệt"""
+
+    export_to_json(Flight.query.all(), 'data/flights.json')
+
+
+
+
+#thong ke doanh thu theo tuyen bay
+def revenue_stats_by_routes():
+    """
+        Thống kê doanh thu theo từng tuyến bay
+    """
+    return db.session.query(
+        Route.id,  # Lấy ID của tuyến bay
+        Route.name,  # Lấy tên của tuyến bay
+        func.sum(TicketPrice.price).label('total_revenue')
+    ).join(Flight, Route.id == Flight.route_id) \
+        .join(Ticket, Flight.id == Ticket.flight_id) \
+        .join(Receipt, Ticket.receipt_id == Receipt.id) \
+        .join(TicketPrice, Ticket.ticket_price_id == TicketPrice.id) \
+        .group_by(
+            Route.id,
+            Route.name
+    ).order_by(
+        func.sum(TicketPrice.price).desc()  # Sắp xếp theo doanh thu giảm dần
+    ).all()
+
+#thong ke doanh thu theo thang
+def revenue_stats_by_time(year, month = None):
+    """
+    Thống kê doanh thu theo tháng trong năm, có thể lọc theo tháng.
+    """
+    query = db.session.query(
+        func.extract('month', Receipt.pay_date).label('month'),
+        func.sum(TicketPrice.price).label('total_revenue')
+    ).join(Ticket, Ticket.receipt_id == Receipt.id) \
+     .join(Flight, Flight.id == Ticket.flight_id) \
+     .join(TicketPrice, Ticket.ticket_price_id == TicketPrice.id) \
+     .filter(func.extract('year', Receipt.pay_date) == year)
+
+    if month:
+        query = query.filter(func.extract('month', Receipt.pay_date) == month)
+
+    return query.group_by(func.extract('month', Receipt.pay_date)) \
+                .order_by(func.extract('month', Receipt.pay_date)).all()
+
+
+def count_flights_by_route(year, month):
+    """
+    Đếm số lượt bay theo từng tuyến bay, có thể lọc theo tháng.
+    """
+    query = db.session.query(
+        Route.id,
+        Route.name,
+        func.count(Flight.id).label('flight_count')
+    ).join(Flight, Flight.route_id == Route.id, isouter=True) \
+     .group_by(Route.id, Route.name)
+
+    if month:
+        query = query.filter(func.extract('month', Flight.flight_date) == month)
+    if year:
+        query = query.filter(func.extract('year', Flight.flight_date) == year)
+    return query.all()
+
+
+from sqlalchemy import extract
+
+def revenue_stats_by_month(month, year):
+    """
+    Thống kê doanh thu theo từng tuyến bay trong tháng và năm chỉ định.
+    Lấy tổng doanh thu cho mỗi tuyến bay trong tháng và năm.
+    """
+    return db.session.query(
+        Route.id,  # Lấy ID của tuyến bay
+        Route.name,  # Lấy tên của tuyến bay
+        func.sum(TicketPrice.price).label('total_revenue')  # Tổng doanh thu của từng tuyến bay
+    ).join(Flight, Route.id == Flight.route_id) \
+        .join(Ticket, Flight.id == Ticket.flight_id) \
+        .join(Receipt, Ticket.receipt_id == Receipt.id) \
+        .join(TicketPrice, Ticket.ticket_price_id == TicketPrice.id) \
+        .filter(
+            extract('month', Receipt.pay_date) == month,  # Lọc theo tháng
+            extract('year', Receipt.pay_date) == year  # Lọc theo năm
+        ) \
+        .group_by(
+            Route.id,
+            Route.name  # Nhóm theo ID và tên tuyến bay
+        ) \
+        .order_by(
+            func.sum(TicketPrice.price).desc()  # Sắp xếp theo tổng doanh thu giảm dần
+        ) \
+        .all()
+
 if __name__ == "__main__":
     with app.app_context():
-        print(count_remaining_seats_per_seat_class_by_airplane_id(1))
+        # print(load_flight_for_search_result())
+        #  print(revenue_stats_by_routes())
+         # print(revenue_stats_by_time())
+         # print(count_flights_by_route(2024,1))
+         # print(revenue_stats_by_month(1,2024))
+         export_all_tables()
+
+
+

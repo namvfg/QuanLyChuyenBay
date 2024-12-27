@@ -259,14 +259,32 @@ class MyAdminView(AdminIndexView):
         tickets = dao.count_tickets()
         passengers = dao.count_passengers()
         total_revenue = dao.get_total_revenue()
+        print(f"Tickets: {tickets}, Passengers: {passengers}, Total Revenue: {total_revenue}")
         return self.render("admin/index.html", tickets=tickets, passengers = passengers,total_revenue = total_revenue)
 
 
+from flask import request
+
+
 class StatsView(BaseView):
-    @expose("/")
+    @expose("/", methods=["GET", "POST"])
     @is_admin
     def index(self):
-        return self.render('admin/stats.html')
+        year = datetime.now().year
+
+        # Thống kê doanh thu theo tuyến bay trong năm hiện tại
+        stats = dao.revenue_stats_by_routes()
+        stats2 = dao.revenue_stats_by_time(year)
+
+        return self.render('admin/stats.html',
+                           stats=stats,
+                           stats2=stats2,
+
+                           # tickets=dao.count_tickets(),
+                           passengers=dao.count_passengers(),
+                           total_revenue=dao.get_total_revenue(),
+                           )
+
     def is_accessible(self):
         return current_user.is_authenticated
 
@@ -368,6 +386,6 @@ admin.add_view(RuleView(Rule, db.session))
 #=========View=========#
 admin.add_view(AddAirplaneView(name="Add Airplane", endpoint='add_airplane'))
 admin.add_view(AddRouteView(name="Add Route", endpoint="add_route"))
-admin.add_view(StatsView(name='Thong ke'))
+admin.add_view(StatsView(name='Stats'))
 #end======View=========#
 
