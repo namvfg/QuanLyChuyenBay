@@ -588,11 +588,7 @@ def export_intermediate_airports_to_json():
     with open('intermediate_airports.json', 'w') as json_file:
         json.dump(intermediate_airports_data, json_file, indent=4)
 
-# Hàm thêm Flight
-def add_flight(name, flight_date, airplane_id, route_id, planner_id):
-    flight = Flight(name=name, flight_date=flight_date, airplane_id=airplane_id, route_id=route_id, planner_id=planner_id)
-    db.session.add(flight)
-    db.session.commit()
+
 
 # Hàm lấy tất cả Flights
 def get_all_flights():
@@ -673,11 +669,6 @@ def export_passengers_to_json():
     with open('passengers.json', 'w', encoding='utf-8') as json_file:
         json.dump(passengers_data, json_file, ensure_ascii=False, indent=4)  # Ghi dữ liệu vào file JSON
 
-# Hàm thêm Receipt
-def add_receipt(amount, payment_method):
-    receipt = Receipt(amount=amount, payment_method=payment_method)
-    db.session.add(receipt)
-    db.session.commit()
 
 # Hàm lấy tất cả Receipts
 def get_all_receipts():

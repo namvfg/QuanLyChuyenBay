@@ -644,7 +644,8 @@ def passenger_information_staff():
         # print(cart)
 
         return jsonify({"status": "success", "redirect": "/staff/customer_information"})
-
+    return render_template("staff/passenger_information.html",
+                           seat_name_array=seat_name_array)
 
 def draw_monthly_chart():
     # Lấy dữ liệu JSON từ request
@@ -678,15 +679,6 @@ def draw_monthly_chart():
     # Trả về dữ liệu dưới dạng JSON với các khóa riêng biệt
     return jsonify({ "data_bar": data_to_draw_chart_bar, "data_pie": data_to_draw_chart_pie,"report_data": report_data,
     "total_flights": sum(row.flight_count for row in raw_data_by_turn) })
-
-
-#trang chu staff
-def staff_login():
-    user_name = request.form['username']
-    password = request.form['password']
-    user = dao.auth_staff(user_name=user_name, password=password)
-    return render_template("staff/passenger_information.html",
-                           seat_name_array=seat_name_array)
 
 
 # nhập thông tin khách hàng

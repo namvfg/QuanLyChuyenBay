@@ -385,6 +385,6 @@ admin.add_view(RuleView(Rule, db.session))
 #=========View=========#
 admin.add_view(AddAirplaneView(name="Add Airplane", endpoint='add_airplane'))
 admin.add_view(AddRouteView(name="Add Route", endpoint="add_route"))
-admin.add_view(StatsView(name='Thong ke'))
+admin.add_view(StatsView(name='Stats'))
 #end======View=========#
 
