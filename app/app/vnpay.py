@@ -11,7 +11,10 @@ VNP_HASH_SECRET = "KW06TMWD7PXSRZ3UW8RWTHOYCO48181B"  # Chuỗi bí mật (do VN
 VNP_URL = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"  # URL sandbox
 VNP_RETURN_URL = "http://127.0.0.1:5000/payment_return"  # URL nhận callback
 
-def generate_payment_url(order_id, amount):
+def generate_return_url(end_point):
+    return f"http://127.0.0.1:5000/{end_point}"
+
+def generate_payment_url(order_id, amount, end_point):
     vnp_IpAddr = request.remote_addr  # Lấy IP thực của người dùng
     params = {
         "vnp_Version": "2.1.0",
@@ -24,7 +27,7 @@ def generate_payment_url(order_id, amount):
         "vnp_Locale": "vn",
         "vnp_OrderInfo": f"Thanh toan don hang {order_id}",
         "vnp_OrderType": "billpayment",
-        "vnp_ReturnUrl": VNP_RETURN_URL,
+        "vnp_ReturnUrl": generate_return_url(end_point),
         "vnp_TxnRef": order_id,
     }
 

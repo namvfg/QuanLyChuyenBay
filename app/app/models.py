@@ -111,6 +111,7 @@ class Airport(BaseModel):
     def __str__(self):
         return self.name
 
+
     def as_dict(self):
         result = super().as_dict()
         result['start_routes'] = [route.as_dict() for route in self.start_routes]
@@ -221,17 +222,15 @@ class TicketPrice(BaseModel):
         result['tickets'] = [ticket.as_dict() for ticket in self.tickets]
         return result
 
-
 # user
 class User(BaseModel, UserMixin):
     first_name = Column(String(20), nullable=False)
     last_name = Column(String(100), nullable=False)
-    user_name = Column(String(20), unique=True, nullable=False)
-    password = Column(String(100), nullable=False)
+    user_name = Column(String(20), unique=True)
+    password = Column(String(100))
 
     def __str__(self):
         return self.first_name
-
 
 
 # admin
@@ -246,8 +245,9 @@ class AdminWebsite(User):
 class Customer(User):
     customer_id = Column(Integer, ForeignKey(User.id), primary_key=True)
     phone_number = Column(String(10), unique=True, nullable=False)
-    email = Column(String(50), unique=True, nullable=False)
-    avatar = Column(String(100), nullable=False)
+    email = Column(String(50), unique=True)
+    avatar = Column(String(100))
+
     receipts = relationship("Receipt", backref="receipts_customer", lazy=True)
 
 

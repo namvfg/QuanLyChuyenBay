@@ -1,12 +1,12 @@
 [
-    {
-        "customer_id": 4,
-        "first_name": "Dun",
-        "last_name": "Nguyen",
-        "phone_number": "123456",
-        "email": "123@gmail.com",
-        "avatar": "https://res.cloudinary.com/dcee16rsp/image/upload/v1732182639/My%20Brand/deadlock_rz3for.jpg",
-        "user_name": "customer",
-        "password": "b'\\xe1\\n\\xdc9I\\xbaY\\xab\\xbeV\\xe0W\\xf2\\x0f\\x88>'"
-    }
-]
+        {
+            "customer_id": 4,
+            "first_name": "Dun",
+            "last_name": "Nguyen",
+            "user_name": "customer",
+            "password": "b'\\xe1\\n\\xdc9I\\xbaY\\xab\\xbeV\\xe0W\\xf2\\x0f\\x88>'",
+            "phone_number": "0123456789",
+            "email": "2251052022dun@ou.edu.vn",
+            "avatar": "https://res.cloudinary.com/dcee16rsp/image/upload/v1732182639/My%20Brand/deadlock_rz3for.jpg"
+        }
+    ]

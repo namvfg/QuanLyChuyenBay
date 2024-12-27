@@ -1,6 +1,7 @@
 import smtplib
 import requests
-
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from app import app
 
 #send mail xác thực
@@ -13,8 +14,15 @@ def send_authenticate_mail(email_target, subject, body):
     mail_session.login(email, password)
     try:
         #Nội dung
-        mail_content = f"Subject: {subject}\n\n{body}"
-        mail_session.sendmail(email, email_target, mail_content)
+        # Tạo đối tượng MIME cho email
+        msg = MIMEMultipart()
+        msg['From'] = email
+        msg['To'] = email_target
+        msg['Subject'] = subject
+
+        # Đảm bảo mã hóa nội dung bằng UTF-8
+        msg.attach(MIMEText(body, 'plain', 'utf-8'))
+        mail_session.sendmail(email, email_target, msg.as_string())
         print("Email sent successfully!")
 
     except smtplib.SMTPRecipientsRefused as e:
