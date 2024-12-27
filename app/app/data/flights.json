@@ -1,56 +1,146 @@
 [
-        {
-            "id": 1,
-            "name": "DT-B001",
-            "flight_date": "2024-12-31 14:37:00",
-            "total_time": 30,
-            "airplane_id": 1,
-            "route_id": 1,
-            "planner_id": 3
-        },
-        {
-            "id": 2,
-            "name": "DT-B002",
-            "flight_date": "2025-01-16 14:38:00",
-            "total_time": 30,
-            "airplane_id": 1,
-            "route_id": 2,
-            "planner_id": 3
-        },
-        {
-            "id": 3,
-            "name": "DT-A001",
-            "flight_date": "2024-12-29 14:41:00",
-            "total_time": 30,
-            "airplane_id": 2,
-            "route_id": 3,
-            "planner_id": 3
-        },
-        {
-            "id": 4,
-            "name": "DT-E001",
-            "flight_date": "2024-12-31 14:42:00",
-            "total_time": 30,
-            "airplane_id": 3,
-            "route_id": 5,
-            "planner_id": 3
-        },
-        {
-            "id": 5,
-            "name": "DT-A002",
-            "flight_date": "2025-01-04 14:43:00",
-            "total_time": 30,
-            "airplane_id": 2,
-            "route_id": 4,
-            "planner_id": 3
-        },
-        {
-            "id": 6,
-            "name": "DT-E002",
-            "flight_date": "2024-12-10 14:47:00",
-            "total_time": 30,
-            "airplane_id": 3,
-            "route_id": 4,
-            "planner_id": 3
-        }
-    ]
+    {
+        "id": 1,
+        "name": "DT-01",
+        "flight_date": "2024-01-01 12:30:00",
+        "airplane_id": 1,
+        "route_id": 4,
+        "planner_id": 2,
+        "total_time": 410
+    },
+    {
+        "id": 2,
+        "name": "DT-02",
+        "flight_date": "2024-01-05 12:20:00",
+        "airplane_id": 2,
+        "route_id": 8,
+        "planner_id": 2,
+        "total_time": 310
+    },
+    {
+        "id": 3,
+        "name": "DT-03",
+        "flight_date": "2024-01-02 12:20:00",
+        "airplane_id": 3,
+        "route_id": 9,
+        "planner_id": 2,
+        "total_time": 385
+    },
+    {
+        "id": 4,
+        "name": "DT-04",
+        "flight_date": "2024-01-10 10:20:00",
+        "airplane_id": 4,
+        "route_id": 6,
+        "planner_id": 2,
+        "total_time": 120
+    },
+    {
+        "id": 5,
+        "name": "DT-05",
+        "flight_date": "2024-01-15 06:30:00",
+        "airplane_id": 5,
+        "route_id": 10,
+        "planner_id": 2,
+        "total_time": 120
+    },
+    {
+        "id": 7,
+        "name": "DT-06",
+        "flight_date": "2024-01-09 12:25:00",
+        "airplane_id": 6,
+        "route_id": 10,
+        "planner_id": 2,
+        "total_time": 130
+    },
+    {
+        "id": 8,
+        "name": "DT-07",
+        "flight_date": "2024-01-15 12:20:00",
+        "airplane_id": 7,
+        "route_id": 2,
+        "planner_id": 2,
+        "total_time": 90
+    },
+    {
+        "id": 9,
+        "name": "DT-08",
+        "flight_date": "2024-01-13 11:40:00",
+        "airplane_id": 7,
+        "route_id": 1,
+        "planner_id": 2,
+        "total_time": 230
+    },
+    {
+        "id": 10,
+        "name": "DT-09",
+        "flight_date": "2024-01-12 12:20:00",
+        "airplane_id": 9,
+        "route_id": 5,
+        "planner_id": 2,
+        "total_time": 110
+    },
+    {
+        "id": 11,
+        "name": "DT-10",
+        "flight_date": "2024-01-10 12:25:00",
+        "airplane_id": 9,
+        "route_id": 3,
+        "planner_id": 2,
+        "total_time": 240
+    },
+    {
+        "id": 12,
+        "name": "DT-11",
+        "flight_date": "2024-01-20 09:30:00",
+        "airplane_id": 11,
+        "route_id": 2,
+        "planner_id": 2,
+        "total_time": 90
+    },
+    {
+        "id": 13,
+        "name": "DT-12",
+        "flight_date": "2024-01-18 22:20:00",
+        "airplane_id": 10,
+        "route_id": 12,
+        "planner_id": 2,
+        "total_time": 90
+    },
+    {
+        "id": 14,
+        "name": "DT-13",
+        "flight_date": "2024-01-03 13:30:00",
+        "airplane_id": 13,
+        "route_id": 1,
+        "planner_id": 2,
+        "total_time": 265
+    },
+    {
+        "id": 15,
+        "name": "DT-14",
+        "flight_date": "2024-01-02 03:30:00",
+        "airplane_id": 14,
+        "route_id": 6,
+        "planner_id": 2,
+        "total_time": 120
+    },
+    {
+        "id": 16,
+        "name": "DT-15",
+        "flight_date": "2024-01-08 05:30:00",
+        "airplane_id": 15,
+        "route_id": 4,
+        "planner_id": 2,
+        "total_time": 380
+    },
+    {
+        "id": 17,
+        "name": "DT-16",
+        "flight_date": "2024-01-10 12:30:00",
+        "airplane_id": 7,
+        "route_id": 3,
+        "planner_id": 2,
+        "total_time": 275
+    }
+]

@@ -3,59 +3,22 @@
 {% block body %}
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .admin-box {
-    max-width: 600px;
-    max-height: 300px;
-}
-
-.admin-button {
-    align-self: stretch; /* Kéo nút theo chiều cao của ô */
-    padding: 0 20px; /* Điều chỉnh khoảng cách trong nút */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    white-space: nowrap; /* Đảm bảo nút không bị xuống dòng */
-}
-    </style>
 </head>
+
 <body>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 <div class="container">
-    <!-- Admin Greeting Box -->
-    <div class="card p-3 shadow-sm admin-box mb-4">
-        <div class="d-flex align-items-center">
-            <h5>THỐNG KÊ BÁO CÁO <i class="fa-solid fa-plane ms-3"></i></h5>
-        </div>
+    <!-- Thống kê năm nay -->
+    <div class="card p-3 shadow-sm admin-box mb-4 text-center"
+         style="display: flex; justify-content: center; align-items: center;">
+        <h2>Thống kê năm nay</h2>
     </div>
 
-    <!-- Date Pickers and Button -->
-    <div class="d-flex align-items-end">
-        <!-- From Date -->
-        <div class="form-group me-3">
-            <label for="fromMonth">Tháng thống kê:</label>
-            <input type="month" id="fromMonth" class="form-control admin-date-picker"/>
-        </div>
+    <!-- Statistics Section -->
+    <div class="row text-center">
 
-        <!-- Submit Button -->
-        <button class="btn btn-primary mb-3">Thống kê</button>
-    </div>
-</div>
-
-
-<!-- Statistics Section -->
-<div class="row text-center">
-    <!-- Tổng số vé -->
-    <div class="col-md-4 mb-3">
-        <div class="card stat-box shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">Tổng số vé</h5>
-                <p class="display-6 text-primary">{{ tickets }}</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Tổng giá vé -->
+        <!-- Tổng giá vé -->
+  <div class="d-flex justify-content-center">
     <div class="col-md-4 mb-3">
         <div class="card stat-box shadow-sm">
             <div class="card-body">
@@ -64,85 +27,368 @@
             </div>
         </div>
     </div>
+</div>
+    </div>
+</div>
 
-    <!-- Tổng khách hàng -->
-    <div class="col-md-4 mb-3">
-        <div class="card stat-box shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">Tổng khách hàng</h5>
-                <p class="display-6 text-warning">{{ passengers }}</p>
-            </div>
+    <!-- Bảng thống kê doanh thu theo tuyến bay -->
+    <div class="row">
+        <div class="col-md-6">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Tên tuyến bay</th>
+                    <th>Doanh thu</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for s in stats %}
+                <tr>
+                    <td>{{ s[0] }}</td>
+                    <td>{{ s[1] }}</td>
+                    <td>{{ s[2] }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <canvas id="Chart_revenue_route" style="height: 400px;"></canvas>
         </div>
     </div>
-</div>
-<div class="row">
-    <!-- Biểu đồ 1 -->
-    <div class="col-md-6 col-12">
-        <canvas id="myChart1" style="height: 400px;"></canvas>
-    </div>
-    <!-- Biểu đồ 2 -->
-    <div class="col-md-6 col-12">
-        <canvas id="myChart2" style="height: 400px;"></canvas>
-    </div>
-</div>
 
+    <!-- Bảng thống kê doanh thu theo thời gian -->
+    <div class="row">
+        <div class="col-md-6">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Thời gian (tháng)</th>
+                    <th>Doanh thu</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for s in stats2 %}
+                <tr>
+                    <td>{{ s[0] }}</td>
+                    <td>{{ s[1] }} VND</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <canvas id="Chart_revenue_by_month" style="height: 400px;"></canvas>
+        </div>
+    </div>
+
+    <!-- Form chọn tháng để thống kê -->
+    <div class="card p-3 shadow-sm admin-box mb-4 text-center">
+        <h5>Chọn tháng để thống kê</h5>
+        <div class="d-flex justify-content-center align-items-center">
+            <input type="month" class="form-control" name="month" style="width: 150px; margin-right: 20px;"
+                   id="monthSelector"  />
+        </div>
+    </div>
+
+    <!-- Khung chứa biểu đồ mới (sẽ được thêm vào sau khi chọn tháng) -->
+    <div id="chartsContainer">
+        <div id="chartsRow" style="display: flex; justify-content: space-between; align-items: center; gap: 30px;">
+            <!-- Biểu đồ doanh thu theo tuyến bay trong tháng -->
+            <div id="revenueByRouteMonth" style="flex: 1; display: flex; justify-content: center; align-items: center;">
+                <div class="col-md-6" style="max-width: 500px; width: 100%; padding: 0 10px;">
+                    <canvas id="Chart_revenue_by_selected_month" style="height: 400px; width: 100%;"></canvas>
+                </div>
+            </div>
+            <!-- Biểu đồ lượt bay theo tuyến bay trong tháng -->
+            <div id="flightCountByRouteMonth" style="flex: 1; display: flex; justify-content: center; align-items: center;">
+                <div class="col-md-6" style="max-width: 500px; width: 100%; padding: 0 10px;">
+                    <canvas id="Chart_turn_by_selected_month" style="height: 400px; width: 100%;"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form báo cáo (hiện khi chọn tháng) -->
+        <div id="reportFormContainer" style="display: none; margin-top: 30px;">
+            <div class="card p-3 shadow-sm">
+                <h5 class="text-center">Form Báo Cáo Thống Kê</h5>
+                <form id="reportForm">
+                    <div class="mb-3">
+                        <label for="monthReport" class="form-label">Tháng báo cáo</label>
+                        <input type="text" class="form-control" id="monthReport" disabled />
+                    <table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Tên tuyến bay</th>
+            <th>Doanh thu</th>
+            <th>Lượt bay</th>
+            <th>Tỷ lệ bay</th>
+        </tr>
+    </thead>
+                    <tbody id="report-table-body">
+                        <!-- Bảng sẽ được cập nhật bằng JavaScript -->
+                    </tbody>
+                </table>
+<!-- Nút Xuất Excel -->
+<button id="exportExcel" class="btn btn-success" style="margin-top: 20px;">Xuất Excel</button>
+
+            </div>
+        </form>
+    </div>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+    </div>
+</body>
 <script>
-    window.onload = function() {
-        // Cấu hình cho biểu đồ 1 (Pie Chart)
-        const ctx1 = document.getElementById('myChart1').getContext('2d');
-            new Chart(ctx1, {
-                type: 'pie',
-                data: {
-                    labels: ['Blue', 'Red', 'Yellow'],
-                    datasets: [
-                        {
-                            label: '3 Days', // Tên tập dữ liệu 1
-                            data: [30, 37, 31], // Giá trị cho từng nhãn
+    let selectedMonthChartBar = null; // Biểu đồ cột
+    let selectedMonthChartPie = null; // Biểu đồ tròn
+
+    // Hàm vẽ biểu đồ
+    function drawChart(ctx, data, labels, chartTitle, chartType) {
+        let chartConfig = {
+            type: chartType,
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: chartTitle,
+                    data: data,
+                    borderWidth: 1,
+                    backgroundColor: chartType === 'bar'
+                        ? ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#FFEB3B'] // Màu sắc cho bar chart
+                        : ['#FF5733', '#33FF57', '#3357FF', '#FF33A1'] // Màu sắc cho pie chart
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: chartType === 'pie',
+                        text: chartTitle, // Hiển thị tiêu đề
+                        font: {
+                            size: 16
                         }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { position: 'top' },
-                        title: { display: true, text: 'Biểu đồ 1: Pie Chart' }
                     }
                 }
-            });
-
-        // Cấu hình cho biểu đồ 2 (Bar Chart)
-        const ctx2 = document.getElementById('myChart2').getContext('2d');
-            new Chart(ctx2, {
-                type: 'bar',
-                data: {
-                    labels: ['Day1', 'Day2', 'Day3'],
-                    datasets: [
-                        {
-                            label: 'Blue',
-                            data: [12, 7, 11],
-                        },
-                        {
-                            label: 'Red',
-                            data: [5, 19, 12],
-                        },
-                        {
-                            label: 'Yellow',
-                            data: [13, 11, 8],
-                        }
-                    ]
-                },
-                options: {
-                    indexAxis: 'y',
-                    responsive: true,
-                    plugins: {
-                        legend: { position: 'right' },
-                        title: { display: true, text: 'Chart.js Horizontal Bar Chart' }
-                    }
-                }
-            });
-
+            }
+        };
+        // Vẽ biểu đồ cột
+        if (chartType === 'bar') {
+            if (selectedMonthChartBar) {
+                selectedMonthChartBar.destroy(); // Xóa biểu đồ cột cũ nếu có
+            }
+            selectedMonthChartBar = new Chart(ctx, chartConfig);
+        }
+        // Vẽ biểu đồ tròn
+        else if (chartType === 'pie') {
+            if (selectedMonthChartPie) {
+                selectedMonthChartPie.destroy(); // Xóa biểu đồ tròn cũ nếu có
+            }
+            selectedMonthChartPie = new Chart(ctx, chartConfig);
+        }
     }
-</script>
 
+    // Hàm vẽ biểu đồ
+    function draw(ctx, data, labels, chartTitle, chartType) {
+        new Chart(ctx, {
+            type: chartType,
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: chartTitle,
+                    data: data,
+                    borderWidth: 1,
+                    backgroundColor: chartType === 'bar'
+                        ? ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#FFEB3B'] // Màu sắc cho bar chart
+                        : ['#FF5733', '#33FF57', '#3357FF', '#FF33A1'] // Màu sắc cho pie chart
+                }]
+            }
+        });
+    }
+
+    // Dữ liệu doanh thu theo tuyến bay (bar chart)
+    let data_revenue_route = [];
+    let label_revenue_route = [];
+    {% for s in stats %}
+        data_revenue_route.push({{ s[2] }});
+        label_revenue_route.push('{{ s[1] }}');
+    {% endfor %}
+
+    // Dữ liệu doanh thu theo tháng (bar chart)
+    let data_revenue_by_month = [];
+    let labels_revenue_by_month = [];
+    {% for s in stats2 %}
+        data_revenue_by_month.push({{ s[1] }});
+        labels_revenue_by_month.push('Tháng ' + '{{ s[0] }}');
+    {% endfor %}
+
+    window.onload = function() {
+        // Vẽ biểu đồ doanh thu theo tuyến bay (bar chart)
+        const ctx1 = document.getElementById('Chart_revenue_route').getContext('2d');
+        draw(ctx1, data_revenue_route, label_revenue_route, 'Doanh thu theo tuyến bay', 'bar');
+
+        // Vẽ biểu đồ doanh thu theo tháng (bar chart)
+        const ctx2 = document.getElementById('Chart_revenue_by_month').getContext('2d');
+        draw(ctx2, data_revenue_by_month, labels_revenue_by_month, 'Doanh thu theo tháng', 'bar');
+    }
+
+    // Lắng nghe sự kiện thay đổi tháng và gọi API
+document.getElementById('monthSelector').addEventListener('change', function () {
+    const selectedDate = this.value; // Lấy giá trị (YYYY-MM)
+    const [year, month] = selectedDate.split('-');
+
+    fetch('/api/draw_monthly_chart', {
+        method: 'POST',
+        body: JSON.stringify({
+            "month": month,
+            "year": year
+        }),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Xử lý dữ liệu bar chart
+        const labelsBar = data.data_bar.map(d => d.route_name);
+        const dataBar = data.data_bar.map(d => d.total_revenue);
+
+        // Xử lý dữ liệu pie chart
+        const labelsPie = data.data_pie.map(d => d.route_name);
+        const dataPie = data.data_pie.map(d => d.flight_count);
+
+        // Vẽ biểu đồ doanh thu theo tuyến bay (bar chart)
+        const ctx3 = document.getElementById('Chart_revenue_by_selected_month').getContext('2d');
+        drawChart(ctx3, dataBar, labelsBar, 'Doanh thu theo tuyến bay tháng ' + month, 'bar');
+
+        // Vẽ biểu đồ lượt bay từng tuyến bay (pie chart)
+        const ctx4 = document.getElementById('Chart_turn_by_selected_month').getContext('2d');
+        drawChart(ctx4, dataPie, labelsPie, 'Lượt bay từng tuyến bay tháng ' + month + ' năm ' + year, 'pie');
+
+        // Hiển thị và cập nhật bảng báo cáo
+        document.getElementById('reportFormContainer').style.display = 'block';
+        document.getElementById('monthReport').value = 'Tháng ' + month;
+
+        const reportTableBody = document.getElementById('report-table-body');
+        reportTableBody.innerHTML = ''; // Reset nội dung bảng
+
+        let totalRevenue = 0; // Biến lưu tổng doanh thu
+
+        data.report_data.forEach(function (item) {
+            const row = document.createElement('tr');
+
+            // Tạo các cột cho từng dữ liệu
+            const cell1 = document.createElement('td');
+            cell1.textContent = item.id;
+            row.appendChild(cell1);
+
+            const cell2 = document.createElement('td');
+            cell2.textContent = item.route_name;
+            row.appendChild(cell2);
+
+            const cell3 = document.createElement('td');
+            cell3.textContent = item.total_revenue + ' VND';
+            row.appendChild(cell3);
+            totalRevenue += item.total_revenue; // Cộng dồn doanh thu
+
+            const cell4 = document.createElement('td');
+            cell4.textContent = item.flight_count;
+            row.appendChild(cell4);
+
+            const cell5 = document.createElement('td');
+            const ratio = item.flight_count / (data.total_flights || 1);
+            cell5.textContent = (ratio * 100).toFixed(2) + '%';
+            row.appendChild(cell5);
+
+            // Thêm hàng vào bảng
+            reportTableBody.appendChild(row);
+        });
+
+        // Thêm một hàng tổng doanh thu vào cuối bảng
+        const totalRow = document.createElement('tr');
+        const totalCell1 = document.createElement('td');
+        totalCell1.textContent = 'Tổng doanh thu'; // Tên cột
+        totalCell1.colSpan = 2; // Gộp 2 cột
+
+        const totalCell2 = document.createElement('td');
+        totalCell2.textContent = totalRevenue + ' VND'; // Tổng doanh thu
+        totalRow.appendChild(totalCell1);
+        totalRow.appendChild(totalCell2);
+
+        // Cột còn lại không có dữ liệu, tạo các ô trống
+        const totalCell3 = document.createElement('td');
+        totalRow.appendChild(totalCell3);
+
+        const totalCell4 = document.createElement('td');
+        totalRow.appendChild(totalCell4);
+
+        reportTableBody.appendChild(totalRow); // Thêm hàng tổng vào bảng
+    })
+    .catch(error => console.error('Lỗi khi gọi API:', error));
+});
+document.getElementById('exportExcel').addEventListener('click', function () {
+    // Lấy giá trị tháng đã chọn
+    const selectedDate = document.getElementById('monthSelector').value;
+    const [year, month] = selectedDate.split('-');
+    const monthText = `Doanh thu tháng ${month}/${year}`;
+
+    // Lấy dữ liệu từ bảng thống kê doanh thu theo tuyến bay
+    const routeTable = document.querySelectorAll('#report-table-body tr');
+    const routeData = [['Id', 'Tên tuyến bay', 'Doanh thu', 'Lượt bay', 'Tỷ lệ bay']];
+
+    // Thêm hàng đầu tiên với thông tin tháng
+    const headerRow = [monthText];
+    for (let i = 1; i < routeData[0].length; i++) {
+        headerRow.push('');
+    }
+    routeData.unshift(headerRow);
+
+    routeTable.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        const rowData = Array.from(cells).map(cell => cell.innerText);
+        routeData.push(rowData);
+    });
+
+    // Tạo workbook và worksheet từ dữ liệu
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(routeData);
+
+    // Hợp nhất các ô trong hàng đầu tiên
+    ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 4 } }];
+
+    XLSX.utils.book_append_sheet(wb, ws, 'Revenue Report');
+
+    // Dữ liệu doanh thu theo tuyến bay trong tháng
+    const revenueByRouteMonthTable = document.querySelectorAll('#Chart_revenue_by_selected_month tr');
+    const revenueByRouteMonthData = [['Id', 'Tên tuyến bay', 'Doanh thu', 'Lượt bay', 'Tỷ lệ bay']];
+
+    // Thêm hàng đầu tiên với thông tin tháng
+    const headerRowMonth = [monthText];
+    for (let i = 1; i < revenueByRouteMonthData[0].length; i++) {
+        headerRowMonth.push('');
+    }
+    revenueByRouteMonthData.unshift(headerRowMonth);
+
+    revenueByRouteMonthTable.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        const rowData = Array.from(cells).map(cell => cell.innerText);
+        revenueByRouteMonthData.push(rowData);
+    });
+
+    // Tạo worksheet từ dữ liệu doanh thu theo tuyến bay trong tháng
+    const wsMonth = XLSX.utils.aoa_to_sheet(revenueByRouteMonthData);
+
+    // Hợp nhất các ô trong hàng đầu tiên
+    wsMonth['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 4 } }];
+
+    XLSX.utils.book_append_sheet(wb, wsMonth, 'Revenue By Route Month');
+
+    // Tạo tên file dựa trên tháng đã chọn
+    const fileName = `Revenue_Report_${year}_${month}.xlsx`;
+
+    // Xuất file Excel
+    XLSX.writeFile(wb, fileName);
+});
+</script>
 {% endblock %}

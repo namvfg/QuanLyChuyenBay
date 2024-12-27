@@ -1,14 +1,14 @@
 import hmac
 import urllib.parse
 import hashlib
-from datetime import datetime
+from datetime import datetime, timedelta
 from app import mail, vnpay
 from app.models import PaymentMethod
 from flask_login import login_user,current_user, logout_user, login_required
 from flask import jsonify, session, url_for
 from flask import request, redirect, render_template
 from app import app, db, dao, utils
-from app.dao import load_popular_routes, load_seat_classes_with_ticket_price_by_flight_id
+from app.dao import load_popular_routes, load_seat_classes_with_ticket_price_by_flight_id, add_ticket_price
 from app.decorators import annonymous_user
 import hashlib
 import cloudinary.uploader
@@ -134,7 +134,7 @@ def logout_my_user():
     return redirect("/")
 
 #ban ve
-@app.route('/staff/selling.html')
+@login_required
 def staff_selling():
     return render_template('staff/selling.html')
 
@@ -285,6 +285,7 @@ def payment_return():
         return render_template("payment_return.html", is_success=False)
 
 #dat lich1
+@login_required
 def staff_scheduling1():
     if request.method.__eq__("POST"):
         key = app.config["KEY_SCHEDULING"]
@@ -320,6 +321,7 @@ def staff_scheduling1():
                            airplanes=airplanes, airports=airports, routes=routes)
 
 #dat lich2
+@login_required
 def staff_scheduling2():
     #lấy dữ liệu từ session
     key = app.config["KEY_SCHEDULING"]
@@ -420,10 +422,13 @@ def info_page():
     return render_template('info.html')
 
 # gọi tới file html của staff
-@app.route('/staff/index.html')
 def staff_page():
     return render_template('/staff/index.html')
 
+#dang xuat staff
+def staff_logout():
+    session.clear()
+    return redirect(url_for('staff_page'))
 #=========admin========#
 
 #trang chu admin
@@ -437,6 +442,41 @@ def admin_login():
         print(current_user)
     return redirect('/admin')
 
+
+def draw_monthly_chart():
+    # Lấy dữ liệu JSON từ request
+    data = request.json
+    month = data.get("month")
+    year = data.get("year")
+
+    # Lấy dữ liệu doanh thu theo tuyến bay cho tháng đã chọn
+    raw_data_by_month = dao.revenue_stats_by_month(year=year, month=month)
+    raw_data_by_turn = dao.count_flights_by_route(year=year, month=month)
+
+    # Chuyển dữ liệu thành định dạng phù hợp với Chart.js
+    data_to_draw_chart_bar = [{"route_name": row.name, "total_revenue": row.total_revenue} for row in raw_data_by_month]
+    data_to_draw_chart_pie = [{"route_name": row.name, "flight_count": row.flight_count} for row in raw_data_by_turn]
+    print("Data for bar chart:", data_to_draw_chart_bar)
+    print("Data for pie chart:", data_to_draw_chart_pie)
+    # Tạo dữ liệu report dựa trên raw_data_by_month
+    report_data = [
+        {
+            "id": idx + 1,  # Đánh số thứ tự
+            "route_name": row.name,
+            "total_revenue": row.total_revenue,
+            "flight_count": next(
+                (item.flight_count for item in raw_data_by_turn if item.name == row.name),
+                0  # Mặc định là 0 nếu không tìm thấy
+            )
+        }
+        for idx, row in enumerate(raw_data_by_month)
+    ]
+
+    # Trả về dữ liệu dưới dạng JSON với các khóa riêng biệt
+    return jsonify({ "data_bar": data_to_draw_chart_bar, "data_pie": data_to_draw_chart_pie,"report_data": report_data,
+    "total_flights": sum(row.flight_count for row in raw_data_by_turn) })
+
+
 #trang chu staff
 def staff_login():
     user_name = request.form['username']
@@ -447,6 +487,7 @@ def staff_login():
         login_user(user)
         print(current_user)
     return redirect('/staff')
+
 
 
 #end======admin========#

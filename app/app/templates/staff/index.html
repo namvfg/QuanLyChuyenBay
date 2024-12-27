@@ -13,10 +13,12 @@
             integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
             crossorigin="anonymous">
     </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
+          integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 
@@ -39,21 +41,23 @@
                 <a class="nav-link" href="/staff/scheduling1">Lập lịch</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('staff_selling') }}">Bán vé</a>
+                <a class="nav-link" href="/staff/selling">Bán vé</a>
             </li>
         </ul>
 
         <ul class="navbar-nav ms-auto">
             {% if current_user.is_authenticated %}
             <li class="nav-item">
-                <a class="nav-link text-danger" href="/info_page"><button class="btn btn-outline-primary">
-                    <img src="{{ current_user.avatar }}" width="25" class="rounded-circle"
-                         >
-                    Chào <span class="text-info">{{ current_user.first_name }}</span>
-                </button></a>
+                <a class="nav-link text-danger" href="/info_page">
+                    <button class="btn btn-outline-primary">
+                        <img src="{{ current_user.avatar }}" width="25" class="rounded-circle"
+                        >
+                        Chào <span class="text-info">{{ current_user.first_name }}</span>
+                    </button>
+                </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-success" href="/logout"><button class="btn btn-primary">Đăng xuất</button></a>
+                <a class=" btn btn-primary mt-2" href="/staff_logout">Đăng xuất</a>
             </li>
             {% else %}
             <li class="nav-item">
