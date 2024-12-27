@@ -5,36 +5,40 @@ from flask_login import login_user, current_user
 from datetime import datetime, timedelta
 import hashlib
 from app import app, controller, login, dao, admin, db
+import os
 from app.dao import add_ticket_price
-from app.models import User, Customer, SubFlight, Airplane
+from app.models import User, Customer, SubFlight, Airplane, Manufacturer, SeatClass, Seat, Airport, Route, \
+    IntermediateAirport, Flight, TicketPrice, Ticket, Passenger, Receipt, Staff, AdminWebsite, Rule
 
 
 # load trang chủ
 app.add_url_rule("/", "index", controller.index, methods=["GET", "POST"])
 
-#load trang đăng nhập
+# load trang đăng nhập
 app.add_url_rule("/login", "login", controller.login_my_user, methods=["POST", "GET"])
 
-#load trang đăng ký
+# load trang đăng ký
 app.add_url_rule("/register", "register", controller.register, methods=["POST", "GET"])
 
-#api mã xác nhận
+# api mã xác nhận
 app.add_url_rule("/api/verify_code", "verify_code", controller.type_verify_code, methods=["POST"])
 
-#api xóa mã xác nhận
+# api xóa mã xác nhận
 app.add_url_rule("/api/clear_verify_code", "clear_verify_code", controller.clear_verify_code, methods=["POST"])
 
 # gọi.qual tới file html của thong tin tai khoan
 app.add_url_rule("/info_page", "info_page", controller.info_page, methods=["POST", "GET"])
 
 #api thêm vé
+
 app.add_url_rule("/api/cart", "add_seat", controller.add_seat, methods=["POST"])
 
-#api xóa vé
+# api xóa vé
 app.add_url_rule("/api/cart/<seat_id>", "api_cart_seatId_delete", controller.delete_seat, methods=["DELETE"])
 
-#log out
+# log out
 app.add_url_rule("/logout", "logout", controller.logout_my_user)
+
 
 #load trang kết quả tìm kiếm
 app.add_url_rule("/search_result", "search_result", controller.search_result, methods=["GET"])
@@ -42,22 +46,25 @@ app.add_url_rule("/search_result", "search_result", controller.search_result, me
 #load trang đặt vé
 app.add_url_rule("/booking/<int:flight_id>", "booking", controller.booking, methods=["GET"])
 
-#load trang nhập thông tin hành khách
-app.add_url_rule("/passenger_information", "passenger_information", controller.passenger_information, methods=["GET", "POST"])
+# load trang nhập thông tin hành khách
+app.add_url_rule("/passenger_information", "passenger_information", controller.passenger_information,
+                 methods=["GET", "POST"])
 
-#load trang thanh toán
+# load trang thanh toán
 app.add_url_rule("/pay", "pay", controller.pay, methods=["GET", "POST"])
 
-#load trang kết quả thanh toán
+# load trang kết quả thanh toán
 app.add_url_rule("/payment_return", "payment_return", controller.payment_return, methods=["GET", "POST"])
-
 
 #==========staff=========#
 # gọi tới file html của staff
 app.add_url_rule("/staff", "staff", controller.staff_page, methods=["POST", "GET"])
 
-#load trang chu staff
+# load trang chu staff
 app.add_url_rule("/login-staff", "login_staff", controller.staff_login, methods=['POST', 'GET'])
+
+# dang xuat staff
+app.add_url_rule("/staff_logout", "logout_staff", controller.staff_logout, methods=['POST', 'GET'])
 
 #dat lich1
 app.add_url_rule("/staff/scheduling1", "scheduling1", controller.staff_scheduling1, methods=["POST", "GET"])
@@ -114,8 +121,10 @@ def load_user(id):
         return dao.get_user_by_id(id)
 
 
+# ve bbieu do
+app.add_url_rule("/api/draw_monthly_chart", "api_draw_monthly_chart", controller.draw_monthly_chart, methods=['POST'])
+
+
+
 if __name__ == "__main__":
     app.run(debug=True)
-
-
-

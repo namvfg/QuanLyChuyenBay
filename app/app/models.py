@@ -8,15 +8,20 @@ from datetime import datetime
 import json
 from werkzeug.security import generate_password_hash, check_password_hash
 
-
-
 # base model
 class BaseModel(db.Model):
     __abstract__ = True
 
     id = Column(Integer, primary_key=True, autoincrement=True)
 
-
+    def as_dict(self):
+        result = {}
+        for column in self.__table__.columns:
+            value = getattr(self, column.name)
+            if isinstance(value, datetime):
+                value = value.strftime("%Y-%m-%d %H:%M:%S")
+            result[column.name] = value
+        return result
 
 
 # hang san xuat
@@ -28,6 +33,11 @@ class Manufacturer(BaseModel):
     def __str__(self):
         return self.name
 
+    def as_dict(self):
+        # Gọi phương thức của lớp cha
+        result = super().as_dict()
+        result['airplanes'] = [airplane.as_dict() for airplane in self.airplanes]
+        return result
 
 
 # may bay
@@ -44,6 +54,15 @@ class Airplane(BaseModel):
     def __str__(self):
         return self.name
 
+    def as_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            # Chuyển đổi mfg_date thành chuỗi nếu không phải None
+            "seat_quantity": self.seat_quantity,
+            "mfg_date": self.mfg_date.strftime("%Y-%m-%d %H:%M:%S") if self.mfg_date else None,
+            "manufacturer_id": self.manufacturer_id
+        }
 
 
 # hang ghe
@@ -55,6 +74,12 @@ class SeatClass(BaseModel):
 
     def __str__(self):
         return self.name
+
+    def as_dict(self):
+        result = super().as_dict()
+        result['seats'] = [seat.as_dict() for seat in self.seats]
+        result['ticket_prices'] = [ticket_price.as_dict() for ticket_price in self.ticket_prices]
+        return result
 
 
 # cho ngoi
@@ -69,6 +94,7 @@ class Seat(BaseModel):
 
     def __str__(self):
         return self.name
+
 
 
 # san bay
@@ -86,6 +112,14 @@ class Airport(BaseModel):
         return self.name
 
 
+    def as_dict(self):
+        result = super().as_dict()
+        result['start_routes'] = [route.as_dict() for route in self.start_routes]
+        result['end_routes'] = [route.as_dict() for route in self.end_routes]
+        result['intermediate_airports'] = [airport.as_dict() for airport in self.intermediate_airports]
+        return result
+
+
 # Tuyen bay
 class Route(BaseModel):
     name = Column(String(10), nullable=False, unique=True)
@@ -96,6 +130,13 @@ class Route(BaseModel):
     intermediate_airports = relationship("IntermediateAirport", backref="intermediate_airports_route", lazy=True)
     flights = relationship("Flight", backref="flights_route", lazy=True)
 
+    def as_dict(self):
+        result = super().as_dict()
+        result['departure_airport_id'] = self.departure_airport_id
+        result['arrival_airport_id'] = self.arrival_airport_id
+        result['intermediate_airports'] = [airport.as_dict() for airport in self.intermediate_airports]
+        result['flights'] = [flight.as_dict() for flight in self.flights]
+        return result
 
 
 # san bay trung gian
@@ -104,6 +145,12 @@ class IntermediateAirport(BaseModel):
 
     airport_id = Column(Integer, ForeignKey(Airport.id), nullable=False)
     route_id = Column(Integer, ForeignKey(Route.id), nullable=False)
+
+    def as_dict(self):
+        result = super().as_dict()
+        result['airport_id'] = self.airport_id
+        result['route_id'] = self.route_id
+        return result
 
 
 # chuyen bay
@@ -123,6 +170,25 @@ class Flight(BaseModel):
     def __str__(self):
         return self.name
 
+    def as_dict(self):
+        # Khởi tạo từ lớp cha nếu có
+        result = {
+            "id": self.id,
+            "name": self.name,
+            # Xử lý datetime
+            "flight_date": self.flight_date.strftime("%Y-%m-%d %H:%M:%S") if self.flight_date else None,
+            "airplane_id": self.airplane_id,
+            "route_id": self.route_id,
+            "planner_id": self.planner_id,
+            "total_time": self.total_time,
+            # Chuyển đổi các quan hệ
+            "ticket_prices": [ticket_price.as_dict() for ticket_price in
+                              self.ticket_prices] if self.ticket_prices else [],
+            "tickets": [ticket.as_dict() for ticket in self.tickets] if self.tickets else [],
+            "sub_flights": [sub_flight.as_dict() for sub_flight in self.sub_flights] if self.sub_flights else []
+        }
+        return result
+
 
 # chuyen bay nho
 class SubFlight(BaseModel):
@@ -132,6 +198,12 @@ class SubFlight(BaseModel):
     waiting_duration = Column(Integer, nullable=False, default=0)
 
     flight_id = Column(Integer, ForeignKey(Flight.id), nullable=False)
+
+    def as_dict(self):
+        result = super().as_dict()
+        result['flight_time'] = self.flight_time.strftime("%Y-%m-%d %H:%M:%S") if self.flight_time else None
+        result['flight_id'] = self.flight_id
+        return result
 
 
 # gia ve
@@ -143,6 +215,12 @@ class TicketPrice(BaseModel):
 
     tickets = relationship("Ticket", backref="tickets_ticket_price", lazy=True)
 
+    def as_dict(self):
+        result = super().as_dict()
+        result['seat_class_id'] = self.seat_class_id
+        result['flight_id'] = self.flight_id
+        result['tickets'] = [ticket.as_dict() for ticket in self.tickets]
+        return result
 
 # user
 class User(BaseModel, UserMixin):
@@ -188,6 +266,18 @@ class Staff(User):
     flights = relationship("Flight", backref="flights_planner", lazy=True)
     receipts = relationship("Receipt", backref="receipts_seller", lazy=True)
 
+    def as_dict(self):
+        result = super().as_dict()  # Kế thừa logic từ User nếu có
+        result.update({
+            "staff_id": self.staff_id,
+            "active": self.active,
+            "staff_role": self.staff_role.name if isinstance(self.staff_role, Enum) else str(self.staff_role),
+            # Chuyển Enum thành chuỗi
+            "flights": [flight.as_dict() for flight in self.flights],  # Serialize các quan hệ
+            "receipts": [receipt.as_dict() for receipt in self.receipts]  # Serialize các quan hệ
+        })
+        return result
+
 
 class PaymentMethod(PythonEnum):
     BANKING = 1
@@ -196,7 +286,7 @@ class PaymentMethod(PythonEnum):
 # hoa don
 class Receipt(BaseModel):
     pay_date = Column(DateTime, default=datetime.now())
-    order_id = Column(String(30), nullable=False)
+    order_id = Column(String(50), nullable=False)
     payment_method = Column(Enum(PaymentMethod), default=PaymentMethod.CASHING)
 
     customer_id = Column(Integer, ForeignKey(Customer.customer_id), nullable=False)
@@ -204,8 +294,20 @@ class Receipt(BaseModel):
 
     tickets = relationship("Ticket", backref="tickets_receipt", lazy=True)
 
+    def as_dict(self):
+        return {
+            "id": self.id,
+            # Xử lý datetime
+            "pay_date": self.pay_date.strftime("%Y-%m-%d %H:%M:%S") if self.pay_date else None,
+            # Liên kết khóa ngoại
+            "customer_id": self.customer_id,
+            "order_id": self.order_id,
+            "seller_id": self.seller_id,
+            # Quan hệ (relationship)
+            "tickets": [ticket.as_dict() for ticket in self.tickets] if self.tickets else []
+        }
 
-# nguoi di
+        # nguoi di
 class Passenger(BaseModel):
     first_name = Column(String(20), nullable=False)
     last_name = Column(String(100), nullable=False)
@@ -217,6 +319,11 @@ class Passenger(BaseModel):
     def __str__(self):
         return self.first_name
 
+    def as_dict(self):
+        result = super().as_dict()
+        result['ticket'] = [ticket.as_dict() for ticket in self.ticket]
+        return result
+
 
 # ve may bay
 class Ticket(BaseModel):
@@ -225,6 +332,15 @@ class Ticket(BaseModel):
     passenger_id = Column(Integer, ForeignKey(Passenger.id), nullable=False, unique=True)
     ticket_price_id = Column(Integer, ForeignKey(TicketPrice.id), nullable=False)
     receipt_id = Column(Integer, ForeignKey(Receipt.id), nullable=False)
+
+    def as_dict(self):
+        result = super().as_dict()
+        result['seat_id'] = self.seat_id
+        result['flight_id'] = self.flight_id
+        result['passenger_id'] = self.passenger_id
+        result['ticket_price_id'] = self.ticket_price_id
+        result['receipt_id'] = self.receipt_id
+        return result
 
 
 # review
@@ -261,7 +377,7 @@ if __name__ == "__main__":
             data = json.load(f)
             for x in data:
                 date = x["review_date"]
-                date = datetime.fromisoformat(date)
+                date = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
                 x["review_date"] = date
                 x = Review(**x)
                 db.session.add(x)
@@ -286,15 +402,15 @@ if __name__ == "__main__":
             db.session.commit()
 
         # #load airplane vào csdl
-        # with open("%s/data/airplanes.json" % app.root_path, encoding="utf-8") as f:
-        #     data = json.load(f)
-        #     for x in data:
-        #         date = x["mfg_date"]
-        #         date = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
-        #         x["mfg_date"] = date
-        #         x = Airplane(**x)
-        #         db.session.add(x)
-        #     db.session.commit()
+        with open("%s/data/airplanes.json" % app.root_path, encoding="utf-8") as f:
+            data = json.load(f)
+            for x in data:
+                date = x["mfg_date"]
+                date = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
+                x["mfg_date"] = date
+                x = Airplane(**x)
+                db.session.add(x)
+            db.session.commit()
 
         # #load airport vào csdl
         with open("%s/data/airports.json" % app.root_path, encoding="utf-8") as f:
@@ -306,20 +422,20 @@ if __name__ == "__main__":
 
 
         # #load route vào csdl
-        # with open("%s/data/routes.json" % app.root_path, encoding="utf-8") as f:
-        #     data = json.load(f)
-        #     for x in data:
-        #         x = Route(**x)
-        #         db.session.add(x)
-        #     db.session.commit()
+        with open("%s/data/routes.json" % app.root_path, encoding="utf-8") as f:
+            data = json.load(f)
+            for x in data:
+                x = Route(**x)
+                db.session.add(x)
+            db.session.commit()
 
         # #load intermediate_airport vào csdl
-        # with open("%s/data/intermediate_airports.json" % app.root_path, encoding="utf-8") as f:
-        #     data = json.load(f)
-        #     for x in data:
-        #         x = IntermediateAirport(**x)
-        #         db.session.add(x)
-        #     db.session.commit()
+        with open("%s/data/intermediate_airports.json" % app.root_path, encoding="utf-8") as f:
+            data = json.load(f)
+            for x in data:
+                x = IntermediateAirport(**x)
+                db.session.add(x)
+            db.session.commit()
 
         # #load seat_class vào csdl
         with open("%s/data/seat_classes.json" % app.root_path, encoding="utf-8") as f:
@@ -331,12 +447,12 @@ if __name__ == "__main__":
 
 
         # #load seat vào csdl
-        # with open("%s/data/seats.json" % app.root_path, encoding="utf-8") as f:
-        #     data = json.load(f)
-        #     for x in data:
-        #         x = Seat(**x)
-        #         db.session.add(x)
-        #     db.session.commit()
+        with open("%s/data/seats.json" % app.root_path, encoding="utf-8") as f:
+            data = json.load(f)
+            for x in data:
+                x = Seat(**x)
+                db.session.add(x)
+            db.session.commit()
 
         # #load user vào csdl
         # with open("%s/data/users.json" % app.root_path, encoding="utf-8") as f:
@@ -371,60 +487,60 @@ if __name__ == "__main__":
             db.session.commit()
 
         # #load receipt vào csdl
-        # with open("%s/data/receipts.json" % app.root_path, encoding="utf-8") as f:
-        #     data = json.load(f)
-        #     for x in data:
-        #         date = x["pay_date"]
-        #         date = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
-        #         x["pay_date"] = date
-        #         x = Receipt(**x)
-        #         db.session.add(x)
-        #     db.session.commit()
+        with open("%s/data/receipts.json" % app.root_path, encoding="utf-8") as f:
+            data = json.load(f)
+            for x in data:
+                date = x["pay_date"]
+                date = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
+                x["pay_date"] = date
+                x = Receipt(**x)
+                db.session.add(x)
+            db.session.commit()
 
         # # load flight vào csdl
-        # with open("%s/data/flights.json" % app.root_path, encoding="utf-8") as f:
-        #     data = json.load(f)
-        #     for x in data:
-        #         date = x["flight_date"]
-        #         date = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
-        #         x["flight_date"] = date
-        #         x = Flight(**x)
-        #         db.session.add(x)
-        #     db.session.commit()
+        with open("%s/data/flights.json" % app.root_path, encoding="utf-8") as f:
+            data = json.load(f)
+            for x in data:
+                date = x["flight_date"]
+                date = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
+                x["flight_date"] = date
+                x = Flight(**x)
+                db.session.add(x)
+            db.session.commit()
 
         # #load subflights vào csdl
-        # with open("%s/data/sub_flights.json" % app.root_path, encoding="utf-8") as f:
-        #     data = json.load(f)
-        #     for x in data:
-        #         date = x["flight_time"]
-        #         date = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
-        #         x["flight_time"] = date
-        #         x = SubFlight(**x)
-        #         db.session.add(x)
-        #     db.session.commit()
+        with open("%s/data/sub_flights.json" % app.root_path, encoding="utf-8") as f:
+            data = json.load(f)
+            for x in data:
+                date = x["flight_time"]
+                date = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
+                x["flight_time"] = date
+                x = SubFlight(**x)
+                db.session.add(x)
+            db.session.commit()
 
         # #load ticket_price vào csdl
-        # with open("%s/data/ticket_prices.json" % app.root_path, encoding="utf-8") as f:
-        #     data = json.load(f)
-        #     for x in data:
-        #         x = TicketPrice(**x)
-        #         db.session.add(x)
-        #     db.session.commit()
+        with open("%s/data/ticket_prices.json" % app.root_path, encoding="utf-8") as f:
+            data = json.load(f)
+            for x in data:
+                x = TicketPrice(**x)
+                db.session.add(x)
+            db.session.commit()
 
         # #load passenger vào csdl
-        # with open("%s/data/passengers.json" % app.root_path, encoding="utf-8") as f:
-        #     data = json.load(f)
-        #     for x in data:
-        #         x = Passenger(**x)
-        #         db.session.add(x)
-        #     db.session.commit()
+        with open("%s/data/passengers.json" % app.root_path, encoding="utf-8") as f:
+            data = json.load(f)
+            for x in data:
+                x = Passenger(**x)
+                db.session.add(x)
+            db.session.commit()
 
         # #load ticket vào csdl
-        # with open("%s/data/tickets.json" % app.root_path, encoding="utf-8") as f:
-        #     data = json.load(f)
-        #     for x in data:
-        #         x = Ticket(**x)
-        #         db.session.add(x)
-        #     db.session.commit()
+        with open("%s/data/tickets.json" % app.root_path, encoding="utf-8") as f:
+            data = json.load(f)
+            for x in data:
+                x = Ticket(**x)
+                db.session.add(x)
+            db.session.commit()
 
 

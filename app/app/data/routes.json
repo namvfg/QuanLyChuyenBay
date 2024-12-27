@@ -1,32 +1,74 @@
 [
-        {
-            "name": "T01",
-            "departure_airport_id": 1,
-            "arrival_airport_id": 4,
-            "id": 1
-        },
-        {
-            "name": "T02",
-            "departure_airport_id": 2,
-            "arrival_airport_id": 4,
-            "id": 2
-        },
-        {
-            "name": "T03",
-            "departure_airport_id": 2,
-            "arrival_airport_id": 3,
-            "id": 3
-        },
-        {
-            "name": "T04",
-            "departure_airport_id": 3,
-            "arrival_airport_id": 4,
-            "id": 4
-        },
-        {
-            "name": "T05",
-            "departure_airport_id": 4,
-            "arrival_airport_id": 1,
-            "id": 5
-        }
-    ]
+    {
+        "name": "TSN-NB",
+        "departure_airport_id": 1,
+        "arrival_airport_id": 4,
+        "id": 1
+    },
+    {
+        "name": "VT-TSN",
+        "departure_airport_id": 2,
+        "arrival_airport_id": 1,
+        "id": 2
+    },
+    {
+        "name": "VT-PY",
+        "departure_airport_id": 2,
+        "arrival_airport_id": 3,
+        "id": 3
+    },
+    {
+        "name": "VT-NB",
+        "departure_airport_id": 2,
+        "arrival_airport_id": 4,
+        "id": 4
+    },
+    {
+        "name": "TSN-PY",
+        "departure_airport_id": 1,
+        "arrival_airport_id": 3,
+        "id": 5
+    },
+    {
+        "name": "PY-NB",
+        "departure_airport_id": 3,
+        "arrival_airport_id": 4,
+        "id": 6
+    },
+    {
+        "name": "NB-PY",
+        "departure_airport_id": 4,
+        "arrival_airport_id": 3,
+        "id": 7
+    },
+    {
+        "name": "NB-TSN",
+        "departure_airport_id": 4,
+        "arrival_airport_id": 1,
+        "id": 8
+    },
+    {
+        "name": "NB-VT",
+        "departure_airport_id": 4,
+        "arrival_airport_id": 2,
+        "id": 9
+    },
+    {
+        "name": "PY-TSN",
+        "departure_airport_id": 3,
+        "arrival_airport_id": 1,
+        "id": 10
+    },
+    {
+        "name": "PY-VT",
+        "departure_airport_id": 3,
+        "arrival_airport_id": 2,
+        "id": 11
+    },
+    {
+        "name": "TSN-VT",
+        "departure_airport_id": 1,
+        "arrival_airport_id": 2,
+        "id": 12
+    }
+]

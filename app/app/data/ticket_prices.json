@@ -1,74 +1,199 @@
 [
-        {
-            "price": 1800000.0,
-            "seat_class_id": 1,
-            "flight_id": 1,
-            "id": 1
-        },
-        {
-            "price": 1580000.0,
-            "seat_class_id": 2,
-            "flight_id": 1,
-            "id": 2
-        },
-        {
-            "price": 1880000.0,
-            "seat_class_id": 1,
-            "flight_id": 2,
-            "id": 3
-        },
-        {
-            "price": 1730000.0,
-            "seat_class_id": 2,
-            "flight_id": 2,
-            "id": 4
-        },
-        {
-            "price": 1830000.0,
-            "seat_class_id": 1,
-            "flight_id": 3,
-            "id": 5
-        },
-        {
-            "price": 1700000.0,
-            "seat_class_id": 2,
-            "flight_id": 3,
-            "id": 6
-        },
-        {
-            "price": 1860000.0,
-            "seat_class_id": 1,
-            "flight_id": 5,
-            "id": 7
-        },
-        {
-            "price": 1700000.0,
-            "seat_class_id": 2,
-            "flight_id": 5,
-            "id": 8
-        },
-        {
-            "price": 1820000.0,
-            "seat_class_id": 1,
-            "flight_id": 4,
-            "id": 9
-        },
-        {
-            "price": 1740000.0,
-            "seat_class_id": 2,
-            "flight_id": 4,
-            "id": 10
-        },
-        {
-            "price": 1810000.0,
-            "seat_class_id": 1,
-            "flight_id": 6,
-            "id": 11
-        },
-        {
-            "price": 1730000.0,
-            "seat_class_id": 2,
-            "flight_id": 6,
-            "id": 12
-        }
-    ]
+    {
+        "price": 1200000.0,
+        "seat_class_id": 1,
+        "flight_id": 1,
+        "id": 1
+    },
+    {
+        "price": 1000000.0,
+        "seat_class_id": 2,
+        "flight_id": 1,
+        "id": 2
+    },
+    {
+        "price": 1300000.0,
+        "seat_class_id": 1,
+        "flight_id": 2,
+        "id": 3
+    },
+    {
+        "price": 1500000.0,
+        "seat_class_id": 2,
+        "flight_id": 2,
+        "id": 4
+
+    },
+    {
+        "price": 1200000.0,
+        "seat_class_id": 1,
+        "flight_id": 3,
+        "id": 5
+    },
+    {
+        "price": 1000000.0,
+        "seat_class_id": 2,
+        "flight_id": 3,
+        "id": 6
+
+    },
+    {
+        "price": 1000000.0,
+        "seat_class_id": 1,
+        "flight_id": 4,
+        "id": 7
+
+    },
+    {
+        "price": 800000.0,
+        "seat_class_id": 2,
+        "flight_id": 4,
+        "id": 8
+
+    },
+    {
+        "price": 1200000.0,
+        "seat_class_id": 1,
+        "flight_id": 5,
+        "id": 9
+    },
+    {
+        "price": 1000000.0,
+        "seat_class_id": 2,
+        "flight_id": 5,
+        "id": 10
+    },
+    {
+        "price": 1200000.0,
+        "seat_class_id": 1,
+        "flight_id": 7,
+        "id": 11
+    },
+    {
+        "price": 1100000.0,
+        "seat_class_id": 2,
+        "flight_id": 7,
+        "id": 12
+    },
+    {
+        "price": 1100000.0,
+        "seat_class_id": 1,
+        "flight_id": 8,
+        "id": 13
+    },
+    {
+        "price": 1000000.0,
+        "seat_class_id": 2,
+        "flight_id": 8,
+        "id": 14
+    },
+    {
+        "price": 1200000.0,
+        "seat_class_id": 1,
+        "flight_id": 9,
+        "id": 15
+    },
+    {
+        "price": 900000.0,
+        "seat_class_id": 2,
+        "flight_id": 9,
+        "id": 16
+    },
+    {
+        "price": 1000000.0,
+        "seat_class_id": 1,
+        "flight_id": 10,
+        "id": 17
+    },
+    {
+        "price": 800000.0,
+        "seat_class_id": 2,
+        "flight_id": 10,
+        "id": 18
+    },
+    {
+        "price": 1400000.0,
+        "seat_class_id": 1,
+        "flight_id": 11,
+        "id": 19
+    },
+    {
+        "price": 1200000.0,
+        "seat_class_id": 2,
+        "flight_id": 11,
+        "id": 20
+    },
+    {
+        "price": 1300000.0,
+        "seat_class_id": 1,
+        "flight_id": 12,
+        "id": 21
+    },
+    {
+        "price": 1000000.0,
+        "seat_class_id": 2,
+        "flight_id": 12,
+        "id": 22
+    },
+    {
+        "price": 1300000.0,
+        "seat_class_id": 1,
+        "flight_id": 13,
+        "id": 23
+    },
+    {
+        "price": 1100000.0,
+        "seat_class_id": 2,
+        "flight_id": 13,
+        "id": 24
+    },
+    {
+        "price": 1600000.0,
+        "seat_class_id": 1,
+        "flight_id": 14,
+        "id": 25
+    },
+    {
+        "price": 1300000.0,
+        "seat_class_id": 2,
+        "flight_id": 14,
+        "id": 26
+    },
+    {
+        "price": 1200000.0,
+        "seat_class_id": 1,
+        "flight_id": 15,
+        "id": 27
+    },
+    {
+        "price": 1000000.0,
+        "seat_class_id": 2,
+        "flight_id": 15,
+        "id": 28
+    },
+    {
+        "price": 1800000.0,
+        "seat_class_id": 1,
+        "flight_id": 16,
+        "id": 29
+    },
+    {
+        "price": 1500000.0,
+        "seat_class_id": 2,
+        "flight_id": 16,
+        "id": 30,
+        "tickets": []
+    },
+    {
+        "price": 1200000.0,
+        "seat_class_id": 1,
+        "flight_id": 17,
+        "id": 31
+    },
+    {
+        "price": 1000000.0,
+        "seat_class_id": 2,
+        "flight_id": 17,
+        "id": 32
+    }
+]

@@ -3,17 +3,14 @@ import math
 import urllib.parse
 import hashlib
 from datetime import datetime, timedelta
-
 from sqlalchemy.testing.suite.test_reflection import users
-
 from app import mail, vnpay, login, table_class
 from app.models import PaymentMethod
 from flask_login import login_user, current_user, logout_user, login_required
 from flask import jsonify, session, url_for
 from flask import request, redirect, render_template
 from app import app, db, dao, utils
-from app.dao import load_popular_routes, load_seat_classes_with_ticket_price_by_flight_id, \
-    count_remaining_seats_per_seat_class_by_airplane_id
+from app.dao import load_popular_routes, load_seat_classes_with_ticket_price_by_flight_id, count_remaining_seats_per_seat_class_by_airplane_id, add_ticket_price
 from app.decorators import anonymous_customer, anonymous_staff, anonymous_admin, is_customer, is_staff, is_admin, \
     for_staff_seller, for_staff_planner
 import hashlib
@@ -149,7 +146,6 @@ def clear_verify_code():
     key = app.config["KEY_VERIFY_EMAIL"]
     session[key] = data
     return jsonify({"status": "success", "message": "Mã xác nhận đã xóa, bạn có thể nhập lại thông tin"})
-
 
 # kết quả tìm kiếm
 @is_customer
@@ -387,7 +383,6 @@ def payment_return():
     else:
         return render_template("payment_return.html", is_success=False)
 
-
 # gọi.qual tới file html của thong tin tai khoan
 @login_required
 @is_customer
@@ -423,6 +418,10 @@ def info_page():
 def staff_page():
     return render_template('/staff/index.html')
 
+  #dang xuat staff
+def staff_logout():
+    session.clear()
+    return redirect(url_for('staff_page'))
 
 # trang chu staff
 @anonymous_staff
@@ -618,6 +617,8 @@ def staff_selling(flight_id):
                            total_quantity=total_quantity,
                            chosen_seats=chosen_seats)
 
+#=========admin========#
+
 
 # nhap thong tin hang khach
 @login_required
@@ -627,7 +628,6 @@ def passenger_information_staff():
     key = app.config["KEY_CART"]
     cart = session[key]
     session[app.config["KEY_PASSENGER"]] = {}
-
     seat_name_array = []
     seat_id_array = []
     total_amount = 0
@@ -645,6 +645,46 @@ def passenger_information_staff():
 
         return jsonify({"status": "success", "redirect": "/staff/customer_information"})
 
+
+def draw_monthly_chart():
+    # Lấy dữ liệu JSON từ request
+    data = request.json
+    month = data.get("month")
+    year = data.get("year")
+
+    # Lấy dữ liệu doanh thu theo tuyến bay cho tháng đã chọn
+    raw_data_by_month = dao.revenue_stats_by_month(year=year, month=month)
+    raw_data_by_turn = dao.count_flights_by_route(year=year, month=month)
+
+    # Chuyển dữ liệu thành định dạng phù hợp với Chart.js
+    data_to_draw_chart_bar = [{"route_name": row.name, "total_revenue": row.total_revenue} for row in raw_data_by_month]
+    data_to_draw_chart_pie = [{"route_name": row.name, "flight_count": row.flight_count} for row in raw_data_by_turn]
+    print("Data for bar chart:", data_to_draw_chart_bar)
+    print("Data for pie chart:", data_to_draw_chart_pie)
+    # Tạo dữ liệu report dựa trên raw_data_by_month
+    report_data = [
+        {
+            "id": idx + 1,  # Đánh số thứ tự
+            "route_name": row.name,
+            "total_revenue": row.total_revenue,
+            "flight_count": next(
+                (item.flight_count for item in raw_data_by_turn if item.name == row.name),
+                0  # Mặc định là 0 nếu không tìm thấy
+            )
+        }
+        for idx, row in enumerate(raw_data_by_month)
+    ]
+
+    # Trả về dữ liệu dưới dạng JSON với các khóa riêng biệt
+    return jsonify({ "data_bar": data_to_draw_chart_bar, "data_pie": data_to_draw_chart_pie,"report_data": report_data,
+    "total_flights": sum(row.flight_count for row in raw_data_by_turn) })
+
+
+#trang chu staff
+def staff_login():
+    user_name = request.form['username']
+    password = request.form['password']
+    user = dao.auth_staff(user_name=user_name, password=password)
     return render_template("staff/passenger_information.html",
                            seat_name_array=seat_name_array)
 
