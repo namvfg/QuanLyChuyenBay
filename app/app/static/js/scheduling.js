@@ -26,7 +26,9 @@ function submitSchedulingForm1(event) {
        .then(data => {
                 if (data.status === "success") {
                     toastr.success("Nhập thành công!");
-                    window.location.href = data.redirect;
+                    setTimeout(() => {
+                        window.location.href = data.redirect;
+                    }, 3000);
                 } else {
 
                     toastr.error(data.message);
@@ -87,7 +89,9 @@ function submitSchedulingForm2(event) {
                     // Hiển thị thông báo thành công
                     toastr.success("Nhập thành công!");
                     // Chuyển hướng trang
-                    window.location.href = data.redirect;
+                    setTimeout(() => {
+                        window.location.href = data.redirect;
+                    }, 3000);
                 } else {
                     // Hiển thị thông báo lỗi
                     toastr.error(data.message);

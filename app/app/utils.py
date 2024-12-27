@@ -28,3 +28,9 @@ def verify_email(email):
         return False
     else:
         return True
+
+def parse_to_valid_file_name(order_id):
+    order_id = order_id.replace(".", "d")
+    order_id = order_id.replace(":", "-")
+    order_id = order_id.replace(" ", "_")
+    return order_id

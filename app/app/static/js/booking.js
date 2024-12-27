@@ -73,3 +73,23 @@ function deleteCart(seatId) {
     }
 }
 
+seatClassListBox = document.getElementById("myListBox")
+seatClassListBox.addEventListener('change', function() {
+    const selectedValue = this.value;
+
+    let seats = document.getElementsByClassName(`seat`);
+    for (let seat of seats) {
+        seat.disabled = true;
+        seat.classList.add("opacity-50")
+    }
+
+    let seatsInSeatClass = document.getElementsByClassName(`seat_class_${selectedValue}`);
+    for (let seat of seatsInSeatClass) {
+        seat.disabled = false;
+        seat.classList.remove("opacity-50")
+    }
+
+});
+
+
+
