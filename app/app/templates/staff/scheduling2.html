@@ -43,7 +43,7 @@
                         <div class="">
                             <label for="waiting_duration_{{ i }}" class="form-label">Thời gian chờ chặng {{ i }}</label>
                             <div class="d-flex align-items-center">
-                                <input type="number" min="0" step="5" class="form-control border border-dark waiting_duration" id="waiting_duration_{{ i }}"
+                                <input type="number" min="{{ min_waiting_duration }}" max="{{ max_waiting_duration }}" step="5" class="form-control border border-dark waiting_duration" id="waiting_duration_{{ i }}"
                                         {% if i == 1 %} value="0" readonly {% else %} placeholder="Nhập thời gian chờ chặng {{ i }}" {% endif %}>
                                 <span class="input-group-text border border-dark bg-light">phút</span>
                             </div>
@@ -51,7 +51,7 @@
                         <div class="">
                             <label for="flying_duration_{{ i }}" class="form-label ">Thời gian bay chặng {{ i }}</label>
                             <div class="d-flex align-items-center">
-                                <input type="number" min="0" step="5" class="form-control border border-dark flying_duration" id="flying_duration_{{ i }}"
+                                <input type="number" min="{{ min_flying_duration }}" step="5" class="form-control border border-dark flying_duration" id="flying_duration_{{ i }}"
                                        placeholder="Nhập thời gian bay chặng {{ i }}">
                                 <span class="input-group-text border border-dark bg-light">phút</span>
                             </div>

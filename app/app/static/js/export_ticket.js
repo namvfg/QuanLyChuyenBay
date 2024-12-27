@@ -1,7 +1,7 @@
 function checkTicketCode(event) {
     event.preventDefault()
     let ticketCode = document.getElementById("ticket_code").value;
-    fetch("check_ticket_code", {
+    fetch("/staff/export_ticket", {
         method: "post",
         body: JSON.stringify({
             "ticket_code": ticketCode

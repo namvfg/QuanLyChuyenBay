@@ -54,6 +54,28 @@ cloudinary.config(cloud_name="dnpodiilj",
                   api_key="874131819545712",
                   api_secret="xHDsHPIIbwKkoT6qfPYTAvn4pmA")
 
+
+#====qui định======
+
+#thời gian bay tối thiểu
+app.config["MIN_FLYING_DURATION"] = "min_flying_duration"
+
+#thời gian chờ tối thiểu
+app.config["MIN_WAITING_DURATION"] = "min_waiting_duration"
+
+#thời gian chờ tối đa
+app.config["MAX_WAITING_DURATION"] = "max_waiting_duration"
+
+#số lượng số lượng sân bay trung gian tối đa
+app.config["MAX_INTERMEDIATE_AIRPORT"] = "max_intermediate_airport"
+
+#thời gian bán vé
+app.config["TIME_TO_SELLING"] = "time_to_selling"
+
+#thời gian đặt vé
+app.config["TIME_TO_BOOKING"] = "time_to_booking"
+
+
 db = SQLAlchemy(app=app)
 
 login = LoginManager(app=app)

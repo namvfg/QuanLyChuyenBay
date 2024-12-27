@@ -1,5 +1,5 @@
 from app import app, db, dao
-from flask import request, jsonify
+from flask import request, jsonify, session
 
 from app.decorators import is_admin
 from app.models import Manufacturer, SeatClass, Seat, Airplane, Airport, Route, IntermediateAirport, Flight, SubFlight, TicketPrice, User, AdminWebsite, Customer, Staff, StaffRole, Receipt, Passenger, Ticket, Review, Notification, Rule
@@ -255,6 +255,7 @@ class MyAdminView(AdminIndexView):
     @expose("/")
     @is_admin
     def index(self):
+        session[app.config["MAX_INTERMEDIATE_AIRPORT"]] = int(dao.get_rule_by_name(app.config["MAX_INTERMEDIATE_AIRPORT"]).value)
         tickets = dao.count_tickets()
         passengers = dao.count_passengers()
         total_revenue = dao.get_total_revenue()

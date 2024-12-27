@@ -26,6 +26,8 @@ def index():
     key = app.config["KEY_CART"]
     session[key] = {}
 
+    session[app.config["TIME_TO_BOOKING"]] = int(dao.get_rule_by_name(app.config["TIME_TO_BOOKING"]).value)
+
     reviews = dao.load_reviews()
     notifications = dao.load_notifications()
     popular_routes = load_popular_routes()
@@ -166,7 +168,7 @@ def search_result():
     page = int(request.args.get("page", 1))
     page_size = app.config["PAGE_SIZE"]
 
-    flights = dao.load_flight_for_search_result(start_point, end_point, flight_date)
+    flights = dao.load_flight_for_search_result(start_point, end_point, flight_date, time=session[app.config["TIME_TO_BOOKING"]])
     page_count = len(flights)
 
     start = (page - 1) * page_size
@@ -299,7 +301,7 @@ def pay():
         total_quantity += 1
         total_amount += c["ticket_price"]
     if request.method.__eq__("POST"):
-        order_id = str(current_user.id) + str(datetime.now())
+        order_id = "{:010}".format(current_user.id) + str(datetime.now())
         vnpay_payment_url = vnpay.generate_payment_url(order_id=order_id, amount=total_amount, end_point="payment_return")
         return jsonify({"status": "success", "redirect": vnpay_payment_url})
 
@@ -366,7 +368,7 @@ def payment_return():
         content = ""
         for i in range(len(cart_data)):
             order_id_tmp = utils.parse_to_valid_file_name(order_id)
-            send_code = f"{order_id_tmp}{cart_data[i]["seat_id"]}"
+            send_code = f"{order_id_tmp}{'{:010}'.format(cart_data[i]["seat_id"])}"
             ticket_content = f'''
                        Mã vé: {send_code}
                        Chuyến bay: {flight_name}
@@ -421,6 +423,11 @@ def info_page():
 @app.route('/staff/index.html')
 @is_staff
 def staff_page():
+    session[app.config["TIME_TO_SELLING"]] = int(dao.get_rule_by_name(app.config["TIME_TO_SELLING"]).value)
+    session[app.config["MIN_FLYING_DURATION"]] = int(dao.get_rule_by_name(app.config["MIN_FLYING_DURATION"]).value)
+    session[app.config["MIN_WAITING_DURATION"]] = int(dao.get_rule_by_name(app.config["MIN_WAITING_DURATION"]).value)
+    session[app.config["MAX_WAITING_DURATION"]] = int(dao.get_rule_by_name(app.config["MAX_WAITING_DURATION"]).value)
+
     return render_template('/staff/index.html')
 
 
@@ -473,7 +480,9 @@ def staff_scheduling1():
     airports = dao.load_airports()
     routes = dao.load_route()
     return render_template('staff/scheduling1.html',
-                           airplanes=airplanes, airports=airports, routes=routes)
+                           airplanes=airplanes,
+                           airports=airports,
+                           routes=routes)
 
 
 # dat lich2
@@ -548,7 +557,10 @@ def staff_scheduling2():
 
     return render_template('staff/scheduling2.html',
                            seat_classes=seat_classes,
-                           airport_array=airport_array)
+                           airport_array=airport_array,
+                           min_flying_duration=session[app.config["MIN_FLYING_DURATION"]],
+                           min_waiting_duration=session[app.config["MIN_WAITING_DURATION"]],
+                           max_waiting_duration=session[app.config["MAX_WAITING_DURATION"]])
 
 
 # tìm kiếm chuyến bay cho nhân viên
@@ -706,7 +718,7 @@ def pay_staff():
     passengers = session[app.config["KEY_PASSENGER"]]
     total_amount = 0
     total_quantity = 0
-    order_id = str(current_user.id) + str(datetime.now())
+    order_id = "{:010}".format(current_user.id) + str(datetime.now())
     for c in cart.values():
         total_quantity += 1
         total_amount += c["ticket_price"]
@@ -792,7 +804,8 @@ def payment_return_staff():
                         customer_id=session[app.config["CUSTOMER_ID"]])
         for i in range(len(ticket_infos)):
             order_id_tmp = utils.parse_to_valid_file_name(order_id)
-            pdf_path = f"pdf/{order_id_tmp}{seat_ids[i]}.pdf"
+
+            pdf_path = f"pdf/{order_id_tmp}{'{:010}'.format(seat_ids[i])}.pdf"
             table_class.export_ticket(ticket_data=ticket_infos[i], pdf_path=pdf_path)
         return render_template("staff/payment_return.html", is_success=True, amount=amount)
     else:
@@ -816,7 +829,7 @@ def payment_return_staff():
 
             for i in range(len(ticket_infos)):
                 order_id_tmp = utils.parse_to_valid_file_name(order_id)
-                pdf_path = f"pdf/{order_id_tmp}{seat_ids[i]}.pdf"
+                pdf_path = f"pdf/{order_id_tmp}{'{:010}'.format(seat_ids[i])}.pdf"
                 table_class.export_ticket(ticket_data=ticket_infos[i], pdf_path=pdf_path)
 
             return render_template("staff/payment_return.html", is_success=True, amount=amount)
@@ -827,7 +840,28 @@ def payment_return_staff():
 @is_staff
 @for_staff_seller
 def export_ticket():
+    if request.method.__eq__("POST"):
+        data = request.json
+        ticket_code = data["ticket_code"]
+        seat_id = (ticket_code[-10:0])
+        order_id = ticket_code[0: -10]
+        order_id = order_id.replace("d", ".")
+        order_id = order_id.replace("_", " ")
+
+        order_id1 = order_id[:21]
+        order_id2 = order_id[21:].replace("-", ":")
+        order_id = order_id1 + order_id2
+
+        print(order_id)
+        print(dao.get_receipt_by_order_id(order_id))
+
     return render_template("staff/export_ticket.html")
+
+#api kiểm tra ticket code
+def check_ticket_code():
+    pass
+
+
 
 # end=======staff========#
 
