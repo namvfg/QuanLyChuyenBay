@@ -255,7 +255,6 @@ class MyAdminView(AdminIndexView):
     @expose("/")
     @is_admin
     def index(self):
-        session[app.config["MAX_INTERMEDIATE_AIRPORT"]] = int(dao.get_rule_by_name(app.config["MAX_INTERMEDIATE_AIRPORT"]).value)
         tickets = dao.count_tickets()
         passengers = dao.count_passengers()
         total_revenue = dao.get_total_revenue()
