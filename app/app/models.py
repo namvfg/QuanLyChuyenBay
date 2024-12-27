@@ -86,8 +86,6 @@ class Airport(BaseModel):
         return self.name
 
 
-
-
 # Tuyen bay
 class Route(BaseModel):
     name = Column(String(10), nullable=False, unique=True)
@@ -106,8 +104,6 @@ class IntermediateAirport(BaseModel):
 
     airport_id = Column(Integer, ForeignKey(Airport.id), nullable=False)
     route_id = Column(Integer, ForeignKey(Route.id), nullable=False)
-
-
 
 
 # chuyen bay
@@ -148,17 +144,15 @@ class TicketPrice(BaseModel):
     tickets = relationship("Ticket", backref="tickets_ticket_price", lazy=True)
 
 
-
 # user
 class User(BaseModel, UserMixin):
     first_name = Column(String(20), nullable=False)
     last_name = Column(String(100), nullable=False)
-    user_name = Column(String(20), unique=True, nullable=False)
-    password = Column(String(100), nullable=False)
+    user_name = Column(String(20), unique=True)
+    password = Column(String(100))
 
     def __str__(self):
         return self.first_name
-
 
 
 # admin
@@ -173,8 +167,9 @@ class AdminWebsite(User):
 class Customer(User):
     customer_id = Column(Integer, ForeignKey(User.id), primary_key=True)
     phone_number = Column(String(10), unique=True, nullable=False)
-    email = Column(String(50), unique=True, nullable=False)
-    avatar = Column(String(100), nullable=False)
+    email = Column(String(50), unique=True)
+    avatar = Column(String(100))
+
     receipts = relationship("Receipt", backref="receipts_customer", lazy=True)
 
 
@@ -201,7 +196,7 @@ class PaymentMethod(PythonEnum):
 # hoa don
 class Receipt(BaseModel):
     pay_date = Column(DateTime, default=datetime.now())
-    order_id = Column(String(15), nullable=False)
+    order_id = Column(String(30), nullable=False)
     payment_method = Column(Enum(PaymentMethod), default=PaymentMethod.CASHING)
 
     customer_id = Column(Integer, ForeignKey(Customer.customer_id), nullable=False)
@@ -230,6 +225,7 @@ class Ticket(BaseModel):
     passenger_id = Column(Integer, ForeignKey(Passenger.id), nullable=False, unique=True)
     ticket_price_id = Column(Integer, ForeignKey(TicketPrice.id), nullable=False)
     receipt_id = Column(Integer, ForeignKey(Receipt.id), nullable=False)
+
 
 # review
 class Review(BaseModel):

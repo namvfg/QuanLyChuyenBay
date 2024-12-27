@@ -78,7 +78,7 @@
                     <a type="button" class="btn btn-primary" href="/passenger_information">
                         Thanh toán
                     </a>
-                    <a href="#" class="btn btn-danger">Hủy</a>
+                    <button onclick="window.history.back()" class="btn btn-danger">Hủy</button>
                     {% else %}
                     <p>Vui lòng <a href="/login?next=/booking/{{ flight_id }}">đăng nhập</a> để thanh toán</p>
                     {% endif %}
@@ -117,11 +117,11 @@
                 {% set extra_class = "ms-1" if i % 4 == 1 else "ms-5" if i % 4 == 3 else "" %}
                 {% set clicked = "clicked" if seats[i - 1].id|string in session['cart'] else "" %}
                 {% set active = "bg-black" if seats[i - 1].active else "" %}
-                <a class="btn btn-outline-primary mt-2 {{ extra_class }} {{ active }} {{ clicked }} seat-toggle" href="javascript:;"
+                <button class="btn btn-outline-primary mt-2 {{ extra_class }} {{ active }} {{ clicked }} seat seat_class_{{ seats[i - 1].seat_class_id }} seat-toggle" href="javascript:;"
                    id="seat_{{ seats[i - 1].id }}"
                    onclick="toggleSeat({{ seats[i - 1].id }}, '{{ seats[i - 1].name }}', '{{ seats[i - 1].seat_class_name }}', {{ seats[i - 1].price }}, {{ seats[i - 1].ticket_price_id }}, '{{ seats[i - 1].active }}')">
                     {{ seats[i - 1].name }}
-                </a>
+                </button>
                 {% if i % 4 == 0 %}
                 <br>
                 {% endif %}

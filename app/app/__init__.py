@@ -19,6 +19,9 @@ app.config["PHONE_NUMBER_LENGTH"] = 10
 #độ dài mật khẩu tối thiểu
 app.config["PASSWORD_LENGTH"] = 6
 
+#số kết quả trong 1 trang tìm kiếm
+app.config["PAGE_SIZE"] = 2
+
 #key cho session chứa email_target và verify_code
 app.config["KEY_VERIFY_EMAIL"] = "verify_email"
 
@@ -29,7 +32,10 @@ app.config["KEY_SCHEDULING"] = "scheduling"
 app.config["KEY_CART"] = "cart"
 
 #key để lưu flight_id
-app.config["FLIGHT_ID"] = -1
+app.config["FLIGHT_ID"] = "flight_id"
+
+#key để lưu customer_id
+app.config["CUSTOMER_ID"] = "customer_id"
 
 #key để lưu thông tin hành khách
 app.config["KEY_PASSENGER"] = "passenger"

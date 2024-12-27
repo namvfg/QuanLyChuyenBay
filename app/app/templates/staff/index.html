@@ -13,10 +13,12 @@
             integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
             crossorigin="anonymous">
     </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
+          integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 
@@ -29,31 +31,87 @@
             <li class="nav-item">
                 <a class="nav-link" href="/staff">Trang chủ</a>
             </li>
+            {% if current_user.is_authenticated %}
+
+            {% if current_user.staff_role|string == "StaffRole.SELLER" %}
             <li class="nav-item">
-                <a class="nav-link" href="#">Bán vé</a>
+                <a class="nav-link" data-bs-toggle="modal" data-bs-target="#myModal" href="#">Tra cứu chuyến bay</a>
             </li>
+            <div class="modal fade" id="myModal">
+                <div class="modal-dialog modal-md">
+                    <div class="modal-content">
+
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title">Tìm kiếm chuyến bay</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            <form action="/staff/search_result_staff" method="get" style="width:100%">
+                                <div class="mb-5 mt-4">
+                                    <label for="start_point" class="mb-1 ps-1">Nơi đi</label>
+                                    <input type="text" class="form-control" id="start_point"
+                                           placeholder="Nhập nơi đi ..."
+                                           name="start_point">
+                                </div>
+                                <div class="mb-5 mt-3">
+                                    <label for="end_point" class="mb-1 ps-1">Nơi đến</label>
+                                    <input type="text" class="form-control" id="end_point"
+                                           placeholder="Nhập nơi đến ..."
+                                           name="end_point">
+                                </div>
+                                <div class="mb-5 mt-3">
+                                    <label for="flight_date" class="mb-1 ps-1">Ngày bay</label>
+                                    <input type="date" class="form-control" id="flight_date"
+                                           placeholder="Chọn ngày bay ..."
+                                           name="flight_date">
+                                </div>
+                                <div class="mb-5 mt-3 d-flex justify-content-center">
+                                    <a href="">
+                                        <button type="submit" class="btn btn-outline-primary">Tìm kiếm</button>
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <p class="me-4">Copyright &copy 2024 Đông Thành Airline. All rights reserved.</p>
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <li class="nav-item">
-                <a class="nav-link" href="#">Tra cứu chuyến bay</a>
+                <a class="nav-link" href="/staff/export_ticket">Xuất vé</a>
             </li>
+            {% elif current_user.staff_role|string == "StaffRole.PLANNER" %}
             <li class="nav-item">
                 <a class="nav-link" href="/staff/scheduling1">Lập lịch</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('staff_selling') }}">Bán vé</a>
-            </li>
+            {% endif %}
+
+            {% endif %}
         </ul>
 
         <ul class="navbar-nav ms-auto">
             {% if current_user.is_authenticated %}
             <li class="nav-item">
-                <a class="nav-link text-danger" href="/info_page"><button class="btn btn-outline-primary">
-                    <img src="{{ current_user.avatar }}" width="25" class="rounded-circle"
-                         >
-                    Chào <span class="text-info">{{ current_user.first_name }}</span>
-                </button></a>
+                <a class="nav-link text-danger" href="/info_page">
+                    <button class="btn btn-outline-primary">
+                        <img src="{{ current_user.avatar }}" width="25" class="rounded-circle"
+                        >
+                        Chào <span class="text-info">{{ current_user.first_name }}</span>
+                    </button>
+                </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-success" href="/logout"><button class="btn btn-primary">Đăng xuất</button></a>
+                <a class="nav-link text-success" href="/logout">
+                    <button class="btn btn-primary">Đăng xuất</button>
+                </a>
             </li>
             {% else %}
             <li class="nav-item">
