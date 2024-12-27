@@ -286,7 +286,7 @@ class PaymentMethod(PythonEnum):
 # hoa don
 class Receipt(BaseModel):
     pay_date = Column(DateTime, default=datetime.now())
-    order_id = Column(String(50), nullable=False)
+    order_id = Column(String(100), nullable=False)
     payment_method = Column(Enum(PaymentMethod), default=PaymentMethod.CASHING)
 
     customer_id = Column(Integer, ForeignKey(Customer.customer_id), nullable=False)

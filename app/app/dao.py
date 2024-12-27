@@ -12,7 +12,7 @@ from app.models import Review, Notification, Ticket, TicketPrice, Passenger, Sub
 import json
 from flask_login import current_user
 from werkzeug.security import generate_password_hash
-
+from datetime import datetime, timedelta
 
 # xác nhận user
 def auth_user(user_name, password):
@@ -377,7 +377,7 @@ def load_flight_by_id(flight_id):
 
 
 # lấy flight cho search result
-def load_flight_for_search_result(kw1=None, kw2=None, flight_date=None):
+def load_flight_for_search_result(kw1=None, kw2=None, flight_date=None, time=None):
     DepartureAirport = aliased(Airport)
     ArrivalAirport = aliased(Airport)
     query = db.session.query(Flight.id, Flight.flight_date, Flight.total_time, Flight.airplane_id,
@@ -399,6 +399,9 @@ def load_flight_for_search_result(kw1=None, kw2=None, flight_date=None):
 
     if flight_date:
         query = query.filter(Flight.flight_date.date().__eq__(flight_date))
+
+    if time:
+        query = query.filter(datetime.now() - timedelta(minutes=time) > Flight.flight_date)
 
     return query.all()
 
@@ -459,6 +462,9 @@ def get_route_by_id(route_id):
 def load_sub_flight_by_flight_id(flight_id):
     return SubFlight.query.filter_by(flight_id=flight_id).order_by(SubFlight.order).all()
 
+#lấy receipt theo order_id
+def get_receipt_by_order_id(order_id):
+    return Receipt.query.filter_by(order_id=order_id).first()
 
 # doi mat khau
 def change_password(new_password):
@@ -467,6 +473,9 @@ def change_password(new_password):
     user.password = password
 
     db.session.commit()
+
+def get_rule_by_name(rule_name):
+    return Rule.query.filter_by(name=rule_name).first()
 
 
 # Hàm thêm Manufacturer

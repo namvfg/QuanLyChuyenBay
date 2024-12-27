@@ -19,7 +19,7 @@
         </div>
         <div class="ms-3 me-3 row">
             <div class="col-md-6 col-12">
-                <form id="export_ticket_form" onsubmit="submitExportTicketForm(event)">
+                <form id="export_ticket_form" onsubmit="checkTicketCode(event)">
                     <div class="mb-3">
                         <label for="ticket_code" class="form-label ">Mã vé</label>
                         <input type="text" class="form-control border border-dark" id="ticket_code"
@@ -38,7 +38,7 @@
                     </div>
                 </form>
             </div>
-            <div class="col-md-6 col-12 d-flex justify-content-center">
+            <div class="col-md-6 col-12 d-flex justify-content-center align_item_center flex-column">
                 <h3>Vé</h3>
                 <div class="mb-3">
 
@@ -56,4 +56,5 @@
         </div>
     </div>
 </div>
+<script src="{{ url_for('static', filename='js/export_ticket.js') }}"></script>
 {% endblock %}
