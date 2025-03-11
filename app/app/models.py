@@ -543,4 +543,12 @@ if __name__ == "__main__":
                 db.session.add(x)
             db.session.commit()
 
+        # #load ticket vào csdl
+        with open("%s/data/rules.json" % app.root_path, encoding="utf-8") as f:
+            data = json.load(f)
+            for x in data:
+                x = Rule(**x)
+                db.session.add(x)
+            db.session.commit()
+
 

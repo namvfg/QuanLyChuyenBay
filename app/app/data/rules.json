@@ -1,1 +1,38 @@
-[]
+[
+  {
+        "name": "min_flying_duration",
+        "value": "30",
+        "admin_id": 3,
+        "id": 1
+  },
+  {
+        "name": "min_waiting_duration",
+        "value": "20",
+        "admin_id": 3,
+        "id": 2
+  },
+  {
+        "name": "max_waiting_duration",
+        "value": "30",
+        "admin_id": 3,
+        "id": 3
+  },
+  {
+        "name": "max_intermediate_airport",
+        "value": "2",
+        "admin_id": 3,
+        "id": 4
+  },
+  {
+        "name": "time_to_selling",
+        "value": "240",
+        "admin_id": 3,
+        "id": 5
+  },
+  {
+        "name": "time_to_booking",
+        "value": "720",
+        "admin_id": 3,
+        "id": 6
+  }
+]
