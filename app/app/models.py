@@ -1,7 +1,7 @@
 from pickle import FALSE
 from sqlalchemy import Column, Integer, String, Float, Text, Boolean, ForeignKey, DateTime, Enum
 from sqlalchemy.orm import relationship
-from app import app, db
+from app import app,db
 from flask_login import UserMixin
 from enum import Enum as PythonEnum
 from datetime import datetime
