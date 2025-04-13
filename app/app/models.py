@@ -470,6 +470,14 @@ if __name__ == "__main__":
                 db.session.add(x)
             db.session.commit()
 
+        # #load customer vào csdl
+        with open("%s/data/customers.json" % app.root_path, encoding="utf-8") as f:
+            data = json.load(f)
+            for x in data:
+                x = Customer(**x)
+                db.session.add(x)
+            db.session.commit()
+
         # #load admin vào csdl
         with open("%s/data/admin_websites.json" % app.root_path, encoding="utf-8") as f:
             data = json.load(f)
@@ -478,13 +486,7 @@ if __name__ == "__main__":
                 db.session.add(x)
             db.session.commit()
 
-        # #load customer vào csdl
-        with open("%s/data/customers.json" % app.root_path, encoding="utf-8") as f:
-            data = json.load(f)
-            for x in data:
-                x = Customer(**x)
-                db.session.add(x)
-            db.session.commit()
+
 
         # #load receipt vào csdl
         with open("%s/data/receipts.json" % app.root_path, encoding="utf-8") as f:
